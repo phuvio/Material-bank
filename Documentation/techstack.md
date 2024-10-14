@@ -1,12 +1,20 @@
 # Technologies used in project
 
+## For whole project
+
+- Prettier
+- Elint
+
 ## Frontend
- - React
+
+- React
 
 ## Backend
- - Node
- - PostgreSQL
+
+- Node
+- PostgreSQL
 
 ## Project management
- - GitHub Project
- - Toggl Track
+
+- GitHub Project
+- Toggl Track

@@ -5,7 +5,7 @@ This is a repository for material bank for [ProNeuron Oy](https://proneuron.fi/)
 
 ## Documentation
 
- - Techstack
+ - [Techstack](/Documentation/techstack.md)
  - Database schema
  - Page layouts
 

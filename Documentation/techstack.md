@@ -19,3 +19,7 @@
 
 - GitHub Project
 - Toggl Track
+
+## Testing
+
+- Nodemon

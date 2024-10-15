@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const Header = () => {
     return (
         <div>
-            ProNeuron
+            <h2>ProNeuron</h2>
         </div>
     )
 };

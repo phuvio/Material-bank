@@ -9,10 +9,13 @@
 
 - React
 - Vite
+- Axios
 
 ## Backend
 
 - Node
+- Express
+- Cors
 - PostgreSQL
 
 ## Project management

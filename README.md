@@ -8,4 +8,20 @@ This is a repository for material bank for [ProNeuron Oy](https://proneuron.fi/)
 - [Database schema](/Documentation/database.md)
 - [Page layouts](/Documentation/pagelayouts.md)
 
-### Quickstart
+## Quickstart
+
+### Downloading
+
+```bash
+git clone git@github.com:phuvio/Material-bank.git
+```
+
+### Installation
+
+Run the following command in root directory:
+
+```bash
+npm install
+```
+
+Installs the required dependencies on both frontend and backend

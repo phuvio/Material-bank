@@ -3,11 +3,12 @@
 ## For whole project
 
 - Prettier
-- Elint
+- Eslint
 
 ## Frontend
 
 - React
+- Vite
 
 ## Backend
 

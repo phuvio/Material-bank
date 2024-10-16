@@ -1,6 +1,6 @@
 # Page layouts
 
-![Pages](/Documentation/Pictures/pages.png){width=600}
+![Pages](/Documentation/Pictures/pages.png)
 
 ## Main page
 

@@ -1,18 +1,21 @@
 {
-  "name": "frontend",
+  "name": "material-bank",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"nodemon backend/index.js\" \"cd frontend && vite\"",
     "build": "cd frontend && vite build",
     "lint": "eslint .",
-    "preview": "cd frontendt && vite preview"
+    "preview": "cd frontendt && vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "express": "^4.21.1",
+    "frontend": "file:",
+    "material-bank": "file:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

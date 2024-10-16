@@ -1,20 +1,20 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import stylisticJs from '@stylistic/eslint-plugin-js';
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import stylisticJs from '@stylistic/eslint-plugin-js'
 
 export default [
-  pluginJs.configs.recommended, 
+  pluginJs.configs.recommended,
   {
-    files: ["**/*.js"],
+    files: ['**/*.js'],
     languageOptions: {
-      sourceType: "commonjs",
+      sourceType: 'module',
       globals: {
         ...globals.browser,
       },
-      ecmaVersion: "latest",
+      ecmaVersion: 'latest',
     },
     plugins: {
-      '@stylistic/js': stylisticJs 
+      '@stylistic/js': stylisticJs
     },
     rules: {
       '@stylistic/js/indent': [
@@ -47,4 +47,4 @@ export default [
   {
     ignores: ['dist/**', 'build/**']
   }
-];
+]

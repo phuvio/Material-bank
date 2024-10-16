@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS Materials (
     id SERIAL PRIMARY KEY,
     name VARCHAR (50) NOT NULL,
     description VARCHAR(500),
-    visible INTEGER NOT NULL,
+    visible BOOLEAN NOT NULL,
     user_id INTEGER NOT NULL,
     is_URL BOOLEAN,
     URL VARCHAR(120),
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS Groups (
     user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE,
     material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE,
     description VARCHAR (500),
-    visible INTEGER NOT NULL
+    visible BOOLEAN NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Groups_Materials (

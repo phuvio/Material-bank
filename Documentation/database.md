@@ -13,7 +13,7 @@ erDiagram
         SERIAL id
         VARCHAR(50) name
         VARCHAR(500) description
-        INTEGER visible
+        BOOLEAN visible
         INTEGER user_id
         BOOLEAN is_URL
         VARCHAR(120) URL
@@ -53,7 +53,7 @@ erDiagram
         INTEGER user_id
         INTEGER material_id
         VARCHAR(500) description
-        INTEGER visible
+        BOOLEAN visible
     }
 
     Groups_Materials {

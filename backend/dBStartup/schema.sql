@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS Customers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS Customer_Materials (
+CREATE TABLE IF NOT EXISTS Customers_Materials (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER REFERENCES Customers(id) ON DELETE CASCADE, 
     material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE,
@@ -77,19 +77,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger for Materials table
-CREATE TRIGGER set_updated_at
+CREATE TRIGGER set_updated_at_materials
 BEFORE UPDATE ON Materials
 FOR EACH ROW
+WHEN (OLD.* IS DISTINCT FROM NEW.*)
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger for Users table
 CREATE TRIGGER set_updated_at_users
 BEFORE UPDATE ON Users
 FOR EACH ROW
+WHEN (OLD.password IS DISTINCT FROM NEW.password)
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Trigger for Customers table
-CREATE TRIGGER set_updated_at_costumers
+CREATE TRIGGER set_updated_at_customers
 BEFORE UPDATE ON Customers
 FOR EACH ROW
+WHEN (OLD.* IS DISTINCT FROM NEW.*)
 EXECUTE FUNCTION update_updated_at_column();

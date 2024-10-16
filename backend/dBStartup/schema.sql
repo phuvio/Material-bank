@@ -1,0 +1,95 @@
+CREATE TABLE IF NOT EXISTS Materials (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (50) NOT NULL,
+    description VARCHAR(500),
+    visible INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    is_URL BOOLEAN,
+    URL VARCHAR(120),
+    material BYTEA,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR (20) NOT NULL,
+    password VARCHAR NOT NULL,
+    role INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Favorites (
+    id SERIAL PRIMARY KEY,
+    material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE, 
+    user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE
+ );
+
+CREATE TABLE IF NOT EXISTS Tags (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR (50) NOT NULL,
+    visible INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Tags_Materials (
+    material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES Tags(id) ON DELETE CASCADE,
+    PRIMARY KEY (material_id, tag_id)
+);
+
+CREATE TABLE IF NOT EXISTS Groups (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+    material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE,
+    description VARCHAR (500),
+    visible INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Groups_Materials (
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER REFERENCES Groups(id) ON DELETE CASCADE,
+    material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Customers (
+    id SERIAL PRIMARY KEY,
+    code INTEGER NOT NULL,
+    user_id INTEGER REFERENCES Users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Customer_Materials (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES Customers(id) ON DELETE CASCADE, 
+    material_id INTEGER REFERENCES Materials(id) ON DELETE CASCADE,
+    status VARCHAR(20)
+);
+
+-- Function to update updated_at column
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger for Materials table
+CREATE TRIGGER set_updated_at
+BEFORE UPDATE ON Materials
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for Users table
+CREATE TRIGGER set_updated_at_users
+BEFORE UPDATE ON Users
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger for Customers table
+CREATE TRIGGER set_updated_at_costumers
+BEFORE UPDATE ON Customers
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();

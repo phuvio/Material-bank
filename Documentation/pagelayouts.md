@@ -1,5 +1,7 @@
 # Page layouts
 
+![Pages](/Documentation/Pictures/pages.png =250x)
+
 ## Main page
 
 ![Main page](/Documentation/Pictures/Main_page.png)

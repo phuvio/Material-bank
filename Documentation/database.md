@@ -11,7 +11,7 @@ erDiagram
     %% Schemas and Tables
     Materials {
         SERIAL id
-        VARCHAR(50) name
+        VARCHAR(50) name UNIQUE
         VARCHAR(500) description
         BOOLEAN visible
         INTEGER user_id
@@ -24,7 +24,7 @@ erDiagram
 
     Users {
         SERIAL id
-        VARCHAR(20) username
+        VARCHAR(20) username UNIQUE
         VARCHAR password
         INTEGER role
         TIMESTAMP created_at
@@ -39,7 +39,7 @@ erDiagram
 
     Tags {
         SERIAL id
-        VARCHAR(50) name
+        VARCHAR(50) name UNIQUE
         INTEGER visible
     }
 
@@ -64,7 +64,7 @@ erDiagram
 
     Customers {
         SERIAL id
-        INTEGER code
+        INTEGER code UNIQUE
         INTEGER user_id
         TIMESTAMP created_at
         TIMESTAMP updated_at
@@ -92,6 +92,6 @@ erDiagram
     Materials ||--o{ Customers_Materials : "material_id"
 ```
 
-There are timestamps on materials, users and customers. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for customers are for GDPR purposes. When the customer ends his/her customership with ProNeuron the data is kept 3 years and then deleted. Timestamps for materials have no use at the moment, but are inserted for future use.
+There are timestamps on materials, users and customers. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for customers are for GDPR purposes. When the customer ends his/her customership with ProNeuron the data is kept 3 years and then deleted. Timestamps for materials have no use at the moment, but are inserted for future use. PostgreSQL triggers are used to update timestamps updated_at.
 
 Here is the [PostgerSQL schema](../backend/dBStartup/schema.sql).

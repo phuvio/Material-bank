@@ -11,7 +11,7 @@ erDiagram
     %% Schemas and Tables
     Materials {
         SERIAL id
-        VARCHAR(50) name UNIQUE
+        VARCHAR(50) name
         VARCHAR(500) description
         BOOLEAN visible
         INTEGER user_id
@@ -24,7 +24,7 @@ erDiagram
 
     Users {
         SERIAL id
-        VARCHAR(20) username UNIQUE
+        VARCHAR(20) username
         VARCHAR password
         INTEGER role
         TIMESTAMP created_at
@@ -39,7 +39,7 @@ erDiagram
 
     Tags {
         SERIAL id
-        VARCHAR(50) name UNIQUE
+        VARCHAR(50) name
         INTEGER visible
     }
 
@@ -64,7 +64,7 @@ erDiagram
 
     Customers {
         SERIAL id
-        INTEGER code UNIQUE
+        INTEGER code
         INTEGER user_id
         TIMESTAMP created_at
         TIMESTAMP updated_at

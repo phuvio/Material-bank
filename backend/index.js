@@ -1,49 +1,29 @@
+import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
+import pg from 'pg'
+
+dotenv.config()
 
 const app = express()
+const connectionString = process.env.DATABASE_URL
 
-const materials = [
-  {
-    id: 1,
-    name: 'materiaali 1',
-    description: 'tämä on testi aineisto',
-    visible: true,
-    user_id: 1,
-    is_URL: false,
-    URL: '',
-    material: '',
-  },
-  {
-    id: 2,
-    name: 'muistipeli',
-    description: 'tämä on testi aineisto',
-    visible: true,
-    user_id: 1,
-    is_URL: false,
-    URL: '',
-    material: '',
-  },
-  {
-    id: 3,
-    name: 'pomppivat pallot',
-    description: 'tämä on testi aineisto',
-    visible: false,
-    user_id: 1,
-    is_URL: false,
-    URL: '',
-    material: '',
-  },
-]
+const pool = new pg.Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  }
+})
 
 app.use(cors())
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World!</h1>')
 })
 
-app.get('/api/materials', (request, response) => {
-  response.json(materials)
+app.get('/api/materials', async (req, res) => {
+  const materials = await (await pool.query('SELECT id, name, description, visible, is_URL FROM materials WHERE visible=True'))
+  res.json(materials.rows)
 })
 
 const PORT = 3001

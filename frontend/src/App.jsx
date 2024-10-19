@@ -5,10 +5,8 @@ import Main_page from "./components/Main_page";
 
 const App = () => {
   const [materials, setMaterials] = useState([])
-  console.log("start")
 
   useEffect(() => {
-    console.log("efekti")
     axios
       .get('http://localhost:3001/api/materials')
       .then(response => {

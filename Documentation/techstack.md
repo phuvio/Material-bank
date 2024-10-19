@@ -17,6 +17,7 @@
 - Express
 - Cors
 - PostgreSQL
+- Pg
 
 ## Project management
 

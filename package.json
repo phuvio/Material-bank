@@ -2,7 +2,6 @@
   "name": "material-bank",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
     "dev": "concurrently \"nodemon backend/index.js\" \"cd frontend && vite\"",
     "build": "cd frontend && vite build",

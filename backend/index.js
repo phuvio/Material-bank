@@ -1,9 +1,7 @@
-import dotenv from 'dotenv'
-import express from 'express'
-import cors from 'cors'
-import pg from 'pg'
-
-dotenv.config()
+const dotenv = require('dotenv').config()
+const express = require('express')
+const cors = require('cors')
+const pg = require('pg')
 
 const app = express()
 const connectionString = process.env.DATABASE_URL

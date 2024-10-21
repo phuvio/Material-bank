@@ -46,6 +46,24 @@ app.get('/api/materials/:id', async (req, res) => {
   }
 })
 
+app.get('/api/materials/:id/material', async (req, res) => {
+  const material_id = req.params.id
+  try {
+    const result = await pool.query(
+      'SELECT material FROM materials WHERE id=$1',
+      [material_id]
+    )
+    console.log(result)
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Material was not found' })
+    }
+    res.json(result.rows)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Error retrieving material' })
+  }
+})
+
 app.post('/api/materials', async (req, res) => {
   const { name, description, user_id, visible, is_URL, URL, material } =
     req.body

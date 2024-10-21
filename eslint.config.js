@@ -1,51 +1,85 @@
-import globals from 'globals'
-import pluginJs from '@eslint/js'
-import stylisticJs from '@stylistic/eslint-plugin-js'
+/* eslint-env node */
 
-export default [
-  pluginJs.configs.recommended,
+const globals = require('globals')
+const pluginJs = require('@eslint/js')
+const stylisticJs = require('@stylistic/eslint-plugin-js')
+
+module.exports = [
   {
-    files: ['**/*.js'],
     languageOptions: {
-      sourceType: 'module',
       globals: {
-        ...globals.browser,
-        process: 'readonly',
+        ...globals.node,
+        process: 'readonly', // Node.js global variable
       },
       ecmaVersion: 'latest',
+      sourceType: 'script', // Use 'script' for backend files
     },
+    files: ['backend/**/*.js'],
+    rules: {
+      'no-console': 'warn',
+      //* Avoid Bugs
+      'no-undef': 'error',
+      'semi': ['error', 'never'],
+      'semi-spacing': 'error',
+      //* Best Practices
+      'eqeqeq': 'warn',
+      'no-invalid-this': 'error',
+      'no-return-assign': 'error',
+      'no-unused-expressions': ['error', { 'allowTernary': true }],
+      'no-useless-concat': 'error',
+      'no-useless-return': 'error',
+      'no-constant-condition': 'warn',
+      'no-unused-vars': ['warn', { 'argsIgnorePattern': 'req|res|next|__' }],
+      //* Enhance Readability
+      'indent': ['error', 2, { 'SwitchCase': 1 }],
+      'no-mixed-spaces-and-tabs': 'warn',
+      'space-before-blocks': 'error',
+      'space-in-parens': 'error',
+      'space-infix-ops': 'error',
+      'space-unary-ops': 'error',
+      'quotes': ['error', 'single'],
+      //
+      'max-len': ['error', { 'code': 200 }],
+      'max-lines': ['error', { 'max': 500 }],
+      'keyword-spacing': 'error',
+      'multiline-ternary': ['error', 'never'],
+      'no-mixed-operators': 'error',
+      //
+      'no-multiple-empty-lines': ['error', { 'max': 2, 'maxEOF': 1 }],
+      'no-whitespace-before-property': 'error',
+      'nonblock-statement-body-position': 'error',
+      'object-property-newline': [
+        'error',
+        { 'allowAllPropertiesOnSameLine': true }
+      ],
+    },
+  },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        process: 'readonly', // Recognize browser global variables
+      },
+      ecmaVersion: 'latest',
+      sourceType: 'module', // Use 'module' for frontend files
+    },
+    files: ['**/*.js'],
     plugins: {
-      '@stylistic/js': stylisticJs
+      '@stylistic/js': stylisticJs,
     },
     rules: {
-      '@stylistic/js/indent': [
-        'error',
-        2
-      ],
-      '@stylistic/js/linebreak-style': [
-        'error',
-        'windows'
-      ],
-      '@stylistic/js/quotes': [
-        'error',
-        'single'
-      ],
-      '@stylistic/js/semi': [
-        'error',
-        'never'
-      ],
+      '@stylistic/js/indent': ['error', 2],
+      '@stylistic/js/linebreak-style': ['error', 'windows'],
+      '@stylistic/js/quotes': ['error', 'single'],
+      '@stylistic/js/semi': ['error', 'never'],
       'eqeqeq': 'error',
       'no-trailing-spaces': 'error',
-      'object-curly-spacing': [
-        'error', 'always'
-      ],
-      'arrow-spacing': [
-        'error', { 'before': true, 'after': true },
-      ],
+      'object-curly-spacing': ['error', 'always'],
+      'arrow-spacing': ['error', { 'before': true, 'after': true }],
       'no-console': 'off',
     },
   },
   {
-    ignores: ['dist/**', 'build/**']
-  }
+    ignores: ['dist/**', 'build/**'],
+  },
 ]

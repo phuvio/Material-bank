@@ -6,6 +6,8 @@
     "dev": "concurrently \"nodemon backend/index.js\" \"cd frontend && vite\"",
     "build": "cd frontend && vite build",
     "lint": "eslint .",
+    "lint:frontend": "eslint frontend/**",
+    "lint:backend": "eslint backend/**",
     "preview": "cd frontendt && vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,7 +29,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
     "concurrently": "^9.0.1",
-    "eslint": "^9.12.0",
+    "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",

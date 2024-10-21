@@ -7,6 +7,7 @@ This is a repository for material bank for [ProNeuron Oy](https://proneuron.fi/)
 - [Techstack](/Documentation/techstack.md)
 - [Database schema](/Documentation/database.md)
 - [Page layouts](/Documentation/pagelayouts.md)
+- [Time log](/Documentation/timelog.md)
 
 ## Quickstart
 

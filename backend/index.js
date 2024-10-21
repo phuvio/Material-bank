@@ -10,7 +10,7 @@ const pool = new pg.Pool({
   connectionString,
   ssl: {
     rejectUnauthorized: false,
-  }
+  },
 })
 
 app.use(cors())
@@ -18,7 +18,8 @@ app.use(cors())
 app.get('/api/materials', async (req, res) => {
   try {
     const materials = await pool.query(
-      'SELECT id, name, description, visible, is_URL FROM materials WHERE visible=True')
+      'SELECT id, name, description, visible, is_URL FROM materials WHERE visible=True'
+    )
     res.json(materials.rows)
   } catch (error) {
     console.error(error)
@@ -32,7 +33,8 @@ app.get('/api/materials/:id', async (req, res) => {
   try {
     const result = await pool.query(
       'SELECT id, name, description, visible, is_URL, URL FROM materials WHERE id=$1',
-      [material_id])
+      [material_id]
+    )
     console.log(result)
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Material was not found' })
@@ -45,12 +47,14 @@ app.get('/api/materials/:id', async (req, res) => {
 })
 
 app.post('/api/materials', async (req, res) => {
-  const { name, describtion, user_id, visible, is_URL, URL, material } = req.body
+  const { name, describtion, user_id, visible, is_URL, URL, material } =
+    req.body
   try {
     const result = await pool.query(
       'INSERT INTO materials (name, description, user_id, visible, is_URL, URL, material) \
         VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, describtion, user_id, visible, is_URL, URL, material])
+      [name, describtion, user_id, visible, is_URL, URL, material]
+    )
     console.log(result)
     res.json(result.rows)
   } catch (error) {

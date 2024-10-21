@@ -4,6 +4,7 @@
 
 - Prettier
 - Eslint
+- Prettier
 
 ## Frontend
 

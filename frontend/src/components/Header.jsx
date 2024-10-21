@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 const Header = () => {
-    return (
-        <div>
-            <h2>ProNeuron</h2>
-        </div>
-    )
-};
+  return (
+    <div>
+      <h2>ProNeuron</h2>
+    </div>
+  )
+}
 
-export default Header;
+export default Header

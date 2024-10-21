@@ -2,9 +2,9 @@
 
 ## Timesheet summary
 
-| Week | Hours done | Hours cumulative |
-|------|------------|------------------|
-| 14.-20.10.2024| 26.00 | 26.00 |
+| Week           | Hours done | Hours cumulative |
+| -------------- | ---------- | ---------------- |
+| 14.-20.10.2024 | 26.00      | 26.00            |
 
 ## Detailed timesheets
 

@@ -20,7 +20,7 @@ app.get('/api/materials', async (req, res) => {
     const materials = await pool.query(
       'SELECT id, name, description, visible, is_URL FROM materials WHERE visible=True'
     )
-    res.json(materials.rows)
+    res.json(materials.rows) 
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error retrieving materials' })
@@ -47,13 +47,31 @@ app.get('/api/materials/:id', async (req, res) => {
 })
 
 app.post('/api/materials', async (req, res) => {
-  const { name, describtion, user_id, visible, is_URL, URL, material } =
+  const { name, description, user_id, visible, is_URL, URL, material } =
     req.body
   try {
     const result = await pool.query(
       'INSERT INTO materials (name, description, user_id, visible, is_URL, URL, material) \
-        VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, describtion, user_id, visible, is_URL, URL, material]
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [name, description, user_id, visible, is_URL, URL, material]
+    )
+    console.log(result)
+    res.json(result.rows)
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error: 'Error saving material' })
+  }
+})
+
+app.post('/api/materials/:id', async (req, res) => {
+  const { name, description, user_id, visible, is_URL, URL, material } =
+    req.body
+  const id = req.params
+  try {
+    const result = await pool.query(
+      'UPDATE materials SET name = $1, description = $2, visible = $3, is_URL = $4, URL = $5, material = $6 \
+        WHERE id = $7 RETURNING *',
+      [name, description, visible, is_URL, URL, material, id]
     )
     console.log(result)
     res.json(result.rows)

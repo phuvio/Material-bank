@@ -1,17 +1,10 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const { Sequelize, QueryTypes } = require('sequelize')
+const sequelize = require('./config/database')
+const { QueryTypes } = require('sequelize')
 
 const app = express()
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
-})
 
 app.use(cors())
 

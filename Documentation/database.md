@@ -94,4 +94,6 @@ erDiagram
 
 There are timestamps on materials, users and customers. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for customers are for GDPR purposes. When the customer ends his/her customership with ProNeuron the data is kept 3 years and then deleted. Timestamps for materials have no use at the moment, but are inserted for future use. PostgreSQL triggers are used to update timestamps updated_at.
 
+Sequelize is used for queries. It does not handle database-level triggers. The schema has been run directly to the database. To avoid problems do not use ```sequelize.sync()``` with ```force``` or ```alter``` options.
+
 Here is the [PostgerSQL schema](../backend/dBStartup/schema.sql).

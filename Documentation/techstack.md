@@ -19,7 +19,7 @@
 - Express
 - Cors
 - PostgreSQL
-- Pg
+- Sequelize
 
 ## Project management
 

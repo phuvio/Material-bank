@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import LoadMaterialButton from '../components/Load_material_button'
 
 const Main_page = ({ materials }) => {
 
@@ -14,6 +15,10 @@ const Main_page = ({ materials }) => {
                 <Link to={'/materials/${material.id}'} >{material.name}</Link>
                 <br />
                 {material.description}
+                <br />
+                {material.URL}
+                <br />
+                <LoadMaterialButton url={ material.url } />
               </li>
             )
         )}

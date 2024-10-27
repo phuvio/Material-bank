@@ -11,7 +11,7 @@ const App = () => {
     const apiUrl = import.meta.env.VITE_API_URL 
     
     axios
-      .get('http://localhost:3001/api/materials')
+      .get('${apiUrl}/api/materials')
       .then((response) => {
         console.log(response)
         setMaterials(response.data)

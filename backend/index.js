@@ -63,7 +63,7 @@ app.get('/api/materials/:id/material', async (req, res) => {
     if (result.length === 0) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-    res.json(result.rows)
+    res.json(result)
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error retrieving material' })
@@ -92,7 +92,7 @@ app.post('/api/materials/:id', async (req, res) => {
       { type: QueryTypes.UPDATE }
     )
     console.log(result)
-    res.json(result.rows)
+    res.json(result[0])
   } catch (error) {
     console.log(error)
     res.status(400).json({ error: 'Error saving material' })

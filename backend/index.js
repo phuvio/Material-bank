@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, '../frontend/dist')))
 app.get('/api/materials', async (req, res) => {
   try {
     const materials = await sequelize.query(
-      'SELECT id, name, description, visible, is_URL FROM materials WHERE visible=True',
+      'SELECT id, name, description, visible, is_URL, URL FROM materials WHERE visible=True',
       { type: QueryTypes.SELECT }
     )
     res.json(materials)

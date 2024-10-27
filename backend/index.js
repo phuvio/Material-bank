@@ -22,8 +22,6 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')))
-
 app.get('/api/materials', async (req, res) => {
   try {
     const materials = await sequelize.query(
@@ -103,10 +101,6 @@ app.post('/api/materials/:id', async (req, res) => {
     console.log(error)
     res.status(400).json({ error: 'Error saving material' })
   }
-})
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
 const PORT = process.env.PORT || 3001

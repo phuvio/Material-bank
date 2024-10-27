@@ -18,7 +18,7 @@ jobs:
                 node-version: '20'
 
             - name: Install dependencies for backend
-              run:
+              run: |
                 cd backend
                 npm install
 
@@ -42,7 +42,7 @@ jobs:
                 node-version: '20'
                 
             - name: Install and Build frontend
-              run:
+              run: |
                 cd frontend
                 npm install
                 npm run build

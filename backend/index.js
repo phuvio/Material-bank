@@ -41,8 +41,10 @@ app.get('/api/materials/:id', async (req, res) => {
   try {
     const result = await sequelize.query(
       'SELECT id, name, description, visible, is_URL, URL FROM materials WHERE id=$1',
-      [material_id],
-      { type: QueryTypes.SELECT }
+      {
+        replacements: [material_id],
+        type: QueryTypes.SELECT
+      }
     )
     console.log(result)
     if (result.length === 0) {

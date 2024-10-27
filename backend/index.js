@@ -11,8 +11,8 @@ const app = express()
 app.use(
   cors({
     origin: [
-      'https://material-bank-backend-449a0f56d7d0.herokuapp.com/api/materials',
-      'http://localhost:3000',
+      'https://prone-material-bank.herokuapp.com',
+      'http://localhost:3001',
     ],
   })
 )

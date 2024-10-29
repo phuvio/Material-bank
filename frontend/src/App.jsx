@@ -8,12 +8,12 @@ const App = () => {
   const [materials, setMaterials] = useState([])
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL 
+    const apiUrl = process.env.VITE_API_URL 
     
     console.log('Api Url:', apiUrl)
 
     axios
-      .get('${apiUrl}/api/materials')
+      .get(`${apiUrl}/api/materials`)
       .then((response) => {
         console.log('Api response:', response.data)
         setMaterials(response.data)

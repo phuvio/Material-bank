@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: [
       'https://prone-material-bank.herokuapp.com',
-      'http://localhost:3001',
+      'http://localhost:5173',
     ],
   })
 )
@@ -43,7 +43,7 @@ app.get('/api/materials/:id', async (req, res) => {
       'SELECT id, name, description, visible, is_URL, URL FROM materials WHERE id=$1',
       {
         replacements: [material_id],
-        type: QueryTypes.SELECT
+        type: QueryTypes.SELECT,
       }
     )
     console.log(result)

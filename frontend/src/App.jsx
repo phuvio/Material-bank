@@ -16,7 +16,7 @@ const App = () => {
       .get('${apiUrl}/api/materials')
       .then((response) => {
         console.log(response)
-        setMaterials(response.data)
+        setMaterials('Api response:', response.data)
       })
       .catch((error) => {
         console.log('Error fetching data:', error)

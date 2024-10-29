@@ -15,8 +15,8 @@ const App = () => {
     axios
       .get('${apiUrl}/api/materials')
       .then((response) => {
-        console.log(response)
-        setMaterials('Api response:', response.data)
+        console.log('Api response:', response.data)
+        setMaterials(response.data)
       })
       .catch((error) => {
         console.log('Error fetching data:', error)

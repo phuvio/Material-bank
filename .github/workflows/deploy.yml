@@ -6,7 +6,7 @@ on:
             - main
 
 jobs:
-    deploy-backend:
+    deploy:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
@@ -17,12 +17,13 @@ jobs:
               with:
                 node-version: '20'
 
-            - name: Install dependencies for backend
-              run: |
-                cd backend
-                npm install
+            - name: Install dependencies
+              run: npm install
 
-            - name: Deploy to Heroku (backend)
+            - name: Build frontend
+              run: npm run build
+
+            - name: Deploy to Heroku
               uses: akhileshns/heroku-deploy@v3.13.15
               with:
                 heroku_api_key: ${{ secrets.HEROKU_API_KEY }}

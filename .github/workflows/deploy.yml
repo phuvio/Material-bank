@@ -29,28 +29,3 @@ jobs:
                 heroku_app_name: 'material-bank-backend'
                 heroku_email: ${{ secrets.HEROKU_EMAIL }}
                 usedocker: false
-
-    deploy-frontend:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-                
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: '20'
-                
-            - name: Install and Build frontend
-              run: |
-                cd frontend
-                npm install
-                npm run build
-                
-            - name: Deploy to Heroku (Frontend)
-              uses: akhileshns/heroku-deploy@v3.13.15
-              with:
-                heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-                heroku_app_name: 'prone-materiaali-pankki'
-                heroku_email: ${{ secrets.HEROKU_EMAIL }}
-                usedocker: false

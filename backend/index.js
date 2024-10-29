@@ -17,6 +17,8 @@ app.use(
   })
 )
 
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
+
 app.use((req, res, next) => {
   console.log(`Request Method: ${req.method}, Request URL: ${req.url}`)
   next()
@@ -103,6 +105,10 @@ app.post('/api/materials/:id', async (req, res) => {
     console.log(error)
     res.status(400).json({ error: 'Error saving material' })
   }
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'))
 })
 
 const PORT = process.env.PORT || 3001

@@ -17,7 +17,7 @@ app.use(
   })
 )
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')))
+app.use(express.json())
 
 app.use((req, res, next) => {
   console.log(`Request Method: ${req.method}, Request URL: ${req.url}`)
@@ -106,6 +106,8 @@ app.post('/api/materials/:id', async (req, res) => {
     res.status(400).json({ error: 'Error saving material' })
   }
 })
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))

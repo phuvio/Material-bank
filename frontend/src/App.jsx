@@ -10,6 +10,8 @@ const App = () => {
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL 
     
+    console.log('Api Url:', apiUrl)
+
     axios
       .get('${apiUrl}/api/materials')
       .then((response) => {

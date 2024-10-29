@@ -108,7 +108,7 @@ app.post('/api/materials/:id', async (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'))
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
 const PORT = process.env.PORT || 3001

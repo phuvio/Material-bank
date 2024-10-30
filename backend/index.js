@@ -8,28 +8,23 @@ const Material = require('./models/materials')
 
 const app = express()
 
-app.use(
-  cors({
-    origin: [
-      'https://prone-material-bank.herokuapp.com',
-      'http://localhost:5173',
-    ],
-  })
-)
+let allowedOrigins
+
+if (process.env.NODE_ENV === 'production') {
+  allowedOrigins = ['https://material-bank-backend-449a0f56d7d0.herokuapp.com']
+} else {
+  allowedOrigins = ['http://localhost:5173']
+}
+
+app.use(cors({ origin: allowedOrigins }))
 
 app.use(express.json())
 
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`)
-  next()
-})
-
 app.get('/api/materials', async (req, res) => {
   try {
-    const materials = await sequelize.query(
-      'SELECT id, name, description, visible, is_URL, URL FROM materials',
-      { type: QueryTypes.SELECT }
-    )
+    const materials = await Material.findAll({
+      attributes: ['id', 'name', 'description', 'visible', 'is_url', 'url'],
+    })
     res.json(materials)
   } catch (error) {
     console.error(error)
@@ -38,21 +33,16 @@ app.get('/api/materials', async (req, res) => {
 })
 
 app.get('/api/materials/:id', async (req, res) => {
-  const material_id = req.params.id
-  console.log(material_id)
   try {
-    const result = await sequelize.query(
-      'SELECT id, name, description, visible, is_URL, URL FROM materials WHERE id=$1',
-      {
-        replacements: [material_id],
-        type: QueryTypes.SELECT,
-      }
-    )
+    const result = await Material.findOne({
+      attributes: ['id', 'name', 'description', 'visible', 'is_URL', 'URL'],
+      where: { id: req.params.id },
+    })
     console.log(result)
-    if (result.length === 0) {
+    if (!result) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-    res.json(result.rows)
+    res.json(result)
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error retrieving material' })

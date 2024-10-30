@@ -26,21 +26,30 @@ Material.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    is_URL: {
+    is_url: {
       type: DataTypes.BOOLEAN,
     },
-    URL: {
+    url: {
       type: DataTypes.STRING(120),
     },
     material: {
       type: DataTypes.BLOB,
     },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     sequelize,
-    underscored: true,
-    timestamps: true,
+    underscored: false,
+    timestamps: false,
     modelName: 'Material',
+    tableName: 'materials',
   }
 )
 

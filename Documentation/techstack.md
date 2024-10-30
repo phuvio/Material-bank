@@ -22,6 +22,7 @@
 - Cors
 - PostgreSQL
 - Sequelize
+- Jsonwebtoken
 
 ## Project management
 

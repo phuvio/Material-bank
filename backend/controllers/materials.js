@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const sequelize = require('./config/database')
+const sequelize = require('../config/database')
 const { QueryTypes } = require('sequelize')
 
 const { Material } = require('../models/index')

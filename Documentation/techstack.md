@@ -5,6 +5,8 @@
 - Prettier
 - Eslint
 - Prettier
+- Git Action
+- Heroku
 
 ## Frontend
 

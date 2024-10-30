@@ -1,26 +1,10 @@
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const path = require('path')
+const router = require('express').Router()
 const sequelize = require('./config/database')
 const { QueryTypes } = require('sequelize')
-const { Material, User } = require('./models/index')
 
-const app = express()
+const { Material } = require('../models/index')
 
-let allowedOrigins
-
-if (process.env.NODE_ENV === 'production') {
-  allowedOrigins = ['https://material-bank-backend-449a0f56d7d0.herokuapp.com']
-} else {
-  allowedOrigins = ['http://localhost:5173']
-}
-
-app.use(cors({ origin: allowedOrigins }))
-
-app.use(express.json())
-
-app.get('/api/materials', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const materials = await Material.findAll({
       attributes: ['id', 'name', 'description', 'visible', 'is_url', 'url'],
@@ -32,7 +16,7 @@ app.get('/api/materials', async (req, res) => {
   }
 })
 
-app.get('/api/materials/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const result = await Material.findOne({
       attributes: [
@@ -58,7 +42,7 @@ app.get('/api/materials/:id', async (req, res) => {
   }
 })
 
-app.get('/api/materials/:id/material', async (req, res) => {
+router.get('/:id/material', async (req, res) => {
   try {
     const result = await Material.findOne({
       attributes: ['material'],
@@ -75,7 +59,7 @@ app.get('/api/materials/:id/material', async (req, res) => {
   }
 })
 
-app.post('/api/materials', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const result = await Material.create(req.body)
     console.log(result)
@@ -86,7 +70,7 @@ app.post('/api/materials', async (req, res) => {
   }
 })
 
-app.post('/api/materials/:id', async (req, res) => {
+router.post('/:id', async (req, res) => {
   const { name, description, visible, is_URL, URL, material } = req.body
   const id = req.params.id
   try {
@@ -104,13 +88,4 @@ app.post('/api/materials/:id', async (req, res) => {
   }
 })
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')))
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
-})
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+module.exports = router

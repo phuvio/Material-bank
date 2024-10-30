@@ -35,7 +35,7 @@ app.get('/api/materials', async (req, res) => {
 app.get('/api/materials/:id', async (req, res) => {
   try {
     const result = await Material.findOne({
-      attributes: ['id', 'name', 'description', 'visible', 'is_URL', 'URL'],
+      attributes: ['id', 'name', 'description', 'visible', 'is_url', 'url'],
       where: { id: req.params.id },
     })
     console.log(result)
@@ -50,15 +50,13 @@ app.get('/api/materials/:id', async (req, res) => {
 })
 
 app.get('/api/materials/:id/material', async (req, res) => {
-  const material_id = req.params.id
   try {
-    const result = await sequelize.query(
-      'SELECT material FROM materials WHERE id=$1',
-      [material_id],
-      { type: QueryTypes.SELECT }
-    )
+    const result = await Material.findOne({
+      attributes: ['material'],
+      where: { id: req.params.id },
+    })
     console.log(result)
-    if (result.length === 0) {
+    if (!result) {
       return res.status(404).json({ error: 'Material was not found' })
     }
     res.json(result)

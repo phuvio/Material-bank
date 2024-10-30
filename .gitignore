@@ -11,7 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+
 .env
+.env.production
 
 /frontend/package-lock.json
 

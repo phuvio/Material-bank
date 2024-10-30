@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
-const router = require('express')
+const router = require('express').Router()
 
 const { SECRET } = require('../config/database')
-const User = require('../models/users')
+const { User } = require('../models/index')
 
 router.post('/', async (req, res) => {
   const body = req.body

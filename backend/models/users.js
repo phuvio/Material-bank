@@ -11,9 +11,17 @@ User.init(
       autoIncrement: true,
     },
     username: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.CHAR(64),
       allowNull: false,
       unique: true,
+    },
+    first_name: {
+      type: DataTypes.CHAR(64),
+      allowNull: false,
+    },
+    last_name: {
+      type: DataTypes.CHAR(64),
+      allowNull: false,
     },
     password: {
       type: DataTypes.BLOB,

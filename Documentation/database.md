@@ -24,7 +24,9 @@ erDiagram
 
     Users {
         SERIAL id
-        VARCHAR(20) username
+        VARCHAR(64) username
+        VARCHAR(64) first_name
+        VARCHAR(64) last_name
         VARCHAR password
         INTEGER role
         TIMESTAMP created_at

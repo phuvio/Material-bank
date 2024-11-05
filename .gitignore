@@ -16,6 +16,7 @@ dist-ssr
 .env.production
 
 /frontend/package-lock.json
+Material-bank.code-workspace
 
 # Editor directories and files
 .vscode/*

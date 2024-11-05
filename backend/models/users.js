@@ -43,6 +43,11 @@ User.init(
     },
   },
   {
+    sequelize,
+    underscored: false,
+    timestamps: false,
+    modelName: 'User',
+    tableName: 'users',
     hooks: {
       beforeCreate: async (user) => {
         const saltRounds = 10
@@ -68,13 +73,6 @@ User.init(
         }
       },
     },
-  },
-  {
-    sequelize,
-    underscored: false,
-    timestamps: false,
-    modelName: 'User',
-    tableName: 'users',
   }
 )
 

@@ -16,8 +16,8 @@ module.exports = [
     },
     files: ['backend/**/*.js'],
     rules: {
-      'linebreak-style': ['error', 'windows'],
-      '@stylistic/js/linebreak-style': ['error', 'windows'],
+      'linebreak-style': ['error', 'unix'],
+      '@stylistic/js/linebreak-style': ['error', 'unix'],
       'no-console': 'warn',
       //* Avoid Bugs
       'no-undef': 'error',
@@ -74,7 +74,7 @@ module.exports = [
     },
     rules: {
       '@stylistic/js/indent': ['error', 2],
-      '@stylistic/js/linebreak-style': ['error', 'windows'],
+      '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
       eqeqeq: 'error',

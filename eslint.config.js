@@ -16,7 +16,7 @@ module.exports = [
     },
     files: ['backend/**/*.js'],
     rules: {
-      'linebreak-style': 'off',
+      'linebreak-style': ['error', 'windows'],
       'no-console': 'warn',
       //* Avoid Bugs
       'no-undef': 'error',

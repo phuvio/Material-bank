@@ -85,6 +85,11 @@ module.exports = [
     },
   },
   {
-    ignores: ['dist/**', 'build/**'],
+    ignores: [
+      'frontend/dist/**/*',
+      '!node_modules/',
+      'node_modules/*',
+      'build/**/*',
+    ],
   },
 ]

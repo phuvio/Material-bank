@@ -55,7 +55,7 @@ module.exports = [
         { allowAllPropertiesOnSameLine: true },
       ],
       // Add Prettier rules
-      'prettier/prettier': ['error', { semi: false }],
+      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
     },
   },
   {
@@ -83,7 +83,7 @@ module.exports = [
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
       // Add Prettier rules
-      'prettier/prettier': ['error', { semi: false }],
+      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
     },
   },
   {

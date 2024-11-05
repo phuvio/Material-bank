@@ -23,6 +23,8 @@
 - PostgreSQL
 - Sequelize
 - Jsonwebtoken
+- Bcrypt
+- Crypto
 
 ## Project management
 

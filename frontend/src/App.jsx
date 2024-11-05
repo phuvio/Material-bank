@@ -3,13 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import axios from 'axios'
 import Main_page from './pages/Main_page'
 import MaterialDetails from './pages/MaterialDetails'
+import apiUrl from './config/config'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
-
     axios
       .get(`${apiUrl}/api/materials`)
       .then((response) => {
@@ -24,8 +23,8 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path='/materials/:id' element={<MaterialDetails material={materials[0]} />} />
         <Route path='/materials' element={<Main_page materials={materials} />} />
+        <Route path='/materials/:id' element={<MaterialDetails />} />
         <Route path='/' element={<Navigate to='/materials' replace={true} />} />
       </Routes>
     </div>

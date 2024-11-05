@@ -6,13 +6,13 @@ const Main_page = ({ materials }) => {
 
   return (
     <div>
-      <h3>Valitse materiaali</h3>
+      <h1>Valitse materiaali</h1>
       <ul>
         {materials.map(
           (material) =>
             material.visible && (
               <li key={material.id}>
-                <Link to={'/materials/${material.id}'} >{material.name}</Link>
+                <Link to={`/materials/${material.id}`} >{material.name}</Link>
                 <br />
                 {material.description}
                 <br />

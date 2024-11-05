@@ -4,6 +4,7 @@ const { QueryTypes } = require('sequelize')
 
 const { Material } = require('../models/index')
 
+// get info from all materials, but files
 router.get('/', async (req, res) => {
   try {
     const materials = await Material.findAll({
@@ -16,6 +17,7 @@ router.get('/', async (req, res) => {
   }
 })
 
+// get single material info, but not files
 router.get('/:id', async (req, res) => {
   try {
     const result = await Material.findOne({
@@ -42,6 +44,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+// get file of a single material
 router.get('/:id/material', async (req, res) => {
   try {
     const result = await Material.findOne({

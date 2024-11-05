@@ -1,5 +1,7 @@
 const { Model, DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
+const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 class User extends Model {}
 
@@ -24,7 +26,7 @@ User.init(
       allowNull: false,
     },
     password: {
-      type: DataTypes.BLOB,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     role: {
@@ -38,6 +40,33 @@ User.init(
     updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    hooks: {
+      beforeCreate: async (user) => {
+        const saltRounds = 10
+        user.password = await bcrypt.hash(user.password, saltRounds)
+
+        user.username = crypto
+          .createHash('sha265')
+          .update(user.username)
+          .digest('hex')
+        user.first_name = crypto
+          .createHash('sha265')
+          .update(user.first_name)
+          .digest('hex')
+        user.last_name = crypto
+          .createHash('sha265')
+          .update(user.last_name)
+          .digest('hex')
+      },
+      beforeUpdate: async (user) => {
+        if (user.changed('password')) {
+          const saltRounds = 10
+          user.password = await bcrypt.hash(user.password, saltRounds)
+        }
+      },
     },
   },
   {

@@ -1,4 +1,10 @@
 import { useState, useEffect } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
 import axios from 'axios'
 import Main_page from './pages/Main_page'
 import MaterialDetails from './pages/MaterialDetails'

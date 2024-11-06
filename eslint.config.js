@@ -98,7 +98,7 @@ module.exports = [
       'no-console': 'off',
       'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
       // Add Prettier rules
-      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
+      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto', singleQuote: true }],
     },
   },
   {

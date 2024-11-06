@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
 const bcrypt = require('bcrypt')
+// eslint-disable-next-line no-global-assign, no-redeclare
 const crypto = require('crypto')
 
 class User extends Model {}

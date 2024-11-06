@@ -3,8 +3,10 @@
 const globals = require('globals')
 const pluginJs = require('@eslint/js')
 const stylisticJs = require('@stylistic/eslint-plugin-js')
+const babelParser = require('@babel/eslint-parser')
 
 module.exports = [
+  pluginJs.configs.recommended,
   {
     languageOptions: {
       globals: {
@@ -15,9 +17,12 @@ module.exports = [
       sourceType: 'script', // Use 'script' for backend files
     },
     files: ['backend/**/*.js'],
+    plugins: {
+      '@stylistic/js': stylisticJs,
+      prettier: require('eslint-plugin-prettier'),
+    },
     rules: {
       'linebreak-style': ['error', 'unix'],
-      '@stylistic/js/linebreak-style': ['error', 'unix'],
       'no-console': 'warn',
       //* Avoid Bugs
       'no-undef': 'error',
@@ -66,8 +71,17 @@ module.exports = [
       },
       ecmaVersion: 'latest',
       sourceType: 'module', // Use 'module' for frontend files
+      parser: babelParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        babelOptions: {
+          presets: ['@babel/preset-react'],
+        },
+        requireConfigFile: false, // Avoid requiring a Babel config file
+      },
     },
-    files: ['**/*.js'],
+    files: ['frontend/**/*.jsx'],
     plugins: {
       '@stylistic/js': stylisticJs,
       prettier: require('eslint-plugin-prettier'),
@@ -82,6 +96,7 @@ module.exports = [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
+      'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
       // Add Prettier rules
       'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
     },
@@ -89,9 +104,11 @@ module.exports = [
   {
     ignores: [
       'frontend/dist/**/*',
+      'backend/dist/**/*',
       '!node_modules/',
       'node_modules/*',
       'build/**/*',
+      'eslint.config.js',
     ],
   },
 ]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import apiUrl from '../config/config'
@@ -28,7 +28,7 @@ const MaterialDetails = () => {
     <div>
       <h1>{material.name}</h1>
       <p>{material.description}</p>
-      {material.is_url && <LoadMaterialButton url={ material.url } />}
+      {material.is_url && <LoadMaterialButton url={material.url} />}
       <p>Materiaalin tallentaja: {material.user_id}</p>
     </div>
   )

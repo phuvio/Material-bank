@@ -9,6 +9,7 @@ import {
 import axios from 'axios'
 import Main_page from './pages/Main_page'
 import MaterialDetails from './pages/MaterialDetails'
+import Users from './pages/Users'
 import NewUser from './pages/NewUser'
 import apiUrl from './config/config'
 
@@ -31,7 +32,7 @@ const App = () => {
     <div>
       <div>
         <Link to={'/'}>Materiaalit</Link>
-        <Link to={'/newuser'}>Uusi käyttäjä</Link>
+        <Link to={'/users'}>Käyttäjähallinta</Link>
       </div>
       <Routes>
         <Route
@@ -40,6 +41,8 @@ const App = () => {
         />
         <Route path="/materials/:id" element={<MaterialDetails />} />
         <Route path="/" element={<Navigate to="/materials" replace={true} />} />
+        <Route path="/materials" element={<Main_page />} />
+        <Route path="/users" element={<Users />} />
         <Route path="/newuser" element={<NewUser />} />
       </Routes>
     </div>

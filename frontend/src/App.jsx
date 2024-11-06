@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   BrowserRouter as Router,
+  Link,
   Routes,
   Route,
   Navigate,
@@ -8,6 +9,7 @@ import {
 import axios from 'axios'
 import Main_page from './pages/Main_page'
 import MaterialDetails from './pages/MaterialDetails'
+import NewUser from './pages/NewUser'
 import apiUrl from './config/config'
 
 const App = () => {
@@ -27,6 +29,10 @@ const App = () => {
 
   return (
     <div>
+      <div>
+        <Link to={'/'}>Materiaalit</Link>
+        <Link to={'/newuser'}>Uusi käyttäjä</Link>
+      </div>
       <Routes>
         <Route
           path="/materials"
@@ -34,6 +40,7 @@ const App = () => {
         />
         <Route path="/materials/:id" element={<MaterialDetails />} />
         <Route path="/" element={<Navigate to="/materials" replace={true} />} />
+        <Route path="/newuser" element={<NewUser />} />
       </Routes>
     </div>
   )

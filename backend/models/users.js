@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 class User extends Model {}
 
@@ -53,15 +54,15 @@ User.init(
         user.password = await bcrypt.hash(user.password, saltRounds)
 
         user.username = crypto
-          .createHash('sha265')
+          .createHash('sha256')
           .update(user.username)
           .digest('hex')
         user.first_name = crypto
-          .createHash('sha265')
+          .createHash('sha256')
           .update(user.first_name)
           .digest('hex')
         user.last_name = crypto
-          .createHash('sha265')
+          .createHash('sha256')
           .update(user.last_name)
           .digest('hex')
       },

@@ -1,5 +1,5 @@
 import NewUser from './NewUser'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import apiUrl from '../config/config'
@@ -35,7 +35,7 @@ const Users = () => {
         ))}
       </ul>
       <p>
-        <Link to={`/newuser`}>Luo uusi käyttäjä</Link>
+        <Link to={'/newuser'}>Luo uusi käyttäjä</Link>
       </p>
     </div>
   )

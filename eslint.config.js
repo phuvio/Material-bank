@@ -96,6 +96,7 @@ module.exports = [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
+      quotes: ['error', 'single'],
       'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
       // Add Prettier rules
       'prettier/prettier': ['error', { semi: false, endOfLine: 'auto', singleQuote: true }],

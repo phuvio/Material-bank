@@ -24,13 +24,11 @@ const Users = () => {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            {user.first_name}
-            <br />
-            {user.last_name}
+            {user.first_name} {user.last_name}
             <br />
             {user.username}
             <br />
-            {user.role}
+            {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
           </li>
         ))}
       </ul>

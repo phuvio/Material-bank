@@ -24,10 +24,10 @@ erDiagram
 
     Users {
         SERIAL id
-        VARCHAR(64) username
-        VARCHAR(64) first_name
-        VARCHAR(64) last_name
-        VARCHAR(64) password
+        VARCHAR(128) username
+        VARCHAR(128) first_name
+        VARCHAR(128) last_name
+        VARCHAR(128) password
         INTEGER role
         TIMESTAMP created_at
         TIMESTAMP updated_at

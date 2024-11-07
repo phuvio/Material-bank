@@ -12,6 +12,7 @@ import MaterialDetails from './pages/MaterialDetails'
 import Users from './pages/Users'
 import NewUser from './pages/NewUser'
 import apiUrl from './config/config'
+import NewMaterial from './pages/NewMaterial'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -41,9 +42,9 @@ const App = () => {
         />
         <Route path="/materials/:id" element={<MaterialDetails />} />
         <Route path="/" element={<Navigate to="/materials" replace={true} />} />
-        <Route path="/materials" element={<Main_page />} />
         <Route path="/users" element={<Users />} />
         <Route path="/newuser" element={<NewUser />} />
+        <Route path="/newmaterial" element={<NewMaterial />} />
       </Routes>
     </div>
   )

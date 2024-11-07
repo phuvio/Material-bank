@@ -20,6 +20,9 @@ const Main_page = ({ materials }) => {
             )
         )}
       </ul>
+      <p>
+        <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
+      </p>
     </div>
   )
 }

@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable multiline-ternary */
+
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
@@ -11,11 +14,11 @@ const app = express()
 
 let allowedOrigins
 
-if (process.env.NODE_ENV === 'production') {
-  allowedOrigins = ['https://material-bank-backend-449a0f56d7d0.herokuapp.com']
-} else {
-  allowedOrigins = ['http://localhost:5173']
-}
+process.env.NODE_ENV === 'production'
+  ? (allowedOrigins = [
+    'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
+  ])
+  : (allowedOrigins = ['http://localhost:5173'])
 
 app.use(cors({ origin: allowedOrigins }))
 

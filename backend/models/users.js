@@ -1,40 +1,9 @@
 const { Model, DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
 const bcrypt = require('bcrypt')
-// eslint-disable-next-line no-global-assign, no-redeclare
-const crypto = require('crypto')
-
-// Load encryption key from environment variables
-const encryptionKey = process.env.ENCRYPTION_KEY // Should be 32 bytes for AES-256
-const algorithm = 'aes-256-cbc'
-const iv = crypto.randomBytes(16) // Initialization vector
+const { encrypt, decrypt } = require('../utils/encryptions')
 
 class User extends Model {}
-
-// Helper functions for encryption and decryption
-function encrypt(text) {
-  const cipher = crypto.createCipheriv(
-    algorithm,
-    Buffer.from(encryptionKey, 'hex'),
-    iv
-  )
-  let encrypted = cipher.update(text, 'utf8', 'hex')
-  encrypted += cipher.final('hex')
-  return iv.toString('hex') + ':' + encrypted // Store IV with encrypted data
-}
-
-function decrypt(text) {
-  const [ivHex, encryptedText] = text.split(':')
-  const ivBuffer = Buffer.from(ivHex, 'hex')
-  const decipher = crypto.createDecipheriv(
-    algorithm,
-    Buffer.from(encryptionKey, 'hex'),
-    ivBuffer
-  )
-  let decrypted = decipher.update(encryptedText, 'hex', 'utf8')
-  decrypted += decipher.final('utf8')
-  return decrypted
-}
 
 User.init(
   {
@@ -49,10 +18,13 @@ User.init(
       unique: true,
       get() {
         const encryptedValue = this.getDataValue('username')
-        return encryptedValue ? decrypt(encryptedValue) : null
+        const iv = this.getDataValue('username_iv')
+        return encryptedValue ? decrypt(encryptedValue, iv) : null
       },
       set(value) {
-        this.setDataValue('username', encrypt(value))
+        const { iv, encryptedData } = encrypt(value)
+        this.setDataValue('username', encryptedData)
+        this.setDataValue('username_iv', iv)
       },
     },
     first_name: {
@@ -60,10 +32,13 @@ User.init(
       allowNull: false,
       get() {
         const encryptedValue = this.getDataValue('first_name')
-        return encryptedValue ? decrypt(encryptedValue) : null
+        const iv = this.getDataValue('first_name_iv')
+        return encryptedValue ? decrypt(encryptedValue, iv) : null
       },
       set(value) {
-        this.setDataValue('first_name', encrypt(value))
+        const { iv, encryptedData } = encrypt(value)
+        this.setDataValue('first_name', encryptedData)
+        this.setDataValue('first_name_iv', iv)
       },
     },
     last_name: {
@@ -71,11 +46,26 @@ User.init(
       allowNull: false,
       get() {
         const encryptedValue = this.getDataValue('last_name')
-        return encryptedValue ? decrypt(encryptedValue) : null
+        const iv = this.getDataValue('last_name_iv')
+        return encryptedValue ? decrypt(encryptedValue, iv) : null
       },
       set(value) {
-        this.setDataValue('last_name', encrypt(value))
+        const { iv, encryptedData } = encrypt(value)
+        this.setDataValue('last_name', encryptedData)
+        this.setDataValue('last_name_iv', iv)
       },
+    },
+    username_iv: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    first_name_iv: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    last_name_iv: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING,

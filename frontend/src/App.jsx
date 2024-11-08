@@ -5,6 +5,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from 'react-router-dom'
 import axios from 'axios'
 import Main_page from './pages/Main_page'
@@ -13,21 +14,38 @@ import Users from './pages/Users'
 import NewUser from './pages/NewUser'
 import apiUrl from './config/config'
 import NewMaterial from './pages/NewMaterial'
+import LoginForm from './pages/LoginForm'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [fullname, setFullname] = useState('')
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/api/materials`)
-      .then((response) => {
-        console.log('Api response:', response.data)
-        setMaterials(response.data)
-      })
-      .catch((error) => {
-        console.log('Error fetching data:', error)
-      })
-  }, [])
+    if (isLoggedIn) {
+      axios
+        .get(`${apiUrl}/api/materials`)
+        .then((response) => {
+          console.log('Api response:', response.data)
+          setMaterials(response.data)
+        })
+        .catch((error) => {
+          console.log('Error fetching data:', error)
+        })
+    }
+  }, [isLoggedIn])
+
+  const handleLoginForm = (username) => {
+    setIsLoggedIn(true)
+    setFullname(username)
+    navigate('/')
+  }
+
+  if (!isLoggedIn) {
+    return <LoginForm onLoginSuccess={handleLoginForm} />
+  }
 
   return (
     <div>

@@ -60,7 +60,11 @@ module.exports = [
         { allowAllPropertiesOnSameLine: true },
       ],
       // Add Prettier rules
-      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto' }],
+      'prettier/prettier': ['error', { 
+        semi: false,
+        endOfLine: 'auto',
+        tabWith: 2,
+      }],
     },
   },
   {

@@ -37,46 +37,50 @@ const NewUser = () => {
     <div>
       <h1>Luo uusi käyttäjä</h1>
       <form onSubmit={addUser}>
-        <div>
+        <label>
           Käyttäjätunnus:
           <input
+            type="text"
             name="username"
             value={formData.username}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
+        </label>
+        <label>
           Etunimi:
           <input
+            type="text"
             name="first_name"
             value={formData.first_name}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
+        </label>
+        <label>
           Sukunimi:
           <input
+            type="text"
             name="last_name"
             value={formData.last_name}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
+        </label>
+        <label>
           Salasana:
           <input
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleFormChange}
           />
-        </div>
-        <div>
+        </label>
+        <label>
           Rooli:
           <select name="role" value={formData.role} onChange={handleFormChange}>
             <option value="2">Valitse</option>
             <option value="1">Pääkäyttäjä</option>
             <option value="2">Peruskäyttäjä</option>
           </select>
-        </div>
+        </label>
         <button type="submit">Tallenna</button>
       </form>
     </div>

@@ -2,9 +2,9 @@ const router = require('express').Router()
 const sequelize = require('../config/database')
 const { QueryTypes } = require('sequelize')
 
-const { Material } = require('../models/index')
+const { Material, User } = require('../models/index')
 
-// get info from all materials, but files
+// get info from all materials, but no files
 router.get('/', async (req, res) => {
   try {
     const materials = await Material.findAll({
@@ -17,12 +17,11 @@ router.get('/', async (req, res) => {
   }
 })
 
-// get single material info, but not files
+// get single material info, but not file
 router.get('/:id', async (req, res) => {
   try {
     const result = await Material.findOne({
       attributes: [
-        'id',
         'name',
         'description',
         'user_id',
@@ -31,9 +30,18 @@ router.get('/:id', async (req, res) => {
         'url',
         'updated_at',
       ],
+      include: {
+        model: User,
+        attributes: [
+          'first_name',
+          'last_name',
+          'first_name_iv',
+          'last_name_iv',
+        ],
+      },
       where: { id: req.params.id },
     })
-    console.log(result)
+    console.log(JSON.stringify(result))
     if (!result) {
       return res.status(404).json({ error: 'Material was not found' })
     }
@@ -65,7 +73,7 @@ router.get('/:id/material', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const result = await Material.create(req.body)
-    console.log(result)
+    console.log(JSON.stringify(result))
     res.json(result)
   } catch (error) {
     console.log(error)

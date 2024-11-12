@@ -1,19 +1,22 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import apiUrl from '../config/config'
 
-const NewMaterial = () => {
+const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     user_id: '',
-    is_URL: false,
-    URL: '',
+    visible: true,
+    is_url: false,
+    url: '',
     material: null,
   })
 
+  const navigate = useNavigate()
+
   const handleFormChange = (event) => {
-    console.log(formData)
     const { name, value, type, checked } = event.target
     setFormData((prevData) => ({
       ...prevData,
@@ -23,15 +26,28 @@ const NewMaterial = () => {
 
   const addMaterial = (event) => {
     event.preventDefault()
-    axios.post(`${apiUrl}/api/users`, formData).then((res) => {
-      setFormData({
-        name: '',
-        description: '',
-        user_id: '',
-        is_URL: false,
-        URL: '',
-        material: null,
+    setFormData((prevData) => {
+      const updatedFormData = {
+        ...prevData,
+        user_id: loggedInUser.user_id,
+      }
+      console.log('Lähtee tietokantaan:', updatedFormData)
+      axios.post(`${apiUrl}/api/materials`, updatedFormData).then((res) => {
+        setFormData({
+          name: '',
+          description: '',
+          user_id: '',
+          visible: true,
+          is_url: false,
+          url: '',
+          material: null,
+        })
+        console.log('updatedFormData', updatedFormData)
+        onMaterialAdded()
+        navigate('/')
       })
+
+      return updatedFormData
     })
   }
 
@@ -61,18 +77,18 @@ const NewMaterial = () => {
           Onko materiaali linkki:
           <input
             type="checkbox"
-            name="is_URL"
-            checked={formData.is_URL}
+            name="is_url"
+            checked={formData.is_url}
             onChange={handleFormChange}
           />
         </label>
-        {formData.is_URL && (
+        {formData.is_url && (
           <label>
             Linkki:
             <input
               type="url"
-              name="URL"
-              value={formData.URL}
+              name="url"
+              value={formData.url}
               onChange={handleFormChange}
             />
           </label>

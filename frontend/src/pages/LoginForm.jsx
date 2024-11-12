@@ -15,7 +15,7 @@ const Login = ({ onLoginSuccess }) => {
       })
       if (response.status === 200) {
         const loggedInUser = response.data
-        console.log(loggedInUser)
+        console.log('LoggedInUser in front:', loggedInUser)
         onLoginSuccess(loggedInUser)
       }
       setUsername('')

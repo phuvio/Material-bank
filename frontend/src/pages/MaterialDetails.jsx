@@ -13,7 +13,11 @@ const MaterialDetails = () => {
       .get(`${apiUrl}/api/materials/${id}`)
       .then((res) => {
         console.log('Material details:', res.data)
-        setMaterial(res.data)
+        const date = new Date(res.data.updated_at)
+        const formattedDate = date.toLocaleDateString('fi-FI')
+        const material = res.data
+        material.updated_at = formattedDate
+        setMaterial(material)
       })
       .catch((error) => {
         console.log('Error fetching material:', error)
@@ -29,7 +33,11 @@ const MaterialDetails = () => {
       <h1>{material.name}</h1>
       <p>{material.description}</p>
       {material.is_url && <LoadMaterialButton url={material.url} />}
-      <p>Materiaalin tallentaja: {material.user_id}</p>
+      <p>
+        Materiaalin tallentaja: {material.User.first_name}{' '}
+        {material.User.last_name}
+      </p>
+      <p>Muokattu: {material.updated_at}</p>
     </div>
   )
 }

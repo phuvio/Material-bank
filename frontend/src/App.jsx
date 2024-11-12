@@ -20,6 +20,7 @@ const App = () => {
   const [materials, setMaterials] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loggedInUser, setLoggedInUser] = useState({})
+  const [reloadTrigger, setReloadTrigger] = useState(false)
 
   const navigate = useNavigate()
 
@@ -35,12 +36,17 @@ const App = () => {
           console.log('Error fetching data:', error)
         })
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn, reloadTrigger])
 
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
     setLoggedInUser(loggedInUser)
+    console.log(loggedInUser)
     navigate('/')
+  }
+
+  const handleMaterialAdded = () => {
+    setReloadTrigger((prev) => !prev) // toggle to trigger re-fetch
   }
 
   if (!isLoggedIn) {
@@ -62,7 +68,15 @@ const App = () => {
         <Route path="/" element={<Navigate to="/materials" replace={true} />} />
         <Route path="/users" element={<Users />} />
         <Route path="/newuser" element={<NewUser />} />
-        <Route path="/newmaterial" element={<NewMaterial />} />
+        <Route
+          path="/newmaterial"
+          element={
+            <NewMaterial
+              loggedInUser={loggedInUser}
+              onMaterialAdded={handleMaterialAdded}
+            />
+          }
+        />
       </Routes>
     </div>
   )

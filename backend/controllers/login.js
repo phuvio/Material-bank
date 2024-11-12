@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
       username: user.username,
       user_id: user.id,
     }
+    console.log('logged in user in back:', loggedInUser)
 
     res.status(200).send(loggedInUser)
   } catch (error) {

@@ -19,7 +19,7 @@ import LoginForm from './pages/LoginForm'
 const App = () => {
   const [materials, setMaterials] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [fullname, setFullname] = useState('')
+  const [loggedInUser, setLoggedInUser] = useState({})
 
   const navigate = useNavigate()
 
@@ -37,9 +37,9 @@ const App = () => {
     }
   }, [isLoggedIn])
 
-  const handleLoginForm = (username) => {
+  const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
-    setFullname(username)
+    setLoggedInUser(loggedInUser)
     navigate('/')
   }
 

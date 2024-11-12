@@ -14,8 +14,9 @@ const Login = ({ onLoginSuccess }) => {
         password,
       })
       if (response.status === 200) {
-        const username = response.data.username
-        onLoginSuccess(username)
+        const loggedInUser = response.data
+        console.log(loggedInUser)
+        onLoginSuccess(loggedInUser)
       }
       setUsername('')
       setPassword('')

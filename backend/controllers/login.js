@@ -34,7 +34,6 @@ router.post('/', async (req, res) => {
 
     const token = jwt.sign(userForToken, SECRET)
     */
-   console.log(JSON.stringify(user))
     const fullName = user.first_name + ' ' + user.last_name
     const loggedInUser = {
       fullname: fullName,

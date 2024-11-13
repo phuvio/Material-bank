@@ -15,6 +15,7 @@ import NewUser from './pages/NewUser'
 import apiUrl from './config/config'
 import NewMaterial from './pages/NewMaterial'
 import LoginForm from './pages/LoginForm'
+import LogoutButton from './components/Logout_button'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -25,6 +26,9 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    const savedLoggedInUser = window.localStorage.getItem('loggedInUser')
+    if (savedLoggedInUser) setIsLoggedIn(true)
+    console.log(loggedInUser)
     if (isLoggedIn) {
       axios
         .get(`${apiUrl}/api/materials`)
@@ -57,7 +61,8 @@ const App = () => {
     <div>
       <div>
         <Link to={'/'}>Materiaalit</Link>
-        <Link to={'/users'}>Käyttäjähallinta</Link>
+        {loggedInUser.role === 1 && <Link to={'/users'}>Käyttäjähallinta</Link>}
+        <LogoutButton setIsLoggedIn={setIsLoggedIn} />
       </div>
       <Routes>
         <Route

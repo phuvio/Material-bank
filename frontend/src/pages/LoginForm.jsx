@@ -16,6 +16,10 @@ const Login = ({ onLoginSuccess }) => {
       if (response.status === 200) {
         const loggedInUser = response.data
         console.log('LoggedInUser in front:', loggedInUser)
+        window.localStorage.setItem(
+          'loggedInUser',
+          JSON.stringify(loggedInUser)
+        )
         onLoginSuccess(loggedInUser)
       }
       setUsername('')

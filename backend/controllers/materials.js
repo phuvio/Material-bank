@@ -1,8 +1,10 @@
 const router = require('express').Router()
 const sequelize = require('../config/database')
+const multer = require('multer')
 const { QueryTypes } = require('sequelize')
-
 const { Material, User } = require('../models/index')
+
+const upload = multer()
 
 // get info from all materials, but no files
 router.get('/', async (req, res) => {
@@ -70,9 +72,19 @@ router.get('/:id/material', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', upload.single('material'), async (req, res) => {
   try {
-    const result = await Material.create(req.body)
+    const materialData = {
+      name: req.body.name,
+      description: req.body.description,
+      user_id: req.body.user_id,
+      visible: req.body.visible,
+      is_url: req.body.is_url,
+      url: req.body.url,
+      material: req.file,
+    }
+
+    const result = await Material.create(materialData)
     console.log(JSON.stringify(result))
     res.json(result)
   } catch (error) {

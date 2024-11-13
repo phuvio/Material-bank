@@ -24,15 +24,38 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
     }))
   }
 
+  const handleFileChange = (event) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      material: event.target.files[0],
+    }))
+  }
+
   const addMaterial = (event) => {
     event.preventDefault()
-    setFormData((prevData) => {
-      const updatedFormData = {
-        ...prevData,
-        user_id: loggedInUser.user_id,
-      }
-      console.log('Lähtee tietokantaan:', updatedFormData)
-      axios.post(`${apiUrl}/api/materials`, updatedFormData).then((res) => {
+
+    const formToSubmit = new FormData()
+
+    formToSubmit.append('name', formData.name)
+    formToSubmit.append('description', formData.description)
+    formToSubmit.append('user_id', loggedInUser.user_id)
+    formToSubmit.append('visible', true)
+    formToSubmit.append('is_url', formData.is_url)
+
+    if (formData.is_url) {
+      formToSubmit.append('url', formData.url)
+    } else {
+      formToSubmit.append('material', formData.material)
+    }
+
+    console.log('Lähtee tietokantaan:')
+    formToSubmit.forEach((value, key) => {
+      console.log(key, value)
+    })
+
+    axios
+      .post(`${apiUrl}/api/materials`, formToSubmit)
+      .then((res) => {
         setFormData({
           name: '',
           description: '',
@@ -42,13 +65,13 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
           url: '',
           material: null,
         })
-        console.log('updatedFormData', updatedFormData)
+        console.log('updatedFormData', res.data)
         onMaterialAdded()
         navigate('/')
       })
-
-      return updatedFormData
-    })
+      .catch((error) => {
+        console.log('Error uploading material', error)
+      })
   }
 
   return (
@@ -90,6 +113,15 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
               name="url"
               value={formData.url}
               onChange={handleFormChange}
+            />
+          </label>
+        )}
+        {!formData.is_url && (
+          <label>
+            <input
+              type="file"
+              name="material"
+              onChange={(event) => handleFileChange(event)}
             />
           </label>
         )}

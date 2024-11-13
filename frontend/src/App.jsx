@@ -45,7 +45,6 @@ const App = () => {
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
     setLoggedInUser(loggedInUser)
-    console.log(loggedInUser)
     navigate('/')
   }
 

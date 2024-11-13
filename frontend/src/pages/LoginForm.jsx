@@ -13,18 +13,24 @@ const Login = ({ onLoginSuccess }) => {
         username,
         password,
       })
+
       if (response.status === 200) {
-        const loggedInUser = response.data
-        console.log('LoggedInUser in front:', loggedInUser)
+        const loggedInUser = response.data.loggedInUser
+        const token = response.data.token
+
         window.localStorage.setItem(
           'loggedInUser',
           JSON.stringify(loggedInUser)
         )
+        window.localStorage.setItem('token', token)
         onLoginSuccess(loggedInUser)
+      } else {
+        setUsername('')
+        setPassword('')
       }
+    } catch (exception) {
       setUsername('')
       setPassword('')
-    } catch (exception) {
       console.log(exception)
     }
   }

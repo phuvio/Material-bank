@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     }
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
 
-    if (!user && passwordCorrect) {
+    if (!passwordCorrect) {
       return res.status(401).json({
         error: 'invalid username or password',
       })
@@ -41,9 +41,8 @@ router.post('/', async (req, res) => {
       user_id: user.id,
       role: user.role,
     }
-    console.log('logged in user in back:', loggedInUser)
 
-    res.status(200).send(loggedInUser)
+    res.status(200).send({ token, loggedInUser })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Internal server error' })

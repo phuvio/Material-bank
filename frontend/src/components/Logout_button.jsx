@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 
-const LogoutButton = ({ setIsLoggedIn }) => {
+const LogoutButton = ({ setIsLoggedIn, setLoggedInUser }) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
     window.localStorage.clear()
     setIsLoggedIn(false)
+    setLoggedInUser({})
     navigate('/')
   }
 

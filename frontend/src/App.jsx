@@ -27,8 +27,13 @@ const App = () => {
 
   useEffect(() => {
     const savedLoggedInUser = window.localStorage.getItem('loggedInUser')
-    if (savedLoggedInUser) setIsLoggedIn(true)
-    console.log(loggedInUser)
+    if (savedLoggedInUser) {
+      setIsLoggedIn(true)
+      setLoggedInUser(JSON.parse(savedLoggedInUser))
+    }
+  }, [])
+
+  useEffect(() => {
     if (isLoggedIn) {
       axios
         .get(`${apiUrl}/api/materials`)
@@ -45,6 +50,7 @@ const App = () => {
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
     setLoggedInUser(loggedInUser)
+    window.localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser))
     navigate('/')
   }
 
@@ -61,7 +67,10 @@ const App = () => {
       <div>
         <Link to={'/'}>Materiaalit</Link>
         {loggedInUser.role === 1 && <Link to={'/users'}>Käyttäjähallinta</Link>}
-        <LogoutButton setIsLoggedIn={setIsLoggedIn} />
+        <LogoutButton
+          setIsLoggedIn={setIsLoggedIn}
+          setLoggedInUser={setLoggedInUser}
+        />
       </div>
       <Routes>
         <Route

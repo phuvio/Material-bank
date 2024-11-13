@@ -4,11 +4,11 @@ const LoadMaterialButton = ({ materialId }) => {
   const handleClick = async () => {
     try {
       const response = await axios.get(`/api/material/${materialId}/material`, {
-        responseType: 'Blob',
+        responseType: 'blob',
       })
-
+      console.log('MaterialId', materialId)
       const fileBlob = response.data
-      const blobUrl = window.URL.createObjectURL(new Blob([fileBlob]))
+      const blobUrl = window.URL.createObjectURL(fileBlob)
 
       window.open(blobUrl, '_blank')
     } catch (error) {

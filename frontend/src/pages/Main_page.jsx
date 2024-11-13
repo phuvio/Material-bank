@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import LoadLinkButton from '../components/Load_link_button'
+import LoadMaterialButton from '../components/Load_material_button'
 
 const Main_page = ({ materials }) => {
   return (
@@ -16,6 +17,9 @@ const Main_page = ({ materials }) => {
                 {material.description}
                 <br />
                 {material.is_url && <LoadLinkButton url={material.url} />}
+                {!material.is_url && (
+                  <LoadMaterialButton materialId={material.id} />
+                )}
               </li>
             )
         )}

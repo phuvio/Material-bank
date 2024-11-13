@@ -56,16 +56,17 @@ router.get('/:id', async (req, res) => {
 
 // get file of a single material
 router.get('/:id/material', async (req, res) => {
+  console.log('Request', req.params.id)
   try {
-    const result = await Material.findOne({
-      attributes: ['material'],
-      where: { id: req.params.id },
-    })
-    console.log(result)
-    if (!result) {
+    const material = await Material.findByPk(req.params.materialId)
+
+    if (!material || !material.material) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-    res.json(result)
+
+    res.setHeader('Content-Type', 'application/octet-stream')
+    res.setHeader('Content-Disposition', 'attachment', 'filename=material-file')
+    res.send(material.material)
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error retrieving material' })

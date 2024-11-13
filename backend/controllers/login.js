@@ -26,19 +26,20 @@ router.post('/', async (req, res) => {
         error: 'invalid username or password',
       })
     }
-    /*
+
     const userForToken = {
       username: user.username,
       id: user.id,
     }
 
     const token = jwt.sign(userForToken, SECRET)
-    */
+
     const fullName = user.first_name + ' ' + user.last_name
     const loggedInUser = {
       fullname: fullName,
       username: user.username,
       user_id: user.id,
+      role: user.role,
     }
     console.log('logged in user in back:', loggedInUser)
 

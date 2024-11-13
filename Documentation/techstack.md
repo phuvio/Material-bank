@@ -25,6 +25,7 @@
 - Jsonwebtoken
 - Bcrypt
 - Crypto
+- Multer
 
 ## Project management
 

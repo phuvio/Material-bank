@@ -1,6 +1,6 @@
 # Database
 
-PostgrSQL was chosen, because it offers ACID transactions.
+PostgrSQL was chosen, because it offers ACID transactions. There will only be hundreds of users and materials. Material files are most single page pdf-, word- or powerpoint files. Because of that it was decided to upload material files to Postgres as blobs.
 
 ## Schema
 

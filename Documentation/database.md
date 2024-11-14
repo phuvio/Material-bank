@@ -18,6 +18,7 @@ erDiagram
         BOOLEAN is_URL
         VARCHAR(120) URL
         BYTEA material
+        VARCHAR(255) material_type
         TIMESTAMP created_at
         TIMESTAMP updated_at
     }

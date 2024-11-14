@@ -13,7 +13,6 @@ const MaterialDetails = () => {
     axios
       .get(`${apiUrl}/api/materials/${id}`)
       .then((res) => {
-        console.log('Material details:', res.data)
         const date = new Date(res.data.updated_at)
         const formattedDate = date.toLocaleDateString('fi-FI')
         const material = res.data

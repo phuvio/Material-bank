@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS Materials (
     is_URL BOOLEAN,
     URL VARCHAR(120),
     material BYTEA,
+    material_type VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

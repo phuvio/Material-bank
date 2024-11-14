@@ -58,7 +58,9 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/material', async (req, res) => {
   console.log('Request', req.params.id)
   try {
-    const material = await Material.findByPk(req.params.id)
+    const material = await Material.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'material', 'material_type'],
+    })
     console.log('type of material', typeof material)
     if (!material || !material.material) {
       return res.status(404).json({ error: 'Material was not found' })
@@ -71,7 +73,7 @@ router.get('/:id/material', async (req, res) => {
     )
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="${material.id}.${material.material_type.split('/')[1] || 'bin'}"`
+      `attachment; filename="${material.name}.${material.material_type.split('/')[1] || 'bin'}"`
     )
     res.send(material.material)
   } catch (error) {

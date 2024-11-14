@@ -17,9 +17,7 @@ const Main_page = ({ materials }) => {
                 {material.description}
                 <br />
                 {material.is_url && <LoadLinkButton url={material.url} />}
-                {!material.is_url && (
-                  <LoadMaterialButton materialId={material.id} />
-                )}
+                {!material.is_url && <LoadMaterialButton material={material} />}
               </li>
             )
         )}

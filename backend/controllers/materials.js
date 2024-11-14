@@ -56,17 +56,13 @@ router.get('/:id', async (req, res) => {
 
 // get file of a single material
 router.get('/:id/material', async (req, res) => {
-  console.log('Request', req.params.id)
   try {
     const material = await Material.findByPk(req.params.id, {
       attributes: ['id', 'name', 'material', 'material_type'],
     })
-    console.log('type of material', typeof material)
     if (!material || !material.material) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-    console.log('Material data length:', material.material.length)
-    console.log('Material Type:', material.material_type)
     res.setHeader(
       'Content-Type',
       material.material_type || 'application/octet-stream'

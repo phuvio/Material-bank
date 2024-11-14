@@ -13,11 +13,11 @@ const MaterialDetails = () => {
     axios
       .get(`${apiUrl}/api/materials/${id}`)
       .then((res) => {
-        const date = new Date(res.data.updated_at)
-        const formattedDate = date.toLocaleDateString('fi-FI')
-        const material = res.data
-        material.updated_at = formattedDate
-        setMaterial(material)
+        const data = res.data
+        const date = new Date(data.updated_at)
+        data.id = id
+        data.updated_at = date.toLocaleDateString('fi-FI')
+        setMaterial(data)
       })
       .catch((error) => {
         console.log('Error fetching material:', error)
@@ -25,7 +25,7 @@ const MaterialDetails = () => {
   }, [id])
 
   if (!material) {
-    return <div>Haetaan materiaalia</div>
+    return <div>Haetaan materiaalia...</div>
   }
 
   return (
@@ -33,7 +33,7 @@ const MaterialDetails = () => {
       <h1>{material.name}</h1>
       <p>{material.description}</p>
       {material.is_url && <LoadLinkButton url={material.url} />}
-      {!material.is_url && <LoadMaterialButton materialId={id} />}
+      {!material.is_url && <LoadMaterialButton material={material} />}
       <p>
         Materiaalin tallentaja: {material.User.first_name}{' '}
         {material.User.last_name}

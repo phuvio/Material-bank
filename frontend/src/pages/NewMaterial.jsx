@@ -12,6 +12,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
     is_url: false,
     url: '',
     material: null,
+    material_type: null,
   })
 
   const navigate = useNavigate()
@@ -25,9 +26,11 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
   }
 
   const handleFileChange = (event) => {
+    const file = event.target.files[0]
     setFormData((prevData) => ({
       ...prevData,
-      material: event.target.files[0],
+      material: file,
+      material_type: file.type,
     }))
   }
 
@@ -46,6 +49,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
       formToSubmit.append('url', formData.url)
     } else {
       formToSubmit.append('material', formData.material)
+      formToSubmit.append('material_type', formData.material_type)
     }
 
     console.log('Lähtee tietokantaan:')
@@ -64,6 +68,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
           is_url: false,
           url: '',
           material: null,
+          material_type: null,
         })
         console.log('updatedFormData', res.data)
         onMaterialAdded()

@@ -35,6 +35,9 @@ Material.init(
     material: {
       type: DataTypes.BLOB,
     },
+    material_type: {
+      type: DataTypes.STRING(255),
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

@@ -58,14 +58,21 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/material', async (req, res) => {
   console.log('Request', req.params.id)
   try {
-    const material = await Material.findByPk(req.params.materialId)
-
+    const material = await Material.findByPk(req.params.id)
+    console.log('type of material', typeof material)
     if (!material || !material.material) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-
-    res.setHeader('Content-Type', 'application/octet-stream')
-    res.setHeader('Content-Disposition', 'attachment', 'filename=material-file')
+    console.log('Material data length:', material.material.length)
+    console.log('Material Type:', material.material_type)
+    res.setHeader(
+      'Content-Type',
+      material.material_type || 'application/octet-stream'
+    )
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${material.id}.${material.material_type.split('/')[1] || 'bin'}"`
+    )
     res.send(material.material)
   } catch (error) {
     console.error(error)
@@ -81,8 +88,9 @@ router.post('/', upload.single('material'), async (req, res) => {
       user_id: req.body.user_id,
       visible: req.body.visible,
       is_url: req.body.is_url,
-      url: req.body.url,
-      material: req.file,
+      url: req.body.url ? req.body.url : null,
+      material: req.file ? req.file.buffer : null,
+      material_type: req.file ? req.file.mimetype : null,
     }
 
     const result = await Material.create(materialData)

@@ -6,11 +6,26 @@ const LoadMaterialButton = ({ materialId }) => {
       const response = await axios.get(`/api/material/${materialId}/material`, {
         responseType: 'blob',
       })
+      console.log('Response Data Type:', response.data.constructor.name)
       console.log('MaterialId', materialId)
-      const fileBlob = response.data
-      const blobUrl = window.URL.createObjectURL(fileBlob)
+      console.log('Material response data:', response.data)
+      if (response.data && response.data > 0) {
+        const contentType =
+          response.headers['content-type'] || 'application/octet-stream'
+        const fileBlob = response.data
+        const blobUrl = window.URL.createObjectURL(fileBlob)
 
-      window.open(blobUrl, '_blank')
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = `${materialId}.${contentType.split('/')[1] || 'bin'}`
+        console.log('linkki:', link.download)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(blobUrl)
+      } else {
+        console.log('No file data returned')
+      }
     } catch (error) {
       console.log('Error opening file', error)
     }

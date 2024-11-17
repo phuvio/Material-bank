@@ -4,6 +4,9 @@ const globals = require('globals')
 const pluginJs = require('@eslint/js')
 const stylisticJs = require('@stylistic/eslint-plugin-js')
 const babelParser = require('@babel/eslint-parser')
+const reactPlugin = require('eslint-plugin-react')
+const reactHooksPlugin = require('eslint-plugin-react-hooks')
+const jsxA11yPlugin = require('eslint-plugin-jsx-a11y')
 
 module.exports = [
   pluginJs.configs.recommended,
@@ -63,7 +66,7 @@ module.exports = [
       'prettier/prettier': ['error', { 
         semi: false,
         endOfLine: 'auto',
-        tabWith: 2,
+        tabWidth: 2,
       }],
     },
   },
@@ -79,6 +82,9 @@ module.exports = [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
         babelOptions: {
           presets: ['@babel/preset-react'],
         },
@@ -88,13 +94,19 @@ module.exports = [
     files: ['frontend/**/*.jsx'],
     plugins: {
       '@stylistic/js': stylisticJs,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      'jsx-a11y': jsxA11yPlugin,
       prettier: require('eslint-plugin-prettier'),
     },
     rules: {
+      indent: ['error', 2, { SwitchCase: 1 }],
       '@stylistic/js/indent': ['error', 2],
       '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
+      'react/jsx-uses-react': 'error',
+      'react/jsx-uses-vars': 'error',
       eqeqeq: 'error',
       'no-trailing-spaces': 'error',
       'object-curly-spacing': ['error', 'always'],
@@ -103,7 +115,12 @@ module.exports = [
       quotes: ['error', 'single'],
       'no-unused-vars': ['warn', { 'argsIgnorePattern': '^_' }],
       // Add Prettier rules
-      'prettier/prettier': ['error', { semi: false, endOfLine: 'auto', singleQuote: true }],
+      'prettier/prettier': ['error', {
+        semi: false,
+        tabWidth: 2,
+        endOfLine: 'auto',
+        singleQuote: true
+      }],
     },
   },
   {

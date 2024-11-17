@@ -11,12 +11,15 @@ const Main_page = ({ materials }) => {
     filter.length === 0
       ? materials
       : materials.filter((m) =>
-        m.name.toLowerCase().includes(filter.toLocaleLowerCase())
-      )
+          m.name.toLowerCase().includes(filter.toLocaleLowerCase())
+        )
 
   return (
     <div>
-      <Filter value={filter} handleChange={({ target }) => setFilter(target.value)} />
+      <Filter
+        value={filter}
+        handleChange={({ target }) => setFilter(target.value)}
+      />
       <h1>Materiaalit</h1>
       <ul>
         {materialsToShow.map(

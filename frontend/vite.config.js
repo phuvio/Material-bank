@@ -7,4 +7,9 @@ export default defineConfig({
     // eslint-disable-next-line no-undef
     'process.env': process.env,
   },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './testSetup.js', 
+  },
 })

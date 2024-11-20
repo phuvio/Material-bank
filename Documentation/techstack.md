@@ -35,3 +35,7 @@
 ## Testing
 
 - Nodemon
+- Vitest
+- Jsdom
+- React testing library
+- Jest-dom

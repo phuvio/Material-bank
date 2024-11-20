@@ -9,7 +9,7 @@
     "lint:frontend": "eslint frontend/**",
     "lint:backend": "eslint backend/**",
     "preview": "cd frontend && vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "format": "prettier --write .",
     "start": "node backend/index.js",
     "postinstall": "npm run build"
@@ -35,6 +35,8 @@
     "@babel/preset-react": "^7.25.9",
     "@eslint/js": "^9.12.0",
     "@stylistic/eslint-plugin-js": "^2.10.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
@@ -47,10 +49,12 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.11.0",
+    "jsdom": "^25.0.1",
     "json-serve": "^0.1.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "vite": "^5.4.8"
+    "vite": "^5.4.8",
+    "vitest": "^2.1.5"
   },
   "engines": {
     "node": "20.x"

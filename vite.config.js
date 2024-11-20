@@ -16,6 +16,10 @@ export default defineConfig({
     // eslint-disable-next-line no-undef
     'process.env': process.env,
   },
+  include: [
+    "frontend/**/*.test.{js,jsx,ts,tsx}",
+    "frontend/**/__tests__/*.{js,jsx,ts,tsx}",
+  ],
   test: {
     environment: 'jsdom',
     globals: true,

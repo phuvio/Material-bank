@@ -18,7 +18,7 @@ process.env.NODE_ENV === 'production'
   ? (allowedOrigins = [
     'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
   ])
-  : (allowedOrigins = ['http://localhost:5173'])
+  : (allowedOrigins = ['http://localhost:3001'])
 
 app.use(cors({ origin: allowedOrigins }))
 

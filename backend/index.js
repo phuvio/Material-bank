@@ -28,10 +28,10 @@ app.use('/api/materials', materialsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
-app.use(express.static(path.join(__dirname, './frontend/dist')))
+app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './frontend/dist/index.html'))
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
 })
 
 const PORT = process.env.PORT || 3001

@@ -129,6 +129,7 @@ module.exports = [
       'node_modules/*',
       'build/**/*',
       'eslint.config.js',
+      'testSetup.js',
     ],
   },
 ]

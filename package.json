@@ -10,6 +10,7 @@
     "lint:backend": "eslint backend/**",
     "preview": "cd frontend && vite preview",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "format": "prettier --write .",
     "start": "node backend/index.js",
     "postinstall": "npm run build"
@@ -40,6 +41,7 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",
+    "@vitest/coverage-v8": "^2.1.5",
     "concurrently": "^9.0.1",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
@@ -48,6 +50,7 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "eslint-plugin-vitest-globals": "^1.5.0",
     "globals": "^15.11.0",
     "jsdom": "^25.0.1",
     "json-serve": "^0.1.0",

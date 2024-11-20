@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     proxy: {
       // eslint-disable-next-line no-undef
-      '/api': process.env.NODE_ENV === 'production' ?
-        'https://material-bank-backend-449a0f56d7d0.herokuapp.com/'
+      '/api': process.env.NODE_ENV === 'production'
+        ? 'https://material-bank-backend-449a0f56d7d0.herokuapp.com'
         : 'http://localhost:3001',
     },
   },
@@ -20,8 +20,8 @@ export default defineConfig({
     'process.env': process.env,
   },
   include: [
-    "frontend/**/*.test.{js,jsx,ts,tsx}",
-    "frontend/**/__tests__/*.{js,jsx,ts,tsx}",
+    'frontend/**/*.test.{js,jsx,ts,tsx}',
+    'frontend/**/__tests__/*.{js,jsx,ts,tsx}',
   ],
   test: {
     environment: 'jsdom',

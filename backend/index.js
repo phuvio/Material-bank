@@ -14,7 +14,7 @@ const app = express()
 
 let allowedOrigins
 console.log('Node_env', process.env.NODE_ENV)
-
+console.log('Frontend dist path:', path.join(__dirname, '../frontend/dist'))
 process.env.NODE_ENV === 'production'
   ? (allowedOrigins = [
     'https://material-bank-backend-449a0f56d7d0.herokuapp.com',

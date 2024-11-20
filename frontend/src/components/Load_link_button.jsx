@@ -1,3 +1,5 @@
+import React from 'react'
+
 const LoadLinkButton = ({ url }) => {
   const handleClick = () => {
     window.open(url, '_blank', 'noopener,noreferrer')

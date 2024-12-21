@@ -1,7 +1,6 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
-import axios from 'axios'
 import { vi, describe, afterEach, test, expect } from 'vitest'
 import NewMaterial from './NewMaterial'
 
@@ -12,7 +11,6 @@ vi.mock('axios', () => ({
 }))
 
 // Mock useNavigate from react-router-dom
-const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal()
   return {

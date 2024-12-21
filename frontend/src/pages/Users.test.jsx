@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import Users from './Users'
 import axios from 'axios'
 import { vi, describe, test, expect } from 'vitest'

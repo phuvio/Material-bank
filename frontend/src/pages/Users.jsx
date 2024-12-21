@@ -1,4 +1,3 @@
-import NewUser from './NewUser'
 import { Link } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'

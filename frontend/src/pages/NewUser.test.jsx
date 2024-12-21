@@ -1,6 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import NewUser from './NewUser'
-import axios from 'axios'
 import { vi, describe, test, expect } from 'vitest'
 
 // Mock axios post request

@@ -22,7 +22,7 @@ const NewUser = () => {
 
   const addUser = (event) => {
     event.preventDefault()
-    axios.post(`${apiUrl}/api/users`, formData).then((res) => {
+    axios.post(`${apiUrl}/api/users`, formData).then(() => {
       setFormData({
         username: '',
         first_name: '',

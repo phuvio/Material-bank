@@ -9,6 +9,7 @@
 | 28.10.-3.11.2024  | 8.00       | 44.00            |
 | 4.11.-10.11.2024 | 18.30  | 62.30 |
 | 11.11.-17.11.2024 | 11.15 | 73.45 |
+| 18.11.-24.11.2024 | 4.30 | 78.15 |
 
 ## Detailed timesheets
 
@@ -22,3 +23,4 @@
 ![4.-10.11.2024](/Documentation/Timelogs/pictures/Näyttökuva%202024-11-12%20093604.png)
 ![11.-17.11.2024](/Documentation/Timelogs/pictures/Näyttökuva%202024-11-17%20185922.png)
 ![11.-17.11.2024](/Documentation/Timelogs/pictures/Näyttökuva%202024-11-17%20185950.png)
+![18.-24.11.2024](/Documentation/Timelogs/pictures/Näyttökuva%202024-12-21%20144958.png)

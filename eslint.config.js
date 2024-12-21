@@ -7,6 +7,7 @@ const babelParser = require('@babel/eslint-parser')
 const reactPlugin = require('eslint-plugin-react')
 const reactHooksPlugin = require('eslint-plugin-react-hooks')
 const jsxA11yPlugin = require('eslint-plugin-jsx-a11y')
+const vitestGlobals = require('eslint-plugin-vitest-globals')
 
 module.exports = [
   pluginJs.configs.recommended,
@@ -98,6 +99,7 @@ module.exports = [
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
       prettier: require('eslint-plugin-prettier'),
+      vitest: vitestGlobals,
     },
     rules: {
       '@stylistic/js/linebreak-style': ['error', 'unix'],

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { vi, describe, test, expect } from 'vitest'
 import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
@@ -36,25 +36,29 @@ describe('App Component', () => {
     window.localStorage.setItem('loggedInUser', JSON.stringify(mockUser))
     axios.get.mockResolvedValueOnce({ data: mockMaterials })
 
-    render(
-      <Router>
-        <App />
-      </Router>
-    )
+    await act(async () => {
+      render(
+        <Router>
+          <App />
+        </Router>
+      )
+    })
 
     // Check if the "Käyttäjähallinta" link is visible for users with role 1
     expect(screen.getByText('Käyttäjähallinta')).toBeInTheDocument()
   })
 
-  test('logs out the user and redirects to login page', () => {
+  test('logs out the user and redirects to login page', async () => {
     window.localStorage.setItem('loggedInUser', JSON.stringify(mockUser))
     axios.get.mockResolvedValueOnce({ data: mockMaterials })
 
-    render(
-      <Router>
-        <App />
-      </Router>
-    )
+    await act(async () => {
+      render(
+        <Router>
+          <App />
+        </Router>
+      )
+    })
 
     // Mock the Logout Button click event
     const logoutButton = screen.getByText('Kirjaudu ulos')

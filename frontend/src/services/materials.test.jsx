@@ -5,7 +5,7 @@ import apiUrl from '../config/config'
 
 vi.mock('axios')
 
-describe('apiService', () => {
+describe('materialService', () => {
   afterEach(() => {
     vi.clearAllMocks()
   })
@@ -59,5 +59,26 @@ describe('apiService', () => {
       `${apiUrl}/api/materials`,
       newMaterial
     )
+  })
+
+  test('getSingle fetches a single material successfully', async () => {
+    const mockMaterial = { id: 1, name: 'Material 1' }
+
+    axios.get.mockResolvedValueOnce({ data: mockMaterial })
+
+    const result = await materialService.getSingle(1)
+
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
+    expect(result).toEqual(mockMaterial)
+  })
+
+  test('getSingle handles fetch error', async () => {
+    axios.get.mockRejectedValueOnce(new Error('Material not found'))
+
+    await expect(materialService.getSingle(1)).rejects.toThrow(
+      'Material not found'
+    )
+
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
   })
 })

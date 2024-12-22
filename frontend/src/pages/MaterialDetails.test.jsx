@@ -40,7 +40,9 @@ describe('MaterialDetails Component', () => {
       expect(screen.getByText('Test Material')).toBeInTheDocument()
       expect(screen.getByText('This is a test material.')).toBeInTheDocument()
       expect(screen.getByText('Load Link Button')).toBeInTheDocument()
-      expect(screen.getByText(/Muokattu:/i)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Muokattu: \d{1,2}\.\d{1,2}\.\d{4}/)
+      ).toBeInTheDocument()
       expect(
         screen.getByText(/Materiaalin tallentaja: Pekka Puupää/i)
       ).toBeInTheDocument()
@@ -64,7 +66,7 @@ describe('MaterialDetails Component', () => {
 
     renderWithRouter(<MaterialDetails />)
 
-    // Expect no crash; the error is logged to console (mock it for testing purposes).
+    // Expect loading text when fetch fails
     expect(screen.getByText(/Haetaan materiaalia.../i)).toBeInTheDocument()
   })
 })

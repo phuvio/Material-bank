@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
-import apiUrl from '../config/config'
 import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
+import materialService from '../services/materials'
 
 const MaterialDetails = () => {
   const { id } = useParams()
   const [material, setMaterial] = useState(null)
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/api/materials/${id}`)
-      .then((res) => {
-        const data = res.data
+    materialService
+      .getSingle(id)
+      .then((returnedMaterial) => {
+        const data = returnedMaterial
         const date = new Date(data.updated_at)
         data.id = id
         data.updated_at = date.toLocaleDateString('fi-FI')

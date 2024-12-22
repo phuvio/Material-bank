@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import apiUrl from '../config/config'
+import materialService from '../services/materials'
 
 const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
   const [formData, setFormData] = useState({
@@ -57,9 +56,9 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
       console.log(key, value)
     })
 
-    axios
-      .post(`${apiUrl}/api/materials`, formToSubmit)
-      .then((res) => {
+    materialService
+      .create(formToSubmit)
+      .then(() => {
         setFormData({
           name: '',
           description: '',
@@ -70,7 +69,6 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
           material: null,
           material_type: null,
         })
-        console.log('updatedFormData', res.data)
         onMaterialAdded()
         navigate('/')
       })

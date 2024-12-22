@@ -7,15 +7,14 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom'
-import axios from 'axios'
 import Main_page from './pages/Main_page'
 import MaterialDetails from './pages/MaterialDetails'
 import Users from './pages/Users'
 import NewUser from './pages/NewUser'
-import apiUrl from './config/config'
 import NewMaterial from './pages/NewMaterial'
 import LoginForm from './pages/LoginForm'
 import LogoutButton from './components/Logout_button'
+import materialService from './services/materials'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -35,11 +34,10 @@ const App = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      axios
-        .get(`${apiUrl}/api/materials`)
-        .then((response) => {
-          console.log('Api response:', response.data)
-          setMaterials(response.data)
+      materialService
+        .getAll()
+        .then((initialMaterials) => {
+          setMaterials(initialMaterials)
         })
         .catch((error) => {
           console.log('Error fetching data:', error)

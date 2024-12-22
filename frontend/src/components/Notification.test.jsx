@@ -14,7 +14,7 @@ describe('Notification component', () => {
     render(
       <Notification
         message="Test Message"
-        length={3000}
+        length={100}
         type="message"
         onClose={mockOnClose}
       />
@@ -28,7 +28,7 @@ describe('Notification component', () => {
     render(
       <Notification
         message={null}
-        length={1000}
+        length={100}
         type="message"
         onClose={vi.fn()}
       />
@@ -42,7 +42,7 @@ describe('Notification component', () => {
     render(
       <Notification
         message="Test Message"
-        length={2000}
+        length={100}
         type="message"
         onClose={mockOnClose}
       />
@@ -56,7 +56,7 @@ describe('Notification component', () => {
       () => {
         expect(mockOnClose).toHaveBeenCalledTimes(1)
       },
-      { timeout: 2500 }
+      { timeout: 150 }
     )
   })
 
@@ -65,7 +65,7 @@ describe('Notification component', () => {
     render(
       <Notification
         message="Test Message"
-        length={1000}
+        length={100}
         type="error"
         onClose={mockOnClose}
       />
@@ -80,7 +80,7 @@ describe('Notification component', () => {
     render(
       <Notification
         message="Test Message"
-        length={1000}
+        length={100}
         type="warning"
         onClose={mockOnClose}
       />
@@ -95,13 +95,13 @@ describe('Notification component', () => {
     render(
       <Notification
         message="Test Message"
-        length={1000}
+        length={100}
         type="message"
         onClose={mockOnClose}
       />
     )
     expect(screen.getByText('Test Message').parentElement).toHaveClass(
-      'notifivation-message'
+      'notification-message'
     )
   })
 

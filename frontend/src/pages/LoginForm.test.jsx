@@ -62,7 +62,13 @@ describe('Login Component', () => {
   })
 
   test('does not call onLoginSuccess on failed login', async () => {
-    render(<Login onLoginSuccess={vi.fn()} />)
+    const setNotificationMessage = vi.fn()
+    render(
+      <Login
+        onLoginSuccess={vi.fn()}
+        setNotificationMessage={setNotificationMessage}
+      />
+    )
 
     // Mock failed login response
     loginService.login.mockResolvedValueOnce({
@@ -85,6 +91,9 @@ describe('Login Component', () => {
         username: 'wrong_user',
         password: 'wrong_password',
       })
+      expect(setNotificationMessage).toHaveBeenCalledWith(
+        'Väärä käyttäjätunnus tai salasana'
+      )
     })
 
     // Check if the inputs are cleared after failed login
@@ -93,7 +102,13 @@ describe('Login Component', () => {
   })
 
   test('handles login errors gracefully', async () => {
-    render(<Login onLoginSuccess={vi.fn()} />)
+    const setNotificationMessage = vi.fn()
+    render(
+      <Login
+        onLoginSuccess={vi.fn()}
+        setNotificationMessage={setNotificationMessage}
+      />
+    )
 
     // Mock login error
     loginService.login.mockRejectedValueOnce(new Error('Network Error'))
@@ -112,6 +127,9 @@ describe('Login Component', () => {
     await waitFor(() => {
       expect(usernameInput.value).toBe('')
       expect(passwordInput.value).toBe('')
+      expect(setNotificationMessage).toHaveBeenCalledWith(
+        'Virhe kirjautumisessa'
+      )
     })
   })
 })

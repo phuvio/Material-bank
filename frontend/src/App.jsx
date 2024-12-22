@@ -15,12 +15,16 @@ import NewMaterial from './pages/NewMaterial'
 import LoginForm from './pages/LoginForm'
 import LogoutButton from './components/Logout_button'
 import materialService from './services/materials'
+import Notification from './components/Notification'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loggedInUser, setLoggedInUser] = useState({})
-  const [reloadTrigger, setReloadTrigger] = useState(false)
+  const [materialsReloaded, setMaterialsReloaded] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('message')
+  const [notificationTimeout, setNotificationTimeout] = useState(0)
 
   const navigate = useNavigate()
 
@@ -41,9 +45,21 @@ const App = () => {
         })
         .catch((error) => {
           console.log('Error fetching data:', error)
+          setNotificationMessage('Virhe haettaessa materiaaleja.')
+          setNotificationType('error')
+          setNotificationTimeout(3000)
         })
     }
-  }, [isLoggedIn, reloadTrigger])
+  }, [isLoggedIn, materialsReloaded])
+
+  useEffect(() => {
+    if (notificationTimeout > 0) {
+      const timer = setTimeout(() => {
+        setNotificationMessage(null)
+      }, notificationTimeout)
+      return () => clearTimeout(timer)
+    }
+  }, [notificationTimeout])
 
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
@@ -53,42 +69,71 @@ const App = () => {
   }
 
   const handleMaterialAdded = () => {
-    setReloadTrigger((prev) => !prev) // toggle to trigger re-fetch
+    setMaterialsReloaded((prev) => !prev) // toggle to trigger re-fetch
+    setNotificationMessage('Materiaali lisätty.')
+    setNotificationType('message')
+    setNotificationTimeout(2000)
   }
 
-  if (!isLoggedIn) {
-    return <LoginForm onLoginSuccess={handleLoginForm} />
+  const handleCloseNotification = () => {
+    setNotificationMessage(null)
   }
 
   return (
     <div>
-      <div>
-        <Link to={'/'}>Materiaalit</Link>
-        {loggedInUser.role === 1 && <Link to={'/users'}>Käyttäjähallinta</Link>}
-        <LogoutButton
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type={notificationType}
+          onClose={handleCloseNotification}
         />
-      </div>
-      <Routes>
-        <Route
-          path="/materials"
-          element={<Main_page materials={materials} />}
-        />
-        <Route path="/materials/:id" element={<MaterialDetails />} />
-        <Route path="/" element={<Navigate to="/materials" replace={true} />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/newuser" element={<NewUser />} />
-        <Route
-          path="/newmaterial"
-          element={
-            <NewMaterial
-              loggedInUser={loggedInUser}
-              onMaterialAdded={handleMaterialAdded}
+      )}
+
+      {isLoggedIn ? (
+        <div>
+          <div>
+            <Link to={'/'}>Materiaalit</Link>
+            {loggedInUser.role === 1 && (
+              <Link to={'/users'}>Käyttäjähallinta</Link>
+            )}
+            <LogoutButton
+              setIsLoggedIn={setIsLoggedIn}
+              setLoggedInUser={setLoggedInUser}
             />
-          }
+          </div>
+          <Routes>
+            <Route
+              path="/materials"
+              element={<Main_page materials={materials} />}
+            />
+            <Route path="/materials/:id" element={<MaterialDetails />} />
+            <Route
+              path="/"
+              element={<Navigate to="/materials" replace={true} />}
+            />
+            <Route
+              path="/users"
+              element={isLoggedIn ? <Users /> : <Navigate to="/login" />}
+            />
+            <Route path="/newuser" element={<NewUser />} />
+            <Route
+              path="/newmaterial"
+              element={
+                <NewMaterial
+                  loggedInUser={loggedInUser}
+                  onMaterialAdded={handleMaterialAdded}
+                />
+              }
+            />
+          </Routes>
+        </div>
+      ) : (
+        <LoginForm
+          onLoginSuccess={handleLoginForm}
+          notificationMessage={notificationMessage}
+          setNotificationMessage={setNotificationMessage}
         />
-      </Routes>
+      )}
     </div>
   )
 }

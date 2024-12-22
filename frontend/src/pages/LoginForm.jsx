@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({
+  onLoginSuccess,
+  notificationMessage,
+  setNotificationMessage,
+}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -25,10 +29,17 @@ const Login = ({ onLoginSuccess }) => {
         window.localStorage.setItem('token', token)
         onLoginSuccess(loggedInUser)
       } else {
+        setNotificationMessage('Väärä käyttäjätunnus tai salasana')
         setUsername('')
         setPassword('')
       }
     } catch (exception) {
+      if (exception.response && exception.response.status === 401) {
+        setNotificationMessage('Väärä käyttäjätunnus tai salasana')
+      } else {
+        setNotificationMessage('Virhe kirjautumisessa')
+      }
+
       setUsername('')
       setPassword('')
       console.log(exception)
@@ -61,6 +72,15 @@ const Login = ({ onLoginSuccess }) => {
           <button type="submit">Kirjaudu sisään</button>
         </form>
       </h1>
+
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          type="error"
+          timeout={3000}
+          onClose={() => setNotificationMessage('')}
+        />
+      )}
     </div>
   )
 }

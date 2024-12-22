@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-import apiUrl from '../config/config'
+import userService from '../services/users'
 
 const NewUser = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +21,7 @@ const NewUser = () => {
 
   const addUser = (event) => {
     event.preventDefault()
-    axios.post(`${apiUrl}/api/users`, formData).then(() => {
+    userService.create(formData).then(() => {
       setFormData({
         username: '',
         first_name: '',

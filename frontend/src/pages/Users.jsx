@@ -1,17 +1,15 @@
 import { Link } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import apiUrl from '../config/config'
+import userService from '../services/users'
 
 const Users = () => {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
-    axios
-      .get(`${apiUrl}/api/users`)
-      .then((response) => {
-        console.log('Api response:', response)
-        setUsers(response.data)
+    userService
+      .getAll()
+      .then((returnedUsers) => {
+        setUsers(returnedUsers)
       })
       .catch((error) => {
         console.log('Error fetching data:', error)

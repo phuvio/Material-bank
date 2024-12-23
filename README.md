@@ -28,3 +28,29 @@ npm install
 ```
 
 Installs the required dependencies on both frontend and backend
+
+### Running the program locally
+
+Running the program locally in development mode:
+
+```bash
+git run dev
+```
+
+Running tests:
+
+```bash
+git run test
+```
+
+Running tests with coverage:
+
+```bash
+git run dev:coverage
+```
+
+Running eslint:
+
+```bash
+git run lint
+```

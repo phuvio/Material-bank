@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import '../styles/Notification.css'
 
-const Notification = ({ message, length: timeout, type, onClose }) => {
+const Notification = ({ message, timeout, type, onClose }) => {
   useEffect(() => {
     if (!message) return
 

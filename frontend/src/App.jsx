@@ -84,6 +84,7 @@ const App = () => {
       {notificationMessage && (
         <Notification
           message={notificationMessage}
+          timeout={notificationTimeout}
           type={notificationType}
           onClose={handleCloseNotification}
         />
@@ -128,11 +129,7 @@ const App = () => {
           </Routes>
         </div>
       ) : (
-        <LoginForm
-          onLoginSuccess={handleLoginForm}
-          notificationMessage={notificationMessage}
-          setNotificationMessage={setNotificationMessage}
-        />
+        <LoginForm onLoginSuccess={handleLoginForm} />
       )}
     </div>
   )

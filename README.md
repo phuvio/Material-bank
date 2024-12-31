@@ -34,23 +34,23 @@ Installs the required dependencies on both frontend and backend
 Running the program locally in development mode:
 
 ```bash
-git run dev
+npm run dev
 ```
 
 Running tests:
 
 ```bash
-git run test
+npm run test
 ```
 
 Running tests with coverage:
 
 ```bash
-git run dev:coverage
+npm run test:coverage
 ```
 
 Running eslint:
 
 ```bash
-git run lint
+npm run lint
 ```

@@ -1,9 +1,21 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import NewUser from './NewUser'
-import { vi, describe, test, expect } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
+import * as userService from '../services/users'
 
-// Mock axios post request
-vi.mock('axios')
+beforeEach(() => {
+  vi.clearAllMocks()
+})
+
+vi.mock('../services/users', () => ({
+  create: vi.fn(() => Promise.resolve()),
+}))
+
+vi.mock('../components/Notification', () => ({
+  default: ({ message, type, timeout, onClose }) => {
+    return <div>{message}</div>
+  },
+}))
 
 describe('NewUser Component', () => {
   test('renders form inputs and submit button', () => {
@@ -24,9 +36,67 @@ describe('NewUser Component', () => {
     render(<NewUser />)
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
-    fireEvent.change(usernameInput, { target: { value: 'john_doe' } })
+    fireEvent.change(usernameInput, {
+      target: { value: 'john.doe@proneuron.fi' },
+    })
 
     // Check if the form state is updated
-    expect(usernameInput.value).toBe('john_doe')
+    expect(usernameInput.value).toBe('john.doe@proneuron.fi')
+  })
+
+  test('shows validation errors when form is submitted with missing or invalid data', async () => {
+    render(<NewUser />)
+
+    const submitButton = screen.getByText(/Tallenna/)
+
+    // Submit the form with invalid data
+    fireEvent.click(submitButton)
+
+    // Wait for validation errors to appear
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Käyttäjätunnuksen tulee olla pronen sähköpostiosoite/)
+      ).toBeInTheDocument()
+      expect(screen.getByText(/Etunimi on pakollinen/)).toBeInTheDocument()
+      expect(screen.getByText(/Sukunimi on pakollinen/)).toBeInTheDocument()
+      expect(screen.getByText(/Salasana on pakollinen/)).toBeInTheDocument()
+      expect(screen.getByText(/Rooli on pakollinen/)).toBeInTheDocument()
+    })
+  })
+
+  test('displays failure notification after failed user creation', async () => {
+    userService.create.mockResolvedValue({
+      id: 1,
+      username: 'john.doe@proneuron.fi',
+    })
+
+    render(<NewUser />)
+
+    const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
+    const firstNameInput = screen.getByLabelText(/Etunimi:/)
+    const lastNameInput = screen.getByLabelText(/Sukunimi:/)
+    const passwordInput = screen.getByLabelText(/Salasana:/)
+    const roleSelect = screen.getByLabelText(/Rooli:/)
+
+    // Fill in the form with valid data
+    fireEvent.change(usernameInput, {
+      target: { value: 'doe@proneuron.fi' },
+    })
+    fireEvent.change(firstNameInput, { target: { value: 'John' } })
+    fireEvent.change(lastNameInput, { target: { value: 'Doe' } })
+    fireEvent.change(passwordInput, { target: { value: 'Password123' } })
+    fireEvent.change(roleSelect, { target: { value: '1' } })
+
+    const submitButton = screen.getByText(/Tallenna/)
+
+    // Submit the form
+    fireEvent.click(submitButton)
+
+    // Wait for the notification to appear
+    await waitFor(() => {
+      expect(
+        screen.getByText('Käyttäjän luonti epäonnistui')
+      ).toBeInTheDocument()
+    })
   })
 })

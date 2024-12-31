@@ -1,0 +1,13 @@
+POST http://localhost:3001/api/materials
+Content-Type: application/json
+
+{
+  "name": "Material test",
+  "description": "Material test description",
+  "user_id": 101,
+  "visible": true,
+  "is_url": true,
+  "url": "https://www.google.com",
+  "material": null,
+  "material_type": null
+}

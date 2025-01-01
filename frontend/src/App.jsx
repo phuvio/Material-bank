@@ -16,6 +16,8 @@ import LoginForm from './pages/LoginForm'
 import LogoutButton from './components/Logout_button'
 import materialService from './services/materials'
 import Notification from './components/Notification'
+import TagAdmin from './pages/TagAdmin'
+import NewTag from './pages/NewTag'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -95,7 +97,10 @@ const App = () => {
           <div>
             <Link to={'/'}>Materiaalit</Link>
             {loggedInUser.role === 1 && (
-              <Link to={'/users'}>Käyttäjähallinta</Link>
+              <>
+                <Link to={'/users'}>Käyttäjähallinta</Link>
+                <Link to={'/tagadmin'}>Tagien hallinta</Link>
+              </>
             )}
             <LogoutButton
               setIsLoggedIn={setIsLoggedIn}
@@ -126,6 +131,8 @@ const App = () => {
                 />
               }
             />
+            <Route path="/tagadmin" element={<TagAdmin />} />
+            <Route path="/newtag" element={<NewTag />} />
           </Routes>
         </div>
       ) : (

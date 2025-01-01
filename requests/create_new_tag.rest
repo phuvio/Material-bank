@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/tags
+Content-Type: application/json
+
+{
+  "name": "Tag test",
+  "color": "#e93a55"
+}

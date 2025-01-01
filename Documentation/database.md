@@ -43,7 +43,7 @@ erDiagram
     Tags {
         SERIAL id
         VARCHAR(50) name
-        INTEGER visible
+        VARCHAR(10) color
     }
 
     Tags_Materials {

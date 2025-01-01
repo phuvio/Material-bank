@@ -18,6 +18,7 @@ import materialService from './services/materials'
 import Notification from './components/Notification'
 import TagAdmin from './pages/TagAdmin'
 import NewTag from './pages/NewTag'
+import EditTag from './pages/EditTag'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -132,6 +133,7 @@ const App = () => {
               }
             />
             <Route path="/tagadmin" element={<TagAdmin />} />
+            <Route path="/tags/:id" element={<EditTag />} />
             <Route path="/newtag" element={<NewTag />} />
           </Routes>
         </div>

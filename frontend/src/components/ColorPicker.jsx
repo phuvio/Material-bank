@@ -19,6 +19,7 @@ const ColorPicker = ({ selectedColor, onColorChange }) => {
           <div
             key={color}
             role="button"
+            value={selectedColor}
             onClick={() => handleColorClick(color)}
             style={{
               backgroundColor: color,

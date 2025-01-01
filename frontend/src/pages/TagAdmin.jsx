@@ -43,7 +43,9 @@ const TagAdmin = () => {
       <h1>Tagit</h1>
       <ul>
         {tagsToShow.map((tag) => (
-          <li key={tag.id}>{tag.name}</li>
+          <li key={tag.id}>
+            <Link to={`/tags/${tag.id}`}>{tag.name}</Link>
+          </li>
         ))}
       </ul>
       <p>

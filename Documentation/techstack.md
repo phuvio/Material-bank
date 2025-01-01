@@ -14,9 +14,6 @@
 - Vite
 - Axios
 - React Router
-- Nanoid
-- React-select
-- React-popper
 
 ## Backend
 

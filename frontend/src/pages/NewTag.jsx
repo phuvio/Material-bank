@@ -99,6 +99,7 @@ const NewTag = () => {
           />
           {errors.color && <span>{errors.color}</span>}
         </div>
+        <br></br>
         <button type="submit">Luo tagi</button>
       </form>
 

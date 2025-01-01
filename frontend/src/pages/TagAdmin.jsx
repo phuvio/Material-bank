@@ -35,7 +35,7 @@ const TagAdmin = () => {
 
   return (
     <div>
-      <h2>Etsi tagista</h2>
+      <h2>Etsi tageista</h2>
       <Filter
         value={filter}
         handleChange={({ target }) => setFilter(target.value)}

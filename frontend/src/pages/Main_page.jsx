@@ -16,6 +16,7 @@ const Main_page = ({ materials }) => {
 
   return (
     <div>
+      <h2>Etsi materaaleista</h2>
       <Filter
         value={filter}
         handleChange={({ target }) => setFilter(target.value)}

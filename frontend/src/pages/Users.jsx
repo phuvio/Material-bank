@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import userService from '../services/users'
+import Filter from '../components/Filter'
 
 const Users = () => {
   const [users, setUsers] = useState([])
+  const [filter, setFilter] = useState('')
 
   useEffect(() => {
     userService
@@ -16,10 +18,23 @@ const Users = () => {
       })
   }, [])
 
+  const usersToShow =
+    filter.length === 0
+      ? users
+      : users.filter((u) =>
+          u.first_name.toLowerCase().includes(filter.toLocaleLowerCase())
+        )
+
   return (
     <div>
+      <h2>Etsi käyttäjistä</h2>
+      <Filter
+        value={filter}
+        handleChange={({ target }) => setFilter(target.value)}
+      />
+      <h1>Käyttäjät</h1>
       <ul>
-        {users.map((user) => (
+        {usersToShow.map((user) => (
           <li key={user.id}>
             {user.first_name} {user.last_name}
             <br />

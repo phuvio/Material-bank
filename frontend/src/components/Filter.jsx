@@ -3,7 +3,6 @@ import React from 'react'
 const Filter = ({ value, handleChange }) => {
   return (
     <>
-      Etsi materiaaleista
       <input value={value} onChange={handleChange} />
     </>
   )

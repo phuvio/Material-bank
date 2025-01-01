@@ -24,7 +24,7 @@ describe('TagAdmin Component', () => {
     )
 
     // Check if the initial content is rendered
-    expect(screen.getByText('Etsi tagista')).toBeInTheDocument()
+    expect(screen.getByText('Etsi tageista')).toBeInTheDocument()
     expect(screen.getByText('Tagit')).toBeInTheDocument()
 
     // Wait for the tags to load and be displayed

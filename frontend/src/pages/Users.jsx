@@ -22,7 +22,9 @@ const Users = () => {
     filter.length === 0
       ? users
       : users.filter((u) =>
-          u.first_name.toLowerCase().includes(filter.toLocaleLowerCase())
+          (u.first_name + u.last_name)
+            .toLowerCase()
+            .includes(filter.toLocaleLowerCase())
         )
 
   return (

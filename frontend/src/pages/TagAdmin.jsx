@@ -8,14 +8,22 @@ const TagAdmin = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
+    let isMounted = true
+
     tagService
       .getAll()
       .then((returnedTags) => {
         setTags(returnedTags)
       })
       .catch((error) => {
-        console.log('Error fetching data:', error)
+        if (isMounted) {
+          console.log('Error fetching data:', error)
+        }
       })
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const tagsToShow =

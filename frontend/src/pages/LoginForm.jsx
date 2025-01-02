@@ -50,24 +50,23 @@ const Login = ({ onLoginSuccess }) => {
       <h1>
         Sisäänkirjautuminen:
         <form onSubmit={handleLogin}>
-          <label>
-            Käyttäjätunnus:
-            <input
-              type="text"
-              value={username}
-              name="username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </label>
-          <label>
-            Salasana:
-            <input
-              type="password"
-              value={password}
-              name="password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </label>
+          <label htmlFor="username">Käyttäjätunnus:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            name="username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+          <label htmlFor="password">Salasana:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            name="password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+
           <button type="submit">Kirjaudu sisään</button>
         </form>
       </h1>

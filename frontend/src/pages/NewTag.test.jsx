@@ -60,7 +60,7 @@ describe('NewTag Component', () => {
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
 
     // Select a color by clicking the color square
-    const colorSquare = screen.getAllByRole('button')[0] // Assuming the first color in COLORS is clicked
+    const colorSquare = screen.getAllByRole('button')[0]
     fireEvent.click(colorSquare)
 
     const button = screen.getByRole('button', { name: /luo tagi/i })
@@ -82,7 +82,7 @@ describe('NewTag Component', () => {
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
 
     // Select a color by clicking the color square
-    const colorSquare = screen.getAllByRole('button')[0] // Assuming the first color in COLORS is clicked
+    const colorSquare = screen.getAllByRole('button')[0]
     fireEvent.click(colorSquare)
 
     const button = screen.getByRole('button', { name: /luo tagi/i })
@@ -104,7 +104,7 @@ describe('NewTag Component', () => {
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
 
     // Select a color by clicking the color square
-    const colorSquare = screen.getAllByRole('button')[0] // Assuming the first color in COLORS is clicked
+    const colorSquare = screen.getAllByRole('button')[0]
     fireEvent.click(colorSquare)
 
     const button = screen.getByRole('button', { name: /luo tagi/i })

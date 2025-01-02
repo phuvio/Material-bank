@@ -26,10 +26,12 @@ const NewTag = () => {
     }))
   }
 
-  const addTag = (event) => {
+  const addTag = async (event) => {
     event.preventDefault()
 
-    if (validate()) {
+    const isValid = await validate()
+
+    if (isValid) {
       tagService
         .create(formData)
         .then(() => {
@@ -61,13 +63,31 @@ const NewTag = () => {
     }
   }
 
-  const validate = () => {
+  const checkDuplicateTagName = async (name) => {
+    try {
+      const tags = await tagService.getAll()
+
+      const existingTag = tags.find(
+        (t) => t.name.toLowerCase() === name.toLowerCase()
+      )
+      return existingTag ? true : false
+    } catch (error) {
+      console.error('Error checking duplicate tag name:', error)
+      return false
+    }
+  }
+
+  const validate = async () => {
     const regexTagName = /^[a-zA-ZäöåÄÖÅ0-9\s]+$/
     const errors = {}
     if (!formData.name || !regexTagName.test(formData.name)) {
       errors.name = !formData.name
         ? 'Anna tagille nimi'
         : 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    }
+    const isDuplicate = await checkDuplicateTagName(formData.name)
+    if (isDuplicate) {
+      errors.name = 'Tämän niminen tagi on jo olemassa'
     }
     if (!formData.color) {
       errors.color = 'Valitse väri'

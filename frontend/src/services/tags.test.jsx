@@ -46,9 +46,21 @@ describe('tagsService', () => {
     expect(result).toEqual(updatedTag)
   })
 
+  it('should delete a tag', async () => {
+    const tagId = 1
+    axios.delete.mockResolvedValueOnce({ data: {} })
+    const result = await tagService.remove(tagId)
+    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/tags/${tagId}`)
+    expect(result).toEqual({})
+  })
+
   it('should handle errors gracefully', async () => {
     axios.get.mockRejectedValueOnce(new Error('Network error'))
     await expect(tagService.getAll()).rejects.toThrow('Network error')
     expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/tags`)
+
+    axios.delete.mockRejectedValueOnce(new Error('Network error'))
+    await expect(tagService.remove(1)).rejects.toThrow('Network error')
+    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/tags/1`)
   })
 })

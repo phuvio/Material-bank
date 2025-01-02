@@ -7,7 +7,7 @@ import ColorPicker from '../components/ColorPicker'
 const EditTag = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [tag, setTag] = useState(null)
+  const [tag, setTag] = useState({ name: '', color: '' })
   const [errors, setErrors] = useState({})
   const [notificationMessage, setNotificationMessage] = useState({})
 
@@ -30,10 +30,35 @@ const EditTag = () => {
     setTag({ ...tag, color: color })
   }
 
-  const addTag = (e) => {
+  const handleDeleteTag = (id) => {
+    if (window.confirm('Haluatko varmasti poistaa tämän tagin?')) {
+      tagService
+        .remove(id)
+        .then(() => {
+          setNotificationMessage({
+            message: 'Tagi poistettu onnistuneesti',
+            type: 'message',
+            timeout: 2000,
+          })
+          navigate('/tagadmin')
+        })
+        .catch((error) => {
+          console.log('Error deleting tag:', error)
+          setNotificationMessage({
+            message: 'Tagin poisto epäonnistui',
+            type: 'error',
+            timeout: 3000,
+          })
+        })
+    }
+  }
+
+  const addTag = async (e) => {
     e.preventDefault()
 
-    if (validate()) {
+    const isValid = await validate()
+
+    if (isValid) {
       tagService
         .update(id, tag)
         .then(() => {
@@ -61,11 +86,30 @@ const EditTag = () => {
     }
   }
 
-  const validate = () => {
+  const checkDuplicateTagName = async (name) => {
+    try {
+      const tags = await tagService.getAll()
+
+      const existingTag = tags.find(
+        (t) => t.name.toLowerCase() === name.toLowerCase()
+      )
+      return existingTag ? true : false
+    } catch (error) {
+      console.error('Error checking duplicate tag name:', error)
+      return false
+    }
+  }
+
+  const validate = async () => {
     const regexTagName = /^[a-zA-ZäöåÄÖÅ0-9\s]+$/
     const errors = {}
     if (!regexTagName.test(tag.name)) {
       errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    }
+
+    const isDuplicate = await checkDuplicateTagName(tag.name)
+    if (isDuplicate) {
+      errors.name = 'Tämän niminen tagi on jo olemassa'
     }
     setErrors(errors)
     return Object.keys(errors).length === 0
@@ -100,6 +144,7 @@ const EditTag = () => {
         <br></br>
         <button type="submit">Tallenna tagi</button>
       </form>
+      <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
 
       {notificationMessage.message && (
         <Notification

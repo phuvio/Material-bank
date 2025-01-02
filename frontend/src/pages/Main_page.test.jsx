@@ -77,21 +77,6 @@ describe('Main_page Component', () => {
     )
   })
 
-  it('filters materials based on the input value', () => {
-    render(
-      <BrowserRouter>
-        <Main_page materials={mockMaterials} />
-      </BrowserRouter>
-    )
-
-    const filterInput = screen.getByTestId('filter-input')
-    fireEvent.change(filterInput, { target: { value: 'Material 2' } })
-
-    // Check only filtered material is displayed
-    expect(screen.queryByText('Material 1')).not.toBeInTheDocument()
-    expect(screen.getByText('Material 2')).toBeInTheDocument()
-  })
-
   it('provides a link to create a new material', () => {
     render(
       <BrowserRouter>

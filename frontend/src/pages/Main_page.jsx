@@ -1,18 +1,43 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
+import TagFilter from '../components/TagFilter'
+import tagService from '../services/tags'
 
 const Main_page = ({ materials }) => {
   const [filter, setFilter] = useState('')
+  const [tags, setTags] = useState([])
+  const [selectedTags, setSelectedTags] = useState([])
 
-  const materialsToShow =
-    filter.length === 0
-      ? materials
-      : materials.filter((m) =>
-          m.name.toLowerCase().includes(filter.toLocaleLowerCase())
-        )
+  useEffect(() => {
+    tagService.getAll().then((returnedTags) => {
+      setTags(returnedTags)
+    })
+  }, [])
+
+  const toggleTags = (tagId) => {
+    setSelectedTags((prevSelected) =>
+      prevSelected.includes(tagId)
+        ? prevSelected.filter((id) => id !== tagId)
+        : [...prevSelected, tagId]
+    )
+  }
+
+  const materialsToShow = materials.filter((material) => {
+    console.log(tags)
+    console.log(materials)
+    console.log(selectedTags)
+    const matchesText =
+      filter.length === 0 ||
+      materials.name.toLowerCase().includes(filter.toLocaleLowerCase())
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.some((tagId) => material.tags.includes(tagId))
+
+    return matchesText && matchesTags
+  })
 
   return (
     <div>
@@ -20,6 +45,12 @@ const Main_page = ({ materials }) => {
       <Filter
         value={filter}
         handleChange={({ target }) => setFilter(target.value)}
+      />
+      <h2>Tagit</h2>
+      <TagFilter
+        tags={tags}
+        selectedTags={selectedTags}
+        toggleTags={toggleTags}
       />
       <h1>Materiaalit</h1>
       <ul>

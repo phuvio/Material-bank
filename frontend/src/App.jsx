@@ -44,7 +44,10 @@ const App = () => {
       materialService
         .getAll()
         .then((initialMaterials) => {
-          setMaterials(initialMaterials)
+          const sortedMaterials = initialMaterials.sort((a, b) =>
+            a.name > b.name ? 1 : -1
+          )
+          setMaterials(sortedMaterials)
         })
         .catch((error) => {
           console.log('Error fetching data:', error)

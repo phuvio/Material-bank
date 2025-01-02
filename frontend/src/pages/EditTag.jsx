@@ -35,14 +35,14 @@ const EditTag = () => {
 
     if (validate()) {
       tagService
-        .update(tag)
+        .update(id, tag)
         .then(() => {
           setNotificationMessage({
             message: 'Tagi päivitetty onnistuneesti',
             type: 'message',
             timeout: 2000,
           })
-          navigate('/tags')
+          navigate('/tagadmin')
         })
         .catch((error) => {
           console.log('Error updating tag:', error)
@@ -98,7 +98,7 @@ const EditTag = () => {
           />
         </div>
         <br></br>
-        <button type="submit">Luo tagi</button>
+        <button type="submit">Tallenna tagi</button>
       </form>
 
       {notificationMessage.message && (

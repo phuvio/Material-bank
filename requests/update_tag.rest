@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/tags/1
+Content-Type: application/json
+
+{
+  "name": "new tag name",
+  "color": "#000000"
+}

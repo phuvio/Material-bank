@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.post('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   const { name, color } = req.body
   if (!name) {
     return res.status(400).json({ error: 'Name is required' })

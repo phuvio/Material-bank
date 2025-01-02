@@ -13,7 +13,10 @@ const TagAdmin = () => {
     tagService
       .getAll()
       .then((returnedTags) => {
-        setTags(returnedTags)
+        const sortedTags = returnedTags.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        )
+        setTags(sortedTags)
       })
       .catch((error) => {
         if (isMounted) {

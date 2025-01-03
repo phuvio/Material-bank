@@ -1,10 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import Main_page from './Main_page'
-import LoadLinkButton from '../components/Load_link_button'
-import LoadMaterialButton from '../components/Load_material_button'
-import Filter from '../components/Filter'
+import tagService from '../services/tags'
 
 // Mock components for isolated testing
 vi.mock('../components/Load_link_button', () => ({
@@ -30,6 +28,28 @@ vi.mock('../components/Filter', () => ({
   ),
 }))
 
+vi.mock('../components/TagFilter', () => ({
+  default: ({ tags, selectedTags, toggleTags }) => (
+    <div data-testid="tag-filter">
+      {tags.map((tag) => (
+        <button
+          key={tag.id}
+          data-testid={`tag-button-${tag.id}`}
+          onClick={() => toggleTags(tag.id)}
+        >
+          {tag.name}
+        </button>
+      ))}
+    </div>
+  ),
+}))
+
+vi.mock('../services/tags', () => ({
+  default: {
+    getAll: vi.fn(),
+  },
+}))
+
 describe('Main_page Component', () => {
   const mockMaterials = [
     {
@@ -38,17 +58,43 @@ describe('Main_page Component', () => {
       visible: true,
       is_url: true,
       url: 'http://example.com',
+      tags: [1, 2],
     },
-    { id: 2, name: 'Material 2', visible: true, is_url: false },
-    { id: 3, name: 'Hidden Material', visible: false, is_url: false },
+    {
+      id: 2,
+      name: 'Material 2',
+      visible: true,
+      is_url: false,
+      tags: [2],
+    },
+    {
+      id: 3,
+      name: 'Hidden Material',
+      visible: false,
+      is_url: false,
+      tags: [],
+    },
   ]
 
-  it('renders the filter input and materials list', () => {
+  const mockTags = [
+    { id: 1, name: 'Tag 1' },
+    { id: 2, name: 'Tag 2' },
+  ]
+
+  beforeEach(() => {
+    vi.resetAllMocks()
+    tagService.getAll.mockResolvedValue(mockTags)
+  })
+
+  it('renders the filter input and materials list', async () => {
     render(
       <BrowserRouter>
         <Main_page materials={mockMaterials} />
       </BrowserRouter>
     )
+
+    // Wait for tags to load
+    await screen.findByTestId('tag-filter')
 
     // Check Filter input
     expect(screen.getByTestId('filter-input')).toBeInTheDocument()
@@ -59,22 +105,54 @@ describe('Main_page Component', () => {
     expect(screen.queryByText('Hidden Material')).not.toBeInTheDocument()
   })
 
-  it('renders the correct buttons for materials', () => {
+  it('renders available tags', async () => {
     render(
       <BrowserRouter>
         <Main_page materials={mockMaterials} />
       </BrowserRouter>
     )
 
-    // Check LoadLinkButton for URL material
-    expect(screen.getByTestId('load-link-button')).toHaveTextContent(
-      'Load http://example.com'
+    // Wait for tags to load
+    const tagButtons = await screen.findAllByTestId(/tag-button-/)
+    expect(tagButtons).toHaveLength(mockTags.length)
+    mockTags.forEach((tag) => {
+      expect(screen.getByText(tag.name)).toBeInTheDocument()
+    })
+  })
+
+  it('filters materials by text', async () => {
+    render(
+      <BrowserRouter>
+        <Main_page materials={mockMaterials} />
+      </BrowserRouter>
     )
 
-    // Check LoadMaterialButton for non-URL material
-    expect(screen.getByTestId('load-material-button')).toHaveTextContent(
-      'Load Material 2'
+    // Wait for tags to load
+    await screen.findByTestId('tag-filter')
+
+    // Simulate typing in the filter
+    const input = screen.getByTestId('filter-input')
+    fireEvent.change(input, { target: { value: 'Material 2' } })
+
+    // Check filtered materials
+    expect(screen.queryByText('Material 1')).not.toBeInTheDocument()
+    expect(screen.getByText('Material 2')).toBeInTheDocument()
+  })
+
+  it('filters materials by tags', async () => {
+    render(
+      <BrowserRouter>
+        <Main_page materials={mockMaterials} />
+      </BrowserRouter>
     )
+
+    // Simulate clicking on a tag
+    const tagButton = await screen.findByTestId('tag-button-1')
+    fireEvent.click(tagButton)
+
+    // Expect materials matching the tag to be shown
+    expect(screen.getByText('Material 1')).toBeInTheDocument()
+    expect(screen.queryByText('Material 2')).not.toBeInTheDocument()
   })
 
   it('provides a link to create a new material', () => {

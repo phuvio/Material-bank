@@ -108,7 +108,7 @@ const NewUser = () => {
     <div>
       <h1>Luo uusi käyttäjä</h1>
       <form onSubmit={addUser}>
-        <label for="username">Käyttäjätunnus:</label>
+        <label htmlFor="username">Käyttäjätunnus:</label>
         <input
           id="username"
           type="text"
@@ -117,7 +117,7 @@ const NewUser = () => {
           onChange={handleFormChange}
         />
         {errors.username && <p>{errors.username}</p>}
-        <label for="first_name">Etunimi:</label>
+        <label htmlFor="first_name">Etunimi:</label>
         <input
           id="first_name"
           type="text"
@@ -126,7 +126,7 @@ const NewUser = () => {
           onChange={handleFormChange}
         />
         {errors.first_name && <p>{errors.first_name}</p>}
-        <label for="last_name">Sukunimi:</label>
+        <label htmlFor="last_name">Sukunimi:</label>
         <input
           id="last_name"
           type="text"
@@ -135,7 +135,7 @@ const NewUser = () => {
           onChange={handleFormChange}
         />
         {errors.last_name && <p>{errors.last_name}</p>}
-        <label for="password">Salasana:</label>
+        <label htmlFor="password">Salasana:</label>
         <input
           id="password"
           type="password"
@@ -144,7 +144,7 @@ const NewUser = () => {
           onChange={handleFormChange}
         />
         {errors.password && <p>{errors.password}</p>}
-        <label for="role">Rooli:</label>
+        <label htmlFor="role">Rooli:</label>
         <select
           id="role"
           name="role"

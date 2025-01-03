@@ -2,7 +2,7 @@ const router = require('express').Router()
 const sequelize = require('../config/database')
 const multer = require('multer')
 const { QueryTypes } = require('sequelize')
-const { Material, User } = require('../models/index')
+const { Material, User, Tag } = require('../models/index')
 
 const upload = multer()
 
@@ -11,6 +11,9 @@ router.get('/', async (req, res) => {
   try {
     const materials = await Material.findAll({
       attributes: ['id', 'name', 'description', 'visible', 'is_url', 'url'],
+      include: {
+        model: Tag,
+      },
     })
     res.json(materials)
   } catch (error) {

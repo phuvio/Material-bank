@@ -26,15 +26,13 @@ const Main_page = ({ materials }) => {
   }
 
   const materialsToShow = materials.filter((material) => {
-    console.log(tags)
-    console.log(materials)
-    console.log(selectedTags)
     const matchesText =
       filter.length === 0 ||
-      materials.name.toLowerCase().includes(filter.toLocaleLowerCase())
+      material.name.toLowerCase().includes(filter.toLocaleLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.some((tagId) => material.tags.includes(tagId))
+      (material.tags &&
+        selectedTags.some((tagId) => material.tags.includes(tagId)))
 
     return matchesText && matchesTags
   })
@@ -46,7 +44,7 @@ const Main_page = ({ materials }) => {
         value={filter}
         handleChange={({ target }) => setFilter(target.value)}
       />
-      <h2>Tagit</h2>
+      <br></br>
       <TagFilter
         tags={tags}
         selectedTags={selectedTags}

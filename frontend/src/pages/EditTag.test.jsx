@@ -85,7 +85,7 @@ describe('EditTag Component', () => {
 
     // Mock color change (assuming ColorPicker is a component that receives color as prop)
     const colorButtons = screen.getAllByRole('button')
-    expect(colorButtons).toHaveLength(34)
+    expect(colorButtons).toHaveLength(34) // Adjust depending on the actual number of color buttons
 
     // Interact with the buttons and submit the form
     fireEvent.click(colorButtons[0])

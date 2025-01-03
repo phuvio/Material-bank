@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import tagService from '../services/tags'
 import Notification from '../components/Notification'
 import ColorPicker from '../components/ColorPicker'
+import validateTag from '../utils/validations'
 
 const EditTag = () => {
   const { id } = useParams()
@@ -56,9 +57,10 @@ const EditTag = () => {
   const addTag = async (e) => {
     e.preventDefault()
 
-    const isValid = await validate()
+    const validationErrors = await validateTag(tag)
+    setErrors(validationErrors)
 
-    if (isValid) {
+    if (Object.keys(validationErrors).length === 0) {
       tagService
         .update(id, tag)
         .then(() => {
@@ -84,35 +86,6 @@ const EditTag = () => {
         timeout: 3000,
       })
     }
-  }
-
-  const checkDuplicateTagName = async (name) => {
-    try {
-      const tags = await tagService.getAll()
-
-      const existingTag = tags.find(
-        (t) => t.name.toLowerCase() === name.toLowerCase()
-      )
-      return existingTag ? true : false
-    } catch (error) {
-      console.error('Error checking duplicate tag name:', error)
-      return false
-    }
-  }
-
-  const validate = async () => {
-    const regexTagName = /^[a-zA-ZäöåÄÖÅ0-9\s]+$/
-    const errors = {}
-    if (!regexTagName.test(tag.name)) {
-      errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
-    }
-
-    const isDuplicate = await checkDuplicateTagName(tag.name)
-    if (isDuplicate) {
-      errors.name = 'Tämän niminen tagi on jo olemassa'
-    }
-    setErrors(errors)
-    return Object.keys(errors).length === 0
   }
 
   if (tag === null) {

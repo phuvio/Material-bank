@@ -59,19 +59,19 @@ router.put('/:id', async (req, res) => {
     console.error(error)
     res.status(500).json({ error: 'Error updating tag' })
   }
+})
 
-  router.delete('/:id', async (req, res) => {
-    try {
-      const result = await Tag.destroy({ where: { id: req.params.id } })
-      if (result === 0) {
-        return res.status(404).json({ error: 'Tag not found' })
-      }
-      res.json({ message: 'Tag deleted successfully' })
-    } catch (error) {
-      console.error(error)
-      res.status(500).json({ error: 'Error deleting tag' })
+router.delete('/:id', async (req, res) => {
+  try {
+    const result = await Tag.destroy({ where: { id: req.params.id } })
+    if (result === 0) {
+      return res.status(404).json({ error: 'Tag not found' })
     }
-  })
+    res.json({ message: 'Tag deleted successfully' })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Error deleting tag' })
+  }
 })
 
 module.exports = router

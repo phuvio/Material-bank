@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import tagService from '../services/tags'
 import Notification from '../components/Notification'
 import ColorPicker from '../components/ColorPicker'
+import validateTag from '../utils/validations'
 
 const NewTag = () => {
   const [formData, setFormData] = useState({
@@ -29,9 +30,10 @@ const NewTag = () => {
   const addTag = async (event) => {
     event.preventDefault()
 
-    const isValid = await validate()
+    const validationErrors = await validateTag(formData)
+    setErrors(validationErrors)
 
-    if (isValid) {
+    if (Object.keys(validationErrors).length === 0) {
       tagService
         .create(formData)
         .then(() => {
@@ -61,39 +63,6 @@ const NewTag = () => {
         timeout: 3000,
       })
     }
-  }
-
-  const checkDuplicateTagName = async (name) => {
-    try {
-      const tags = await tagService.getAll()
-
-      const existingTag = tags.find(
-        (t) => t.name.toLowerCase() === name.toLowerCase()
-      )
-      return existingTag ? true : false
-    } catch (error) {
-      console.error('Error checking duplicate tag name:', error)
-      return false
-    }
-  }
-
-  const validate = async () => {
-    const regexTagName = /^[a-zA-ZäöåÄÖÅ0-9\s]+$/
-    const errors = {}
-    if (!formData.name || !regexTagName.test(formData.name)) {
-      errors.name = !formData.name
-        ? 'Anna tagille nimi'
-        : 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
-    }
-    const isDuplicate = await checkDuplicateTagName(formData.name)
-    if (isDuplicate) {
-      errors.name = 'Tämän niminen tagi on jo olemassa'
-    }
-    if (!formData.color) {
-      errors.color = 'Valitse väri'
-    }
-    setErrors(errors)
-    return Object.keys(errors).length === 0
   }
 
   return (

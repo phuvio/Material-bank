@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import userService from '../services/users'
 import Notification from '../components/Notification'
+import userService from '../services/users'
+import useNotification from '../utils/useNotification'
 
 const NewUser = () => {
   const [formData, setFormData] = useState({
@@ -11,10 +12,10 @@ const NewUser = () => {
     role: '',
   })
   const [errors, setErrors] = useState({})
-  const [notificationMessage, setNotificationMessage] = useState({})
+
+  const { message, type, showNotification } = useNotification()
 
   const handleFormChange = (event) => {
-    console.log(event.target.value)
     const { name, value } = event.target
     setFormData((prevData) => ({
       ...prevData,
@@ -26,11 +27,7 @@ const NewUser = () => {
     event.preventDefault()
 
     if (validate()) {
-      setNotificationMessage({
-        message: 'Käyttäjä luotu onnistuneesti',
-        type: 'message',
-        timeout: 2000,
-      })
+      showNotification('Käyttäjä luotu onnistuneesti', 'message', 2000)
       userService.create(formData).then(() => {
         setFormData({
           username: '@proneuron.fi',
@@ -42,18 +39,10 @@ const NewUser = () => {
       })
       setErrors({}).catch((error) => {
         console.log('Error creating user:', error)
-        setNotificationMessage({
-          message: 'Käyttäjän luonti epäonnistui',
-          type: 'error',
-          timeout: 3000,
-        })
+        showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
       })
     } else {
-      setNotificationMessage({
-        message: 'Käyttäjän luonti epäonnistui',
-        type: 'error',
-        timeout: 3000,
-      })
+      showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
     }
   }
 
@@ -159,14 +148,7 @@ const NewUser = () => {
         <button type="submit">Tallenna</button>
       </form>
 
-      {notificationMessage.message && (
-        <Notification
-          message={notificationMessage.message}
-          type={notificationMessage.type}
-          timeout={notificationMessage.timeout}
-          onClose={() => setNotificationMessage({})}
-        />
-      )}
+      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
 import Notification from '../components/Notification'
+import useNotification from '../utils/useNotification'
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notificationMessage, setNotificationMessageLocal] = useState('')
+
+  const { message, type, showNotification } = useNotification()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -28,15 +30,15 @@ const Login = ({ onLoginSuccess }) => {
         onLoginSuccess(loggedInUser)
       } else {
         console.log('Error logging in:', response)
-        setNotificationMessageLocal('Väärä käyttäjätunnus tai salasana')
+        showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
         setUsername('')
         setPassword('')
       }
     } catch (exception) {
       if (exception.response && exception.response.status === 401) {
-        setNotificationMessageLocal('Väärä käyttäjätunnus tai salasana')
+        showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
       } else {
-        setNotificationMessageLocal('Virhe kirjautumisessa')
+        showNotification('Virhe kirjautumisessa', 'error', 3000)
       }
 
       setUsername('')
@@ -71,14 +73,7 @@ const Login = ({ onLoginSuccess }) => {
         </form>
       </h1>
 
-      {notificationMessage && (
-        <Notification
-          message={notificationMessage}
-          type="error"
-          timeout={3000}
-          onClose={() => setNotificationMessageLocal('')}
-        />
-      )}
+      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

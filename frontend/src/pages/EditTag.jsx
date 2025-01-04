@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import tagService from '../services/tags'
 import Notification from '../components/Notification'
+import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/validations'
+import useNotification from '../utils/useNotification'
 
 const EditTag = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [tag, setTag] = useState({ name: '', color: '' })
   const [errors, setErrors] = useState({})
-  const [notificationMessage, setNotificationMessage] = useState({})
+
+  const { message, type, showNotification } = useNotification()
 
   useEffect(() => {
     tagService
@@ -36,20 +38,12 @@ const EditTag = () => {
       tagService
         .remove(id)
         .then(() => {
-          setNotificationMessage({
-            message: 'Tagi poistettu onnistuneesti',
-            type: 'message',
-            timeout: 2000,
-          })
+          showNotification('Tagi poistettu onnistuneesti', 'message', 2000)
           navigate('/tagadmin')
         })
         .catch((error) => {
           console.log('Error deleting tag:', error)
-          setNotificationMessage({
-            message: 'Tagin poisto epäonnistui',
-            type: 'error',
-            timeout: 3000,
-          })
+          showNotification('Tagin poisto epäonnistui', 'error', 3000)
         })
     }
   }
@@ -64,27 +58,15 @@ const EditTag = () => {
       tagService
         .update(id, tag)
         .then(() => {
-          setNotificationMessage({
-            message: 'Tagi päivitetty onnistuneesti',
-            type: 'message',
-            timeout: 2000,
-          })
+          showNotification('Tagi päivitetty onnistuneesti', 'message', 2000)
           navigate('/tagadmin')
         })
         .catch((error) => {
           console.log('Error updating tag:', error)
-          setNotificationMessage({
-            message: 'Tagin päivitys epäonnistui',
-            type: 'error',
-            timeout: 3000,
-          })
+          showNotification('Tagin päivitys epäonnistui', 'error', 3000)
         })
     } else {
-      setNotificationMessage({
-        message: 'Tagin päivitys epäonnistui',
-        type: 'error',
-        timeout: 3000,
-      })
+      showNotification('Tagin päivitys epäonnistui', 'error', 3000)
     }
   }
 
@@ -119,14 +101,7 @@ const EditTag = () => {
       </form>
       <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
 
-      {notificationMessage.message && (
-        <Notification
-          message={notificationMessage.message}
-          type={notificationMessage.type}
-          timeout={notificationMessage.timeout}
-          onClose={() => setNotificationMessage({})}
-        />
-      )}
+      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

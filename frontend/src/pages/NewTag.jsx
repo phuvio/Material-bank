@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import tagService from '../services/tags'
 import Notification from '../components/Notification'
+import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/validations'
+import useNotification from '../utils/useNotification'
 
 const NewTag = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,8 @@ const NewTag = () => {
     color: '',
   })
   const [errors, setErrors] = useState({})
-  const [notificationMessage, setNotificationMessage] = useState({})
+
+  const { message, type, showNotification } = useNotification()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -37,11 +39,7 @@ const NewTag = () => {
       tagService
         .create(formData)
         .then(() => {
-          setNotificationMessage({
-            message: 'Tagi luotu onnistuneesti',
-            type: 'message',
-            timeout: 2000,
-          })
+          showNotification('Tagi luotu onnistuneesti', 'message', 2000)
           setFormData({
             name: '',
             color: '',
@@ -50,18 +48,10 @@ const NewTag = () => {
         })
         .catch((error) => {
           console.log('Error creating tag:', error)
-          setNotificationMessage({
-            message: 'Tagin luonti epäonnistui',
-            type: 'error',
-            timeout: 3000,
-          })
+          showNotification('Tagin luonti epäonnistui', 'error', 3000)
         })
     } else {
-      setNotificationMessage({
-        message: 'Tagin luonti epäonnistui',
-        type: 'error',
-        timeout: 3000,
-      })
+      showNotification('Tagin luonti epäonnistui', 'error', 3000)
     }
   }
 
@@ -92,14 +82,7 @@ const NewTag = () => {
         <button type="submit">Luo tagi</button>
       </form>
 
-      {notificationMessage.message && (
-        <Notification
-          message={notificationMessage.message}
-          type={notificationMessage.type}
-          timeout={notificationMessage.timeout}
-          onClose={() => setNotificationMessage({})}
-        />
-      )}
+      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

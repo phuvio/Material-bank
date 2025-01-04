@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Notification from '../components/Notification'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
-import validateTag from '../utils/validations'
+import validateTag from '../utils/tagValidations'
 import useNotification from '../utils/useNotification'
 
 const NewTag = () => {

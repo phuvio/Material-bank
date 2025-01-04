@@ -1,4 +1,5 @@
 import tagService from '../services/tags'
+import { regexName } from './validationRegex'
 
 const checkDuplicateTagName = async (name) => {
   try {
@@ -14,13 +15,12 @@ const checkDuplicateTagName = async (name) => {
   }
 }
 
-const validateTag = async (data) => {
+export const validateTag = async (data) => {
   const errors = {}
-  const regexTagName = /^[a-zA-ZäöåÄÖÅ0-9\s]+$/
 
   if (!data.name) {
     errors.name = 'Anna tagille nimi'
-  } else if (!regexTagName.test(data.name)) {
+  } else if (!regexName.test(data.name)) {
     errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
   } else if (data.name.length < 3 || data.name.length > 20) {
     errors.name = 'Nimen pituuden tulee olla 3-20 merkkiä'

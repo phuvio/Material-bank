@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import materialService from '../services/materials'
+import Notification from '../components/Notification'
+import useNotification from '../utils/useNotification'
+import validateMaterial from '../utils/tagValidations'
 
 const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
   const [formData, setFormData] = useState({
@@ -13,6 +16,9 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
     material: null,
     material_type: null,
   })
+  const [errors, setErrors] = useState({})
+
+  const { message, type, showNotification } = useNotification()
 
   const navigate = useNavigate()
 
@@ -33,8 +39,16 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
     }))
   }
 
-  const addMaterial = (event) => {
+  const addMaterial = async (event) => {
     event.preventDefault()
+
+    const validationErrors = await validateMaterial(formData)
+    setErrors(validationErrors)
+
+    if (Object.keys(validationErrors).length > 0) {
+      showNotification('Materiaalin luonti epäonnistui', 'error', 3000)
+      return
+    }
 
     const formToSubmit = new FormData()
 
@@ -51,14 +65,10 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
       formToSubmit.append('material_type', formData.material_type)
     }
 
-    console.log('Lähtee tietokantaan:')
-    formToSubmit.forEach((value, key) => {
-      console.log(key, value)
-    })
-
     materialService
       .create(formToSubmit)
       .then(() => {
+        showNotification('Materiaali lisätty', 'message', 2000)
         setFormData({
           name: '',
           description: '',
@@ -73,6 +83,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
         navigate('/')
       })
       .catch((error) => {
+        showNotification('Materiaalin luonti epäonnistui', 'error', 3000)
         console.log('Error uploading material', error)
       })
   }
@@ -81,55 +92,61 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
     <div>
       <h1>Luo uusi materiaali</h1>
       <form onSubmit={addMaterial}>
-        <label>
-          Materiaalin nimi:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleFormChange}
-          />
-        </label>
-        <label>
-          Kuvaus:
-          <input
-            type="text"
-            name="description"
-            value={formData.description}
-            onChange={handleFormChange}
-          />
-        </label>
-        <label>
-          Onko materiaali linkki:
-          <input
-            type="checkbox"
-            name="is_url"
-            checked={formData.is_url}
-            onChange={handleFormChange}
-          />
-        </label>
+        <label htmlFor="name">Materiaalin nimi:</label>
+        <input
+          id="name"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleFormChange}
+        />
+        {errors.name && <span>{errors.name}</span>}
+        <label htmlFor="description">Kuvaus:</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleFormChange}
+        />
+        {errors.description && <span>{errors.description}</span>}
+        <label htmlFor="is_url">Onko materiaali linkki:</label>
+        <input
+          type="checkbox"
+          id="is_url"
+          name="is_url"
+          checked={formData.is_url}
+          onChange={handleFormChange}
+        />
         {formData.is_url && (
-          <label>
-            Linkki:
+          <>
+            <label htmlFor="url">Linkki:</label>
             <input
               type="url"
+              id="url"
               name="url"
               value={formData.url}
               onChange={handleFormChange}
             />
-          </label>
+            {errors.url && <span>{errors.url}</span>}
+          </>
         )}
         {!formData.is_url && (
-          <label>
+          <>
+            <label htmlFor="material"></label>
             <input
               type="file"
+              id="material"
               name="material"
               onChange={(event) => handleFileChange(event)}
             />
-          </label>
+            {errors.material && <span>{errors.material}</span>}
+          </>
         )}
         <button type="submit">Tallenna</button>
       </form>
+
+      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

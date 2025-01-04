@@ -1,8 +1,13 @@
-import validateTag from './validations'
+import validateTag from './tagValidations'
 import tagService from '../services/tags'
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 describe('validateTag function', () => {
+  beforeEach(() => {
+    // Clear all mocks before each test
+    vi.clearAllMocks()
+  })
+
   // Mocking tagService.getAll function
   vi.mock('../services/tags')
 
@@ -62,5 +67,15 @@ describe('validateTag function', () => {
     const errors = await validateTag(data)
 
     expect(errors).toEqual({})
+  })
+
+  it('should handle case-insensitive duplicate tag names', async () => {
+    // Mocking tagService.getAll to return a list with an existing tag in different case
+    tagService.getAll.mockResolvedValueOnce([{ name: 'existing tag' }])
+
+    const data = { name: 'Existing Tag', color: 'green' }
+    const errors = await validateTag(data)
+
+    expect(errors.name).toBe('Tämän niminen tagi on jo olemassa')
   })
 })

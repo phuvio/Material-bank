@@ -19,15 +19,15 @@ import Notification from './components/Notification'
 import TagAdmin from './pages/TagAdmin'
 import NewTag from './pages/NewTag'
 import EditTag from './pages/EditTag'
+import useNotification from './utils/useNotification'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loggedInUser, setLoggedInUser] = useState({})
   const [materialsReloaded, setMaterialsReloaded] = useState(false)
-  const [notificationMessage, setNotificationMessage] = useState(null)
-  const [notificationType, setNotificationType] = useState('message')
-  const [notificationTimeout, setNotificationTimeout] = useState(0)
+
+  const { message, type, showNotification } = useNotification()
 
   const navigate = useNavigate()
 
@@ -51,21 +51,10 @@ const App = () => {
         })
         .catch((error) => {
           console.log('Error fetching data:', error)
-          setNotificationMessage('Virhe haettaessa materiaaleja.')
-          setNotificationType('error')
-          setNotificationTimeout(3000)
+          showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
         })
     }
   }, [isLoggedIn, materialsReloaded])
-
-  useEffect(() => {
-    if (notificationTimeout > 0) {
-      const timer = setTimeout(() => {
-        setNotificationMessage(null)
-      }, notificationTimeout)
-      return () => clearTimeout(timer)
-    }
-  }, [notificationTimeout])
 
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
@@ -76,25 +65,12 @@ const App = () => {
 
   const handleMaterialAdded = () => {
     setMaterialsReloaded((prev) => !prev) // toggle to trigger re-fetch
-    setNotificationMessage('Materiaali lisätty.')
-    setNotificationType('message')
-    setNotificationTimeout(2000)
-  }
-
-  const handleCloseNotification = () => {
-    setNotificationMessage(null)
+    showNotification('Materiaali lisätty', 'message', 2000)
   }
 
   return (
     <div>
-      {notificationMessage && (
-        <Notification
-          message={notificationMessage}
-          timeout={notificationTimeout}
-          type={notificationType}
-          onClose={handleCloseNotification}
-        />
-      )}
+      {message && <Notification message={message} type={type} />}
 
       {isLoggedIn ? (
         <div>

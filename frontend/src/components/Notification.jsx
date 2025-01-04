@@ -1,23 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import '../styles/Notification.css'
 
-const Notification = ({ message, timeout, type, onClose }) => {
-  useEffect(() => {
-    if (!message) return
-
-    const timer = setTimeout(() => {
-      onClose()
-    }, timeout)
-
-    return () => clearTimeout(timer)
-  }, [message, timeout, onClose])
+const Notification = ({ message, type }) => {
+  if (!message) {
+    return null
+  }
 
   const notificationClass = `notification ${
-    type === 'error'
-      ? 'notification-error'
-      : type === 'warning'
-        ? 'notification-warning'
-        : 'notification-message'
+    {
+      error: 'notification-error',
+      warning: 'notification-warning',
+      message: 'notification-message',
+    }[type] || 'notification-message'
   }`
 
   return (

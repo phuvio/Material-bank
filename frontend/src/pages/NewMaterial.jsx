@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import materialService from '../services/materials'
-import validateMaterial from '../utils/tagValidations'
+import validateMaterial from '../utils/materialValidations'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
 
@@ -9,7 +9,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    user_id: '',
+    user_id: loggedInUser.user_id,
     visible: true,
     is_url: false,
     url: '',
@@ -65,27 +65,27 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
       formToSubmit.append('material_type', formData.material_type)
     }
 
-    materialService
-      .create(formToSubmit)
-      .then(() => {
-        showNotification('Materiaali lisätty', 'message', 2000)
-        setFormData({
-          name: '',
-          description: '',
-          user_id: '',
-          visible: true,
-          is_url: false,
-          url: '',
-          material: null,
-          material_type: null,
-        })
-        onMaterialAdded()
-        navigate('/')
+    formToSubmit.append('tagIds', JSON.stringify(selectedTags))
+
+    try {
+      await materialService.create(formToSubmit)
+      showNotification('Materiaali lisätty', 'message', 2000)
+      setFormData({
+        name: '',
+        description: '',
+        user_id: loggedInUser.user_id,
+        visible: true,
+        is_url: false,
+        url: '',
+        material: null,
+        material_type: null,
       })
-      .catch((error) => {
-        showNotification('Materiaalin luonti epäonnistui', 'error', 3000)
-        console.log('Error uploading material', error)
-      })
+      onMaterialAdded()
+      navigate('/')
+    } catch (error) {
+      showNotification('Materiaalin luonti epäonnistui', 'error', 3000)
+      console.log('Error uploading material', error)
+    }
   }
 
   return (

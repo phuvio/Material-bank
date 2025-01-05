@@ -5,6 +5,7 @@ import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
+import '../styles/tag.css'
 
 const Main_page = ({ materials }) => {
   const [filter, setFilter] = useState('')
@@ -43,6 +44,16 @@ const Main_page = ({ materials }) => {
             material.visible && (
               <li key={material.id}>
                 <Link to={`/materials/${material.id}`}>{material.name}</Link>
+                {material.Tags &&
+                  material.Tags.map((tag) => (
+                    <span
+                      key={tag.id}
+                      className="tag"
+                      style={{ backgroundColor: tag.color }}
+                    >
+                      {tag.name}
+                    </span>
+                  ))}
                 {material.is_url && <LoadLinkButton url={material.url} />}
                 {!material.is_url && <LoadMaterialButton material={material} />}
               </li>

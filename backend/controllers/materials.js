@@ -2,7 +2,7 @@ const router = require('express').Router()
 const sequelize = require('../config/database')
 const multer = require('multer')
 const { QueryTypes } = require('sequelize')
-const { Material, User, Tag } = require('../models/index')
+const { Material, User, Tag, TagsMaterial } = require('../models/index')
 
 const upload = multer()
 
@@ -26,6 +26,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const result = await Material.findOne({
+      where: { id: req.params.id },
       attributes: [
         'name',
         'description',
@@ -35,16 +36,21 @@ router.get('/:id', async (req, res) => {
         'url',
         'updated_at',
       ],
-      include: {
-        model: User,
-        attributes: [
-          'first_name',
-          'last_name',
-          'first_name_iv',
-          'last_name_iv',
-        ],
-      },
-      where: { id: req.params.id },
+      include: [
+        {
+          model: User,
+          attributes: [
+            'first_name',
+            'last_name',
+            'first_name_iv',
+            'last_name_iv',
+          ],
+        },
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color'],
+        },
+      ],
     })
     console.log(JSON.stringify(result))
     if (!result) {
@@ -94,9 +100,29 @@ router.post('/', upload.single('material'), async (req, res) => {
       material_type: req.file ? req.file.mimetype : null,
     }
 
-    const result = await Material.create(materialData)
-    console.log(JSON.stringify(result))
-    res.json(result)
+    const material = await Material.create(materialData)
+
+    const tagIds = req.body.tagIds ? JSON.parse(req.body.tagIds) : []
+
+    if (tagIds.length > 0) {
+      await TagsMaterial.bulkCreate(
+        tagIds.map((tag_id) => ({
+          material_id: material.id,
+          tag_id,
+        }))
+      )
+    }
+
+    const materialWithTags = await Material.findByPk(material.id, {
+      include: [
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color'],
+        },
+      ],
+    })
+
+    res.json(materialWithTags)
   } catch (error) {
     console.log(error)
     res.status(400).json({ error: 'Error saving material' })

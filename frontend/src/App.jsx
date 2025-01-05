@@ -130,7 +130,10 @@ const App = () => {
           </Routes>
         </div>
       ) : (
-        <LoginForm onLoginSuccess={handleLoginForm} />
+        <LoginForm
+          onLoginSuccess={handleLoginForm}
+          showNotification={showNotification}
+        />
       )}
     </div>
   )

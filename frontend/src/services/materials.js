@@ -6,8 +6,10 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-const create = newObject => {
-  const request = axios.post(`${apiUrl}/api/materials`, newObject)
+const create = (data) => {
+  const request = axios.post(`${apiUrl}/api/materials`, data, {
+    headers: { 'Content-Type': 'multipart/form-data'}
+  })
   return request.then(response => response.data)
 }
 

@@ -42,7 +42,10 @@ describe('materialService', () => {
 
     expect(axios.post).toHaveBeenCalledWith(
       `${apiUrl}/api/materials`,
-      newMaterial
+      newMaterial,
+      expect.objectContaining({
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
     )
     expect(result).toEqual(createdMaterial)
   })
@@ -57,7 +60,10 @@ describe('materialService', () => {
 
     expect(axios.post).toHaveBeenCalledWith(
       `${apiUrl}/api/materials`,
-      newMaterial
+      newMaterial,
+      expect.objectContaining({
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
     )
   })
 

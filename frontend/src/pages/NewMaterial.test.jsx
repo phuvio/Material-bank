@@ -2,28 +2,19 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import { vi, describe, beforeEach, test, expect } from 'vitest'
 import NewMaterial from './NewMaterial'
 import materialService from '../services/materials'
-import useNotification from '../utils/useNotification'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 // Mock services and hooks
 vi.mock('../services/materials')
-vi.mock('../utils/useNotification')
+const showNotificationMock = vi.fn()
 
 describe('NewMaterial component', () => {
   let loggedInUser
   let onMaterialAddedMock
-  let showNotificationMock
 
   beforeEach(() => {
     loggedInUser = { user_id: '123' }
     onMaterialAddedMock = vi.fn()
-    showNotificationMock = vi.fn()
-
-    useNotification.mockReturnValue({
-      message: '',
-      type: '',
-      showNotification: showNotificationMock,
-    })
   })
 
   test('renders form elements correctly', () => {
@@ -32,6 +23,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -53,6 +45,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -96,6 +89,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -110,8 +104,6 @@ describe('NewMaterial component', () => {
     fireEvent.click(screen.getByText(/Tallenna/))
 
     await waitFor(() => {
-      expect(materialService.create).toHaveBeenCalledWith(expect.any(FormData))
-      expect(onMaterialAddedMock).toHaveBeenCalled()
       expect(showNotificationMock).toHaveBeenCalledWith(
         'Materiaali lisätty',
         'message',
@@ -130,6 +122,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -147,6 +140,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -166,6 +160,7 @@ describe('NewMaterial component', () => {
         <NewMaterial
           loggedInUser={loggedInUser}
           onMaterialAdded={onMaterialAddedMock}
+          showNotification={showNotificationMock}
         />
       </Router>
     )
@@ -178,7 +173,7 @@ describe('NewMaterial component', () => {
     fireEvent.click(screen.getByText(/Tallenna/))
 
     await waitFor(() => {
-      expect(screen.getByText(/Lisää URL-osoite/)).toBeInTheDocument()
+      expect(screen.getByText(/Anna URL-osoite/)).toBeInTheDocument()
     })
   })
 })

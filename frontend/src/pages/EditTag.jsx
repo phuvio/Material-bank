@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import Notification from '../components/Notification'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/tagValidations'
-import useNotification from '../utils/useNotification'
 
-const EditTag = () => {
+const EditTag = ({ showNotification }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [tag, setTag] = useState({ name: '', color: '' })
   const [errors, setErrors] = useState({})
-
-  const { message, type, showNotification } = useNotification()
 
   useEffect(() => {
     tagService
@@ -100,8 +96,6 @@ const EditTag = () => {
         <button type="submit">Tallenna tagi</button>
       </form>
       <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
-
-      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

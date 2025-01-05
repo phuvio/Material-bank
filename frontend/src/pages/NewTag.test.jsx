@@ -5,6 +5,7 @@ import { vi, describe, beforeEach, it, expect } from 'vitest'
 
 // Mock the tagService to simulate the create function
 vi.mock('../services/tags')
+const showNotificationMock = vi.fn()
 
 describe('NewTag Component', () => {
   beforeEach(() => {
@@ -12,7 +13,7 @@ describe('NewTag Component', () => {
   })
 
   it('renders the form correctly', () => {
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
     // Check if the form elements are rendered
     expect(screen.getByLabelText('Nimi')).toBeInTheDocument()
@@ -24,7 +25,7 @@ describe('NewTag Component', () => {
   })
 
   it('displays an error message when the name is invalid', async () => {
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: '' } })
@@ -39,7 +40,7 @@ describe('NewTag Component', () => {
   })
 
   it('displays an error message when no color is selected', async () => {
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -54,7 +55,7 @@ describe('NewTag Component', () => {
   })
 
   it('calls tagService.create when the form is valid', async () => {
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -76,7 +77,7 @@ describe('NewTag Component', () => {
   })
 
   it('displays a success notification when tag is created successfully', async () => {
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -90,29 +91,31 @@ describe('NewTag Component', () => {
 
     // Wait for success notification
     await waitFor(() =>
-      expect(screen.getByText('Tagi luotu onnistuneesti')).toBeInTheDocument()
+      expect(showNotificationMock).toHaveBeenCalledWith(
+        'Tagi luotu onnistuneesti',
+        'message',
+        2000
+      )
     )
   })
 
   it('displays an error notification when tag creation fails', async () => {
-    // Simulate a failed tag creation
     tagService.create.mockRejectedValueOnce(new Error('Error creating tag'))
 
-    render(<NewTag />)
+    render(<NewTag showNotification={showNotificationMock} />)
 
-    const inputName = screen.getByRole('textbox', { name: /nimi/i })
-    fireEvent.change(inputName, { target: { value: 'Valid Name' } })
+    fireEvent.change(screen.getByRole('textbox', { name: /nimi/i }), {
+      target: { value: 'Valid Name' },
+    })
+    fireEvent.click(screen.getAllByRole('button')[0]) // Assuming first color is selected
+    fireEvent.click(screen.getByRole('button', { name: /luo tagi/i }))
 
-    // Select a color by clicking the color square
-    const colorSquare = screen.getAllByRole('button')[0]
-    fireEvent.click(colorSquare)
-
-    const button = screen.getByRole('button', { name: /luo tagi/i })
-    fireEvent.click(button)
-
-    // Wait for error notification
     await waitFor(() =>
-      expect(screen.getByText('Tagin luonti epäonnistui')).toBeInTheDocument()
+      expect(showNotificationMock).toHaveBeenCalledWith(
+        'Tagin luonti epäonnistui',
+        'error',
+        3000
+      )
     )
   })
 })

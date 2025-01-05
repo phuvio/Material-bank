@@ -11,15 +11,11 @@ vi.mock('../services/users', () => ({
   create: vi.fn(() => Promise.resolve()),
 }))
 
-vi.mock('../components/Notification', () => ({
-  default: ({ message, type, timeout, onClose }) => {
-    return <div>{message}</div>
-  },
-}))
+const showNotificationMock = vi.fn()
 
 describe('NewUser Component', () => {
   test('renders form inputs and submit button', () => {
-    render(<NewUser />)
+    render(<NewUser showNotification={showNotificationMock} />)
 
     // Check that the form fields are rendered
     expect(screen.getByLabelText(/Käyttäjätunnus:/)).toBeInTheDocument()
@@ -33,7 +29,7 @@ describe('NewUser Component', () => {
   })
 
   test('updates form state on input change', () => {
-    render(<NewUser />)
+    render(<NewUser showNotification={showNotificationMock} />)
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
     fireEvent.change(usernameInput, {
@@ -45,7 +41,7 @@ describe('NewUser Component', () => {
   })
 
   test('shows validation errors when form is submitted with missing or invalid data', async () => {
-    render(<NewUser />)
+    render(<NewUser showNotification={showNotificationMock} />)
 
     const submitButton = screen.getByText(/Tallenna/)
 
@@ -70,7 +66,7 @@ describe('NewUser Component', () => {
       username: 'john.doe@proneuron.fi',
     })
 
-    render(<NewUser />)
+    render(<NewUser showNotification={showNotificationMock} />)
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
     const firstNameInput = screen.getByLabelText(/Etunimi:/)
@@ -94,9 +90,11 @@ describe('NewUser Component', () => {
 
     // Wait for the notification to appear
     await waitFor(() => {
-      expect(
-        screen.getByText('Käyttäjän luonti epäonnistui')
-      ).toBeInTheDocument()
+      expect(showNotificationMock).toHaveBeenCalledWith(
+        'Käyttäjän luonti epäonnistui',
+        'error',
+        3000
+      )
     })
   })
 })

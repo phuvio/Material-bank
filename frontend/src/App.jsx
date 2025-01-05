@@ -101,19 +101,32 @@ const App = () => {
               path="/users"
               element={isLoggedIn ? <Users /> : <Navigate to="/login" />}
             />
-            <Route path="/newuser" element={<NewUser />} />
+            <Route
+              path="/newuser"
+              element={<NewUser showNotification={showNotification} />}
+            />
             <Route
               path="/newmaterial"
               element={
                 <NewMaterial
                   loggedInUser={loggedInUser}
                   onMaterialAdded={handleMaterialAdded}
+                  showNotification={showNotification}
                 />
               }
             />
-            <Route path="/tagadmin" element={<TagAdmin />} />
-            <Route path="/tags/:id" element={<EditTag />} />
-            <Route path="/newtag" element={<NewTag />} />
+            <Route
+              path="/tagadmin"
+              element={<TagAdmin showNotification={showNotification} />}
+            />
+            <Route
+              path="/tags/:id"
+              element={<EditTag showNotification={showNotification} />}
+            />
+            <Route
+              path="/newtag"
+              element={<NewTag showNotification={showNotification} />}
+            />
           </Routes>
         </div>
       ) : (

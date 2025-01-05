@@ -4,7 +4,7 @@ import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import materialService from '../services/materials'
 
-const MaterialDetails = () => {
+const MaterialDetails = ({ showNotification }) => {
   const { id } = useParams()
   const [material, setMaterial] = useState(null)
 

@@ -1,18 +1,14 @@
 import React, { useState } from 'react'
-import Notification from '../components/Notification'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/tagValidations'
-import useNotification from '../utils/useNotification'
 
-const NewTag = () => {
+const NewTag = ({ showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     color: '',
   })
   const [errors, setErrors] = useState({})
-
-  const { message, type, showNotification } = useNotification()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -81,8 +77,6 @@ const NewTag = () => {
         <br></br>
         <button type="submit">Luo tagi</button>
       </form>
-
-      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

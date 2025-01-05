@@ -13,6 +13,8 @@ vi.mock('../utils/tagValidations', () => ({
   default: vi.fn(),
 }))
 
+const showNotificationMock = vi.fn()
+
 describe('EditTag Component', () => {
   const mockTag = { id: '1', name: 'Test Tag', color: '#ff0000' }
 
@@ -28,7 +30,7 @@ describe('EditTag Component', () => {
   const renderComponent = () =>
     render(
       <BrowserRouter>
-        <EditTag />
+        <EditTag showNotification={showNotificationMock} />
       </BrowserRouter>
     )
 
@@ -82,12 +84,28 @@ describe('EditTag Component', () => {
     fireEvent.click(saveButton)
 
     await waitFor(() => {
+      // Ensure that '1' is passed as the first argument (id) along with the tag object
       expect(tagService.update).toHaveBeenCalledWith('1', {
         id: '1',
         name: 'Test Tag',
         color: '#ff0000',
       })
     })
+  })
+
+  it('does not submit if validation fails', async () => {
+    validateTag.mockResolvedValue({ name: 'Nimi on pakollinen' })
+    tagService.update.mockResolvedValue()
+
+    renderComponent()
+
+    const saveButton = screen.getByText(/Tallenna tagi/i)
+    fireEvent.click(saveButton)
+
+    await waitFor(() => {
+      expect(tagService.update).not.toHaveBeenCalled()
+    })
+    expect(screen.getByText(/Nimi on pakollinen/i)).toBeInTheDocument()
   })
 
   it.skip('deletes the tag', async () => {
@@ -109,7 +127,7 @@ describe('EditTag Component', () => {
     renderComponent()
 
     await waitFor(() => {
-      expect(screen.queryByLabelText(/Nimi/i)).not.toBeInTheDocument()
+      expect(screen.queryByLabelText(/Nimi/i)).toBeNull() // ensure it doesn't render the input field on error
     })
   })
 })

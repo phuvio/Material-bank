@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import Notification from '../components/Notification'
 import userService from '../services/users'
-import useNotification from '../utils/useNotification'
 
-const NewUser = () => {
+const NewUser = ({ showNotification }) => {
   const [formData, setFormData] = useState({
     username: '@proneuron.fi',
     first_name: '',
@@ -12,8 +10,6 @@ const NewUser = () => {
     role: '',
   })
   const [errors, setErrors] = useState({})
-
-  const { message, type, showNotification } = useNotification()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -147,8 +143,6 @@ const NewUser = () => {
         {errors.role && <p>{errors.role}</p>}
         <button type="submit">Tallenna</button>
       </form>
-
-      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

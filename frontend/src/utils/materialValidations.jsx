@@ -63,9 +63,7 @@ export const validateMaterial = async (data) => {
     } else if (!regexURL.test(data.url)) {
       errors.url = 'Anna validi URL-osoite'
     }
-  }
-
-  if (!data.is_url) {
+  } else {
     if (!data.material) {
       errors.material = 'Valitse tiedosto'
     } else if (data.material.size > 10000000) {

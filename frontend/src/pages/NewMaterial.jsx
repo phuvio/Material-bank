@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import materialService from '../services/materials'
-import Notification from '../components/Notification'
-import useNotification from '../utils/useNotification'
 import validateMaterial from '../utils/tagValidations'
+import TagFilter from '../components/TagFilter'
+import { selectTags } from '../utils/selectTags'
 
-const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
+const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -18,7 +18,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
   })
   const [errors, setErrors] = useState({})
 
-  const { message, type, showNotification } = useNotification()
+  const { tags, selectedTags, toggleTags } = selectTags()
 
   const navigate = useNavigate()
 
@@ -101,6 +101,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
           onChange={handleFormChange}
         />
         {errors.name && <span>{errors.name}</span>}
+
         <label htmlFor="description">Kuvaus:</label>
         <input
           type="text"
@@ -110,6 +111,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
           onChange={handleFormChange}
         />
         {errors.description && <span>{errors.description}</span>}
+
         <label htmlFor="is_url">Onko materiaali linkki:</label>
         <input
           type="checkbox"
@@ -131,6 +133,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
             {errors.url && <span>{errors.url}</span>}
           </>
         )}
+
         {!formData.is_url && (
           <>
             <label htmlFor="material"></label>
@@ -143,10 +146,15 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded }) => {
             {errors.material && <span>{errors.material}</span>}
           </>
         )}
+
         <button type="submit">Tallenna</button>
       </form>
 
-      {message && <Notification message={message} type={type} />}
+      <TagFilter
+        tags={tags}
+        selectedTags={selectedTags}
+        toggleTags={toggleTags}
+      />
     </div>
   )
 }

@@ -1,29 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
-import tagService from '../services/tags'
+import { selectTags } from '../utils/selectTags'
 
 const Main_page = ({ materials }) => {
   const [filter, setFilter] = useState('')
-  const [tags, setTags] = useState([])
-  const [selectedTags, setSelectedTags] = useState([])
 
-  useEffect(() => {
-    tagService.getAll().then((returnedTags) => {
-      setTags(returnedTags)
-    })
-  }, [])
-
-  const toggleTags = (tagId) => {
-    setSelectedTags((prevSelected) =>
-      prevSelected.includes(tagId)
-        ? prevSelected.filter((id) => id !== tagId)
-        : [...prevSelected, tagId]
-    )
-  }
+  const { tags, selectedTags, toggleTags } = selectTags()
 
   const materialsToShow = materials.filter((material) => {
     const matchesText =

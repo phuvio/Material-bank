@@ -5,7 +5,10 @@ import materialService from '../services/materials'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 // Mock services and hooks
-vi.mock('../services/materials')
+vi.mock('../services/materials', () => ({
+  create: vi.fn().mockResolvedValue({}),
+  // Add other methods you might use in your component
+}))
 const showNotificationMock = vi.fn()
 
 describe('NewMaterial component', () => {

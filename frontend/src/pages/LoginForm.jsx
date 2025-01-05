@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
-import Notification from '../components/Notification'
-import useNotification from '../utils/useNotification'
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, showNotification }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  const { message, type, showNotification } = useNotification()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -72,8 +68,6 @@ const Login = ({ onLoginSuccess }) => {
           <button type="submit">Kirjaudu sisään</button>
         </form>
       </h1>
-
-      {message && <Notification message={message} type={type} />}
     </div>
   )
 }

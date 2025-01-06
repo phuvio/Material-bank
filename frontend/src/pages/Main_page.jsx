@@ -13,13 +13,13 @@ const Main_page = ({ materials }) => {
   const { tags, selectedTags, toggleTags } = selectTags()
 
   const materialsToShow = materials.filter((material) => {
+    const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
     const matchesText =
       filter.length === 0 ||
       material.name.toLowerCase().includes(filter.toLocaleLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
-      (material.tags &&
-        selectedTags.some((tagId) => material.tags.includes(tagId)))
+      (tagsIds && selectedTags.every((tagId) => tagsIds.includes(tagId)))
 
     return matchesText && matchesTags
   })

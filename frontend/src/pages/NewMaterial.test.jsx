@@ -2,7 +2,6 @@ import { vi, describe, beforeEach, test, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import NewMaterial from './NewMaterial'
-import * as materialService from '../services/materials' // Import materialService for direct mocking
 
 vi.mock('../services/materials') // Mock the entire materialService module
 

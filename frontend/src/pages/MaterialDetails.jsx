@@ -63,15 +63,17 @@ const MaterialDetails = ({
         <h1>{material.name}</h1>
         <p>{material.description}</p>
         {material.Tags &&
-          material.Tags.map((tag) => (
-            <span
-              key={tag.id}
-              className="tag"
-              style={{ background: tag.color }}
-            >
-              {tag.name}
-            </span>
-          ))}
+          material.Tags.slice()
+            .sort((a, b) => (a.name > b.name ? 1 : -1))
+            .map((tag) => (
+              <span
+                key={tag.id}
+                className="tag"
+                style={{ background: tag.color }}
+              >
+                {tag.name}
+              </span>
+            ))}
         <br></br>
         {material.is_url && <LoadLinkButton url={material.url} />}
         {!material.is_url && <LoadMaterialButton material={material} />}
@@ -80,7 +82,7 @@ const MaterialDetails = ({
         <h2>Muokkaa tageja</h2>
         <TagFilter
           tags={tags}
-          selectedTags={selectedTags}
+          selectedTags={material.Tags}
           toggleTags={toggleTags}
         />
       </div>

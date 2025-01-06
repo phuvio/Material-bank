@@ -7,7 +7,7 @@ export const selectTags = () => {
 
   useEffect(() => {
     tagService.getAll().then((returnedTags) => {
-      setTags(returnedTags)
+      setTags(returnedTags.slice().sort((a, b) => (a.name > b.name ? 1 : -1)))
     })
   }, [])
 

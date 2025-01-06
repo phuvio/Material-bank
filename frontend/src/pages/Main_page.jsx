@@ -45,15 +45,17 @@ const Main_page = ({ materials }) => {
               <li key={material.id}>
                 <Link to={`/materials/${material.id}`}>{material.name}</Link>
                 {material.Tags &&
-                  material.Tags.map((tag) => (
-                    <span
-                      key={tag.id}
-                      className="tag"
-                      style={{ backgroundColor: tag.color }}
-                    >
-                      {tag.name}
-                    </span>
-                  ))}
+                  material.Tags.slice()
+                    .sort((a, b) => (a.name > b.name ? 1 : -1))
+                    .map((tag) => (
+                      <span
+                        key={tag.id}
+                        className="tag"
+                        style={{ backgroundColor: tag.color }}
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
                 {material.is_url && <LoadLinkButton url={material.url} />}
                 {!material.is_url && <LoadMaterialButton material={material} />}
               </li>

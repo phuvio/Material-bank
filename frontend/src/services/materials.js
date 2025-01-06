@@ -25,4 +25,9 @@ const update = (id, data) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, getSingle, update }
+const remove = id => {
+  const request = axios.delete(`${apiUrl}/api/materials/${id}`)
+  return request.then(response => response.data)
+}
+
+export default { getAll, create, getSingle, update, remove }

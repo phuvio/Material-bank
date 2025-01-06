@@ -190,4 +190,17 @@ router.put('/:id', upload.single('material'), async (req, res) => {
   }
 })
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const result = await Material.destroy({ where: { id: req.params.id } })
+    if (result === 0) {
+      return res.status(404).json({ error: 'Material not found' })
+    }
+    res.json({ message: 'Material deleted successfully' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Error deleting material' })
+  }
+})
+
 module.exports = router

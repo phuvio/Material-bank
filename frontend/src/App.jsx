@@ -97,6 +97,7 @@ const App = () => {
               element={
                 <MaterialDetails
                   loggedInUser={loggedInUser}
+                  onMaterialAdded={handleMaterialAdded}
                   showNotification={showNotification}
                 />
               }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import materialService from '../services/materials'
@@ -7,8 +7,13 @@ import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
 import '../styles/tag.css'
 
-const MaterialDetails = ({ loggedInUser, showNotification }) => {
+const MaterialDetails = ({
+  loggedInUser,
+  onMaterialAdded,
+  showNotification,
+}) => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
 
   const { tags, selectedTags, toggleTags } = selectTags()
@@ -30,6 +35,26 @@ const MaterialDetails = ({ loggedInUser, showNotification }) => {
 
   if (!material) {
     return <div>Materiaalia ei löytynyt</div>
+  }
+
+  const handleDeleteMaterail = (id) => {
+    if (window.confirm('Haluatko varmati poistaa tämän materiaalin?')) {
+      materialService
+        .remove(id)
+        .then(() => {
+          showNotification(
+            'Materiaali poistettu onnistuneesti',
+            'message',
+            2000
+          )
+          onMaterialAdded()
+          navigate('/materials')
+        })
+        .catch((error) => {
+          console.log('Error deleting material', error)
+          showNotification('Materiaalin poisto epäonnistui', 'error', 3000)
+        })
+    }
   }
 
   return (
@@ -61,7 +86,13 @@ const MaterialDetails = ({ loggedInUser, showNotification }) => {
       </div>
       <div>
         {(loggedInUser.role === 0 || loggedInUser.id === material.User.id) && (
-          <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>
+          <>
+            <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>
+            <b></b>
+            <button onClick={() => handleDeleteMaterail(id)}>
+              Poista materiaali
+            </button>
+          </>
         )}
       </div>
       <p>

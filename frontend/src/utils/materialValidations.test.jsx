@@ -1,75 +1,64 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import validateMaterial from './materialValidations'
 import materialService from '../services/materials'
+import { validateMaterial, validateMaterialUpdate } from './materialValidations'
+
+vi.mock('../services/materials', () => {
+  return {
+    default: {
+      getAll: vi.fn(),
+    },
+  }
+})
 
 describe('validateMaterial', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  vi.mock('../services/materials')
-
   it('should return an error if name is missing', async () => {
-    const data = {
-      description: 'Test description',
-      is_url: true,
-      url: 'http://example.com',
-    }
-    const errors = await validateMaterial(data)
-    expect(errors.name).toBe('Anna materiaalille nimi')
+    const data = { description: 'Test description', material: {} }
+    const result = await validateMaterial(data)
+    expect(result.name).toBe('Anna materiaalille nimi')
   })
 
-  it('should return an error if name is invalid', async () => {
+  it('should return an error for invalid name format', async () => {
     const data = {
-      name: 'Invalid@Name',
+      name: 'Invalid@Name!',
       description: 'Test description',
-      is_url: true,
-      url: 'http://example.com',
+      material: {},
     }
-    const errors = await validateMaterial(data)
-    expect(errors.name).toBe(
+    const result = await validateMaterial(data)
+    expect(result.name).toBe(
       'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
     )
   })
 
-  it('should return an error if name length is invalid', async () => {
+  it('should return an error if the name is a duplicate', async () => {
+    materialService.getAll.mockResolvedValueOnce([{ name: 'Duplicate' }])
     const data = {
-      name: 'ab',
+      name: 'Duplicate',
       description: 'Test description',
-      is_url: true,
-      url: 'http://example.com',
+      material: {},
     }
-    const errors = await validateMaterial(data)
-    expect(errors.name).toBe('Nimen pituuden tulee olla 3-50 merkkiä')
-  })
-
-  it('should return an error if name is a duplicate', async () => {
-    materialService.getAll.mockResolvedValue([{ name: 'Duplicate Name' }])
-    const data = {
-      name: 'Duplicate Name',
-      description: 'Test description',
-      is_url: true,
-      url: 'http://example.com',
-    }
-    const errors = await validateMaterial(data)
-    expect(errors.name).toBe('Tämän niminen materiaali on jo olemassa')
+    const result = await validateMaterial(data)
+    expect(result.name).toBe('Tämän niminen materiaali on jo olemassa')
   })
 
   it('should return an error if description is missing', async () => {
-    const data = { name: 'Valid Name', is_url: true, url: 'http://example.com' }
-    const errors = await validateMaterial(data)
-    expect(errors.description).toBe('Anna kuvaus')
+    const data = { name: 'Valid Name', material: {} }
+    const result = await validateMaterial(data)
+    expect(result.description).toBe('Anna kuvaus')
   })
 
-  it('should return an error if description length exceeds 500 characters', async () => {
+  it('should return an error if description exceeds 500 characters', async () => {
+    const longDescription = 'a'.repeat(501)
     const data = {
       name: 'Valid Name',
-      description: 'a'.repeat(501),
-      is_url: true,
-      url: 'http://example.com',
+      description: longDescription,
+      material: {},
     }
-    const errors = await validateMaterial(data)
-    expect(errors.description).toBe(
+    const result = await validateMaterial(data)
+    expect(result.description).toBe(
       'Kuvaus saa olla enintään 500 merkkiä pitkä'
     )
   })
@@ -81,43 +70,84 @@ describe('validateMaterial', () => {
       is_url: true,
       url: 'invalid-url',
     }
-    const errors = await validateMaterial(data)
-    expect(errors.url).toBe('Anna validi URL-osoite')
+    const result = await validateMaterial(data)
+    expect(result.url).toBe('Anna validi URL-osoite')
   })
 
-  it('should return an error if file size exceeds 10 MB', async () => {
+  it('should return an error for missing file if not a URL', async () => {
+    const data = {
+      name: 'Valid Name',
+      description: 'Test description',
+      is_url: false,
+    }
+    const result = await validateMaterial(data)
+    expect(result.material).toBe('Valitse tiedosto')
+  })
+
+  it('should return an error if file size exceeds 10MB', async () => {
     const data = {
       name: 'Valid Name',
       description: 'Test description',
       is_url: false,
       material: { size: 10000001, type: 'application/pdf' },
     }
-    const errors = await validateMaterial(data)
-    expect(errors.material).toBe('Tiedoston maksimikoko on 10 Mt')
+    const result = await validateMaterial(data)
+    expect(result.material).toBe('Tiedoston maksimikoko on 10 Mt')
   })
 
-  it('should return an error if file type is not allowed', async () => {
+  it('should return an error for unsupported file type', async () => {
     const data = {
       name: 'Valid Name',
       description: 'Test description',
       is_url: false,
-      material: { size: 5000, type: 'application/unknown' },
+      material: { size: 5000, type: 'application/unsupported' },
     }
-    const errors = await validateMaterial(data)
-    expect(errors.material).toBe(
+    const result = await validateMaterial(data)
+    expect(result.material).toBe(
       'Sallitut tiedostomuodot ovat PDF, Word, Excel, PowerPoint ja kuvatiedostot'
     )
   })
 
-  it('should return no errors for valid material data (URL)', async () => {
-    materialService.getAll.mockResolvedValue([])
+  it('should pass validation for valid data', async () => {
+    materialService.getAll.mockResolvedValueOnce([])
     const data = {
-      name: 'Unique Name',
-      description: 'Test description',
-      is_url: true,
-      url: 'http://example.com',
+      name: 'Valid Name',
+      description: 'Valid description',
+      is_url: false,
+      material: { size: 5000, type: 'application/pdf' },
     }
-    const errors = await validateMaterial(data)
-    expect(errors).toEqual({})
+    const result = await validateMaterial(data)
+    expect(result).toEqual({})
+  })
+})
+
+describe('validateMaterialUpdate', () => {
+  it('should return an error if name is missing', async () => {
+    const data = { description: 'Test description' }
+    const result = await validateMaterialUpdate(data)
+    expect(result.name).toBe('Anna materiaalille nimi')
+  })
+
+  it('should return an error for invalid name format', async () => {
+    const data = { name: 'Invalid@Name!', description: 'Test description' }
+    const result = await validateMaterialUpdate(data)
+    expect(result.name).toBe(
+      'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    )
+  })
+
+  it('should return an error if description exceeds 500 characters', async () => {
+    const longDescription = 'a'.repeat(501)
+    const data = { name: 'Valid Name', description: longDescription }
+    const result = await validateMaterialUpdate(data)
+    expect(result.description).toBe(
+      'Kuvaus saa olla enintään 500 merkkiä pitkä'
+    )
+  })
+
+  it('should pass validation for valid update data', async () => {
+    const data = { name: 'Valid Name', description: 'Valid description' }
+    const result = await validateMaterialUpdate(data)
+    expect(result).toEqual({})
   })
 })

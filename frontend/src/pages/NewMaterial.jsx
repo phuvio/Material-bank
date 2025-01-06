@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import materialService from '../services/materials'
-import validateMaterial from '../utils/materialValidations'
+import { validateMaterial } from '../utils/materialValidations'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
 
@@ -136,12 +136,13 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
 
         {!formData.is_url && (
           <>
-            <label htmlFor="material"></label>
+            <label htmlFor="material" aria-label="Material"></label>
             <input
               type="file"
               id="material"
               name="material"
-              onChange={(event) => handleFileChange(event)}
+              aria-label="Material"
+              onChange={handleFileChange}
             />
             {errors.material && <span>{errors.material}</span>}
           </>

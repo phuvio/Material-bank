@@ -19,6 +19,7 @@ import Notification from './components/Notification'
 import TagAdmin from './pages/TagAdmin'
 import NewTag from './pages/NewTag'
 import EditTag from './pages/EditTag'
+import EditMaterial from './pages/EditMaterial'
 import useNotification from './utils/useNotification'
 
 const App = () => {
@@ -65,7 +66,6 @@ const App = () => {
 
   const handleMaterialAdded = () => {
     setMaterialsReloaded((prev) => !prev) // toggle to trigger re-fetch
-    showNotification('Materiaali lisätty', 'message', 2000)
   }
 
   return (
@@ -92,7 +92,15 @@ const App = () => {
               path="/materials"
               element={<Main_page materials={materials} />}
             />
-            <Route path="/materials/:id" element={<MaterialDetails />} />
+            <Route
+              path="/materials/:id"
+              element={
+                <MaterialDetails
+                  loggedInUser={loggedInUser}
+                  showNotification={showNotification}
+                />
+              }
+            />
             <Route
               path="/"
               element={<Navigate to="/materials" replace={true} />}
@@ -110,6 +118,15 @@ const App = () => {
               element={
                 <NewMaterial
                   loggedInUser={loggedInUser}
+                  onMaterialAdded={handleMaterialAdded}
+                  showNotification={showNotification}
+                />
+              }
+            />
+            <Route
+              path="/editmaterial/:id"
+              element={
+                <EditMaterial
                   onMaterialAdded={handleMaterialAdded}
                   showNotification={showNotification}
                 />

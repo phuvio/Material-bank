@@ -1,7 +1,6 @@
 const router = require('express').Router()
-const sequelize = require('../config/database')
+const { sequelize } = require('../config/database')
 const multer = require('multer')
-const { QueryTypes } = require('sequelize')
 const { Material, User, Tag, TagsMaterial } = require('../models/index')
 
 const upload = multer()
@@ -88,6 +87,7 @@ router.get('/:id/material', async (req, res) => {
 })
 
 router.post('/', upload.single('material'), async (req, res) => {
+  const transaction = await sequelize.transaction()
   try {
     const materialData = {
       name: req.body.name,
@@ -100,7 +100,7 @@ router.post('/', upload.single('material'), async (req, res) => {
       material_type: req.file ? req.file.mimetype : null,
     }
 
-    const material = await Material.create(materialData)
+    const material = await Material.create(materialData, { transaction })
 
     const tagIds = req.body.tagIds ? JSON.parse(req.body.tagIds) : []
 
@@ -109,9 +109,12 @@ router.post('/', upload.single('material'), async (req, res) => {
         tagIds.map((tag_id) => ({
           material_id: material.id,
           tag_id,
-        }))
+        })),
+        { transaction }
       )
     }
+
+    await transaction.commit()
 
     const materialWithTags = await Material.findByPk(material.id, {
       include: [
@@ -122,27 +125,67 @@ router.post('/', upload.single('material'), async (req, res) => {
       ],
     })
 
-    res.json(materialWithTags)
+    res.status(200).json(materialWithTags)
   } catch (error) {
     console.log(error)
+    await transaction.rollback()
     res.status(400).json({ error: 'Error saving material' })
   }
 })
 
-router.post('/:id', async (req, res) => {
-  const { name, description, visible, is_URL, URL, material } = req.body
-  const id = req.params.id
+router.put('/:id', upload.single('material'), async (req, res) => {
+  const transaction = await sequelize.transaction()
   try {
-    const result = await sequelize.query(
-      'UPDATE materials SET name = $1, description = $2, visible = $3, is_URL = $4, URL = $5, material = $6 \
-        WHERE id = $7 RETURNING *',
-      [name, description, visible, is_URL, URL, material, id],
-      { type: QueryTypes.UPDATE }
+    const materialId = req.params.id
+
+    if (!materialId) {
+      return res.status(400).json({ error: 'Material ID is needed for update' })
+    }
+
+    const { name, description, tagIds } = req.body
+
+    const [affectedRows] = await Material.update(
+      { name, description },
+      { where: { id: materialId }, transaction }
     )
-    console.log(result)
-    res.json(result[0])
+
+    if (affectedRows === 0) {
+      await transaction.rollback()
+      return res.status(404).json({ error: 'Material not found' })
+    }
+
+    if (tagIds) {
+      const parseTagIds = JSON.parse(tagIds)
+
+      await TagsMaterial.destroy({
+        where: { material_id: materialId },
+        transaction,
+      })
+
+      await TagsMaterial.bulkCreate(
+        parseTagIds.map((tag_id) => ({
+          material_id: materialId,
+          tag_id,
+        })),
+        { transaction }
+      )
+    }
+
+    await transaction.commit()
+
+    const updatedMaterial = await Material.findByPk(materialId, {
+      include: [
+        {
+          model: Tag,
+          attributes: ['id', 'name', 'color'],
+        },
+      ],
+    })
+
+    res.status(200).json(updatedMaterial)
   } catch (error) {
     console.log(error)
+    await transaction.rollback()
     res.status(400).json({ error: 'Error saving material' })
   }
 })

@@ -9,10 +9,10 @@ beforeEach(() => {
 
 vi.mock('../services/users', () => ({
   default: {
-    create: vi.fn().mockResolvedValue({}),
-    update: vi.fn().mockResolvedValue({}),
-    getSingle: vi.fn().mockResolvedValue({}),
-    getAll: vi.fn().mockResolvedValue([]),
+    create: vi.fn(),
+    update: vi.fn(),
+    getSingle: vi.fn(),
+    getAll: vi.fn(),
   },
 }))
 

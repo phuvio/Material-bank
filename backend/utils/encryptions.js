@@ -15,7 +15,7 @@ function encrypt(text) {
   )
   let encrypted = cipher.update(text, 'utf8', 'hex')
   encrypted += cipher.final('hex')
-  console.log(encrypted)
+
   return { iv: iv.toString('hex'), encryptedData: encrypted } // Store IV with encrypted data
 }
 

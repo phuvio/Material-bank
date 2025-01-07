@@ -2,6 +2,8 @@ const router = require('express').Router()
 
 const { User } = require('../models/index')
 
+const bcrypt = require('bcrypt')
+
 router.get('/', async (req, res) => {
   try {
     const users = await User.findAll()
@@ -15,12 +17,14 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { username, first_name, last_name, password, role } = req.body
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   try {
     const user = User.create({
       username,
       first_name,
       last_name,
-      password,
+      password: hashedPassword,
       role,
     })
     res.status(201).json(user)
@@ -53,14 +57,16 @@ router.put('/:id', async (req, res) => {
     }
 
     const { first_name, last_name, password, role } = req.body
-
+    console.log('body', req.body)
     const updateData = {}
     if (first_name) updateData.first_name = first_name
     if (last_name) updateData.last_name = last_name
     if (role) updateData.role = role
     if (password) {
-      updateData.password = password
+      const hashedPassword = await bcrypt.hash(password, 10)
+      updateData.password = hashedPassword
     }
+    console.log('updatedData', updateData)
 
     const [affectedRows] = await User.update(updateData, {
       where: { id: userId },

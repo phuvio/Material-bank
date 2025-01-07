@@ -11,4 +11,4 @@ export const regexFirstname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
 export const regexLastname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
 
 export const regexPassword =
-  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!#%*?&]{8,}$/

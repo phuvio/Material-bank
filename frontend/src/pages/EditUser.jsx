@@ -51,14 +51,14 @@ const EditUser = ({ showNotification }) => {
       return
     }
 
-    const formToSubmit = new FormData()
+    const formToSubmit = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      role: formData.role,
+    }
 
-    formToSubmit.append('first_name', formData.first_name)
-    formToSubmit.append('last_name', formData.last_name)
-    formToSubmit.append('role', formData.role)
-
-    if (!(formData.password === '')) {
-      formToSubmit.append('password', formData.password)
+    if (formData.password && formData.password !== '') {
+      formToSubmit.password = formData.password
     }
 
     userService
@@ -120,6 +120,7 @@ const EditUser = ({ showNotification }) => {
           value={formData.password}
           onChange={handleFormChange}
         />
+        {errors.password && <span>{errors.password}</span>}
         <label htmlFor="role">Rooli:</label>
         <select
           id="role"

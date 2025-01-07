@@ -68,7 +68,7 @@ describe('NewUser Component', () => {
   test('displays success notification after successful user creation', async () => {
     userService.create.mockResolvedValue({
       id: 1,
-      username: 'doe@proneuron.fi',
+      username: 'john.doe@proneuron.fi',
     })
 
     render(<NewUser showNotification={showNotificationMock} />)

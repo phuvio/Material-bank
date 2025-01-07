@@ -24,19 +24,22 @@ const NewUser = ({ showNotification }) => {
 
     if (validate()) {
       showNotification('Käyttäjä luotu onnistuneesti', 'message', 2000)
-      userService.create(formData).then(() => {
-        setFormData({
-          username: '@proneuron.fi',
-          first_name: '',
-          last_name: '',
-          password: '',
-          role: '',
+      userService
+        .create(formData)
+        .then(() => {
+          setFormData({
+            username: '@proneuron.fi',
+            first_name: '',
+            last_name: '',
+            password: '',
+            role: '',
+          })
+          setErrors({})
         })
-      })
-      setErrors({}).catch((error) => {
-        console.log('Error creating user:', error)
-        showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
-      })
+        .catch((error) => {
+          console.log('Error creating user:', error)
+          showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
+        })
     } else {
       showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
     }
@@ -50,7 +53,7 @@ const NewUser = ({ showNotification }) => {
     const regexFirstname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
     const regexLastname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
     const regexPassword =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!#%*?&]{8,}$/
 
     if (!formData.username || !regexUsername.test(formData.username)) {
       newErrors.username = !formData.username
@@ -76,7 +79,7 @@ const NewUser = ({ showNotification }) => {
     if (!formData.password || !regexPassword.test(formData.password)) {
       newErrors.password = !formData.password
         ? 'Salasana on pakollinen'
-        : 'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältäen pienen ja ison kirjaimen sekä numeron'
+        : 'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki: @$!#%*?&'
       isValid = false
     }
 

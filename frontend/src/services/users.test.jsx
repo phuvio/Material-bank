@@ -7,7 +7,7 @@ vi.mock('axios')
 
 describe('usersService', () => {
   afterEach(() => {
-    vi.clearAllMocks()
+    vi.clearAllMocks() // Clear mocks after each test
   })
 
   test('getAll fetches all users successfully', async () => {
@@ -37,6 +37,30 @@ describe('usersService', () => {
     expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users`)
   })
 
+  test('getSingle fetches a single user successfully', async () => {
+    const mockUser = { id: 1, name: 'John Doe' }
+
+    // Mock resolved value for axios.get
+    axios.get.mockResolvedValueOnce({ data: mockUser })
+
+    const result = await userService.getSingle(1)
+
+    // Ensure the correct API endpoint is called
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users/1`)
+    // Ensure the returned data matches the mock
+    expect(result).toEqual(mockUser)
+  })
+
+  test('getSingle handles fetch error for a single user', async () => {
+    const errorMessage = 'User not found'
+    axios.get.mockRejectedValueOnce(new Error(errorMessage))
+
+    await expect(userService.getSingle(1)).rejects.toThrow(errorMessage)
+
+    // Ensure the correct API endpoint is called
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users/1`)
+  })
+
   test('create posts a new user successfully', async () => {
     const newUser = { name: 'New User' }
     const createdUser = { id: 3, name: 'New User' }
@@ -62,5 +86,33 @@ describe('usersService', () => {
 
     // Ensure the correct API endpoint and data are used
     expect(axios.post).toHaveBeenCalledWith(`${apiUrl}/api/users`, newUser)
+  })
+
+  test('update puts updated user successfully', async () => {
+    const updatedUser = { id: 1, name: 'Updated User' }
+
+    // Mock resolved value for axios.put
+    axios.put.mockResolvedValueOnce({ data: updatedUser })
+
+    const result = await userService.update(1, updatedUser)
+
+    // Ensure the correct API endpoint and data are used
+    expect(axios.put).toHaveBeenCalledWith(`${apiUrl}/api/users/1`, updatedUser)
+    // Ensure the returned data matches the mock
+    expect(result).toEqual(updatedUser)
+  })
+
+  test('update handles put error', async () => {
+    const updatedUser = { id: 1, name: 'Updated User' }
+    const errorMessage = 'Failed to update user'
+
+    axios.put.mockRejectedValueOnce(new Error(errorMessage))
+
+    await expect(userService.update(1, updatedUser)).rejects.toThrow(
+      errorMessage
+    )
+
+    // Ensure the correct API endpoint and data are used
+    expect(axios.put).toHaveBeenCalledWith(`${apiUrl}/api/users/1`, updatedUser)
   })
 })

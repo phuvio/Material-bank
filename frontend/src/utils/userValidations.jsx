@@ -51,9 +51,9 @@ export const validateUser = async (data) => {
   const errors = {}
 
   if (!data.username) {
-    errors.name = 'Käyttäjätunnus on pakollinen'
+    errors.username = 'Käyttäjätunnus on pakollinen'
   } else if (!regexUsername.test(data.username)) {
-    errors.name = 'Käyttäjätunnuksen tulee olla pronen sähköpostiosoite'
+    errors.username = 'Käyttäjätunnuksen tulee olla pronen sähköpostiosoite'
   }
 
   const isDuplicate = await checkDuplicatUsername(data.username)
@@ -77,7 +77,7 @@ export const validateUser = async (data) => {
     errors.password = 'Salasana on pakollinen'
   } else if (!regexPassword.test(data.password)) {
     errors.password =
-      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältäen pienen ja ison kirjaimen sekä numeron'
+      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki: @$!#%*?&'
   }
 
   if (!data.role) {

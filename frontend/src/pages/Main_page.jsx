@@ -5,7 +5,7 @@ import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
-import '../styles/tag.css'
+import '../styles/styles.css'
 
 const Main_page = ({ materials }) => {
   const [filter, setFilter] = useState('')
@@ -26,42 +26,50 @@ const Main_page = ({ materials }) => {
 
   return (
     <div>
-      <h2>Etsi materaaleista</h2>
-      <Filter
-        value={filter}
-        handleChange={({ target }) => setFilter(target.value)}
-      />
-      <br></br>
-      <TagFilter
-        tags={tags}
-        selectedTags={selectedTags}
-        toggleTags={toggleTags}
-      />
-      <h1>Materiaalit</h1>
-      <ul>
-        {materialsToShow.map(
-          (material) =>
-            material.visible && (
-              <li key={material.id}>
-                <Link to={`/materials/${material.id}`}>{material.name}</Link>
-                {material.Tags &&
-                  material.Tags.slice()
-                    .sort((a, b) => (a.name > b.name ? 1 : -1))
-                    .map((tag) => (
-                      <span
-                        key={tag.id}
-                        className="tag"
-                        style={{ backgroundColor: tag.color }}
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                {material.is_url && <LoadLinkButton url={material.url} />}
-                {!material.is_url && <LoadMaterialButton material={material} />}
-              </li>
-            )
-        )}
-      </ul>
+      <div className="left-section">
+        <div className="filter">
+          <h2>Etsi materaaleista</h2>
+          <Filter
+            value={filter}
+            handleChange={({ target }) => setFilter(target.value)}
+          />
+          <br></br>
+          <TagFilter
+            tags={tags}
+            selectedTags={selectedTags}
+            toggleTags={toggleTags}
+          />
+        </div>
+      </div>
+      <div className="right-section">
+        <h1>Materiaalit</h1>
+        <ul>
+          {materialsToShow.map(
+            (material) =>
+              material.visible && (
+                <li key={material.id}>
+                  <Link to={`/materials/${material.id}`}>{material.name}</Link>
+                  {material.Tags &&
+                    material.Tags.slice()
+                      .sort((a, b) => (a.name > b.name ? 1 : -1))
+                      .map((tag) => (
+                        <span
+                          key={tag.id}
+                          className="tag"
+                          style={{ backgroundColor: tag.color }}
+                        >
+                          {tag.name}
+                        </span>
+                      ))}
+                  {material.is_url && <LoadLinkButton url={material.url} />}
+                  {!material.is_url && (
+                    <LoadMaterialButton material={material} />
+                  )}
+                </li>
+              )
+          )}
+        </ul>
+      </div>
       <p>
         <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
       </p>

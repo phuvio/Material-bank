@@ -1,0 +1,167 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Logo and Navigation Links */
+  header .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  header nav {
+    display: flex;
+    gap: 15px;
+  }
+  
+  header nav a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+  }
+  
+  header nav a:hover {
+    color: #007BFF;
+  }
+  
+  /* Dropdown Menu */
+  header .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  header .dropdown button {
+    background: none;
+    border: none;
+    font-size: 1em;
+    color: #555;
+    cursor: pointer;
+  }
+  
+  header .dropdown button:hover {
+    color: #007BFF;
+  }
+  
+  header .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  header .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  header .dropdown-content a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    display: block;
+  }
+  
+  header .dropdown-content a:hover {
+    background-color: #f4f4f4;
+  }
+  
+  /* Main Page Layout */
+  main {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  main .left-section,
+  main .right-section {
+    flex: 1;
+    min-width: 300px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Left Section: Filter and Favorites */
+  main .left-section h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  main .filter {
+    margin-bottom: 20px;
+  }
+  
+  main .filter input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  main .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  main .tags .tag {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  main .tags .tag:hover {
+    background-color: #0056b3;
+  }
+  
+  main .favorites {
+    list-style: none;
+    padding: 0;
+  }
+  
+  main .favorites li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  main .favorites li:last-child {
+    border-bottom: none;
+  }
+  
+  /* Right Section: All Materials */
+  main .right-section ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  main .right-section li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  main .right-section li:last-child {
+    border-bottom: none;
+  }
+  

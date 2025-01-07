@@ -21,6 +21,7 @@ import NewTag from './pages/NewTag'
 import EditTag from './pages/EditTag'
 import EditMaterial from './pages/EditMaterial'
 import useNotification from './utils/useNotification'
+import EditUser from './pages/EditUser'
 
 const App = () => {
   const [materials, setMaterials] = useState([])
@@ -109,6 +110,10 @@ const App = () => {
             <Route
               path="/users"
               element={isLoggedIn ? <Users /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/edituser/:id"
+              element={<EditUser showNotification={showNotification} />}
             />
             <Route
               path="/newuser"

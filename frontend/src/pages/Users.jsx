@@ -36,15 +36,20 @@ const Users = () => {
       />
       <h1>Käyttäjät</h1>
       <ul>
-        {usersToShow.map((user) => (
-          <li key={user.id}>
-            {user.first_name} {user.last_name}
-            <br />
-            {user.username}
-            <br />
-            {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
-          </li>
-        ))}
+        {usersToShow
+          .slice()
+          .sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+          .map((user) => (
+            <li key={user.id}>
+              <Link to={`/edituser/${user.id}`}>
+                {user.first_name} {user.last_name}
+              </Link>
+              <br />
+              {user.username}
+              <br />
+              {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+            </li>
+          ))}
       </ul>
       <p>
         <Link to={'/newuser'}>Luo uusi käyttäjä</Link>

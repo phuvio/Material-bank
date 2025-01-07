@@ -16,7 +16,7 @@ const MaterialDetails = ({
   const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
 
-  const { tags, selectedTags, toggleTags } = selectTags()
+  const { tags, selectedTags, setSelectedTags, toggleTags } = selectTags()
 
   useEffect(() => {
     materialService
@@ -27,6 +27,10 @@ const MaterialDetails = ({
         data.id = id
         data.updated_at = date.toLocaleDateString('fi-FI')
         setMaterial(data)
+        if (data.Tags && Array.isArray(data.Tags)) {
+          const tagIds = data.Tags.map((tag) => tag.id)
+          setSelectedTags(tagIds)
+        }
       })
       .catch((error) => {
         console.log('Error fetching material:', error)
@@ -37,23 +41,34 @@ const MaterialDetails = ({
     return <div>Materiaalia ei löytynyt</div>
   }
 
-  const handleDeleteMaterail = (id) => {
+  const handleDeleteMaterail = async (id) => {
     if (window.confirm('Haluatko varmati poistaa tämän materiaalin?')) {
-      materialService
-        .remove(id)
-        .then(() => {
-          showNotification(
-            'Materiaali poistettu onnistuneesti',
-            'message',
-            2000
-          )
-          onMaterialAdded()
-          navigate('/materials')
-        })
-        .catch((error) => {
-          console.log('Error deleting material', error)
-          showNotification('Materiaalin poisto epäonnistui', 'error', 3000)
-        })
+      try {
+        await materialService.remove(id)
+        showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
+        onMaterialAdded()
+        navigate('/materials')
+      } catch (error) {
+        console.log('Error deleting material:', error)
+        showNotification('Materiaalin poisto epäonnistui', 'error', 3000)
+      }
+    }
+  }
+
+  const handleUpdateTags = async (e) => {
+    e.preventDefault()
+
+    const formToSubmit = new FormData()
+
+    formToSubmit.append('tagIds', JSON.stringify(selectedTags))
+
+    try {
+      await materialService.update(id, formToSubmit)
+      showNotification('Tagit päivitetty onnistuneesti', 'message', 2000)
+      onMaterialAdded()
+    } catch (error) {
+      console.log('Error updating tags', error)
+      showNotification('Tagien päivitys epäonnistui', 'error', 3000)
     }
   }
 
@@ -82,9 +97,10 @@ const MaterialDetails = ({
         <h2>Muokkaa tageja</h2>
         <TagFilter
           tags={tags}
-          selectedTags={material.Tags}
+          selectedTags={selectedTags}
           toggleTags={toggleTags}
         />
+        <button onClick={(e) => handleUpdateTags(e)}>Päivitä tagit</button>
       </div>
       <div>
         {(loggedInUser.role === 0 || loggedInUser.id === material.User.id) && (

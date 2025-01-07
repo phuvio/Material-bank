@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import tagService from '../services/tags'
 
 export const selectTags = () => {
@@ -11,15 +11,15 @@ export const selectTags = () => {
     })
   }, [])
 
-  const toggleTags = (tagId) => {
+  const toggleTags = useCallback((tagId) => {
     setSelectedTags((prevSelected) =>
       prevSelected.includes(tagId)
         ? prevSelected.filter((id) => id !== tagId)
         : [...prevSelected, tagId]
     )
-  }
+  }, [])
 
-  return { tags, selectedTags, toggleTags }
+  return { tags, selectedTags, setSelectedTags, toggleTags }
 }
 
 export default selectTags

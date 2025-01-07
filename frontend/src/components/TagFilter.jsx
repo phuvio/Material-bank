@@ -1,11 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 
 const TagFilter = ({ tags, selectedTags, toggleTags }) => {
-  const sortedTags = useMemo(() => {
-    return tags.slice().sort((a, b) => (a.name > b.name ? 1 : -1))
-  }, [tags])
-
-  const selectedTagsIds = selectedTags.map((tag) => tag.id)
+  const sortedTags = tags.slice().sort((a, b) => (a.name > b.name ? 1 : -1))
 
   return (
     <div>
@@ -13,7 +9,7 @@ const TagFilter = ({ tags, selectedTags, toggleTags }) => {
         <label key={tag.id}>
           <input
             type="checkbox"
-            checked={selectedTagsIds.includes(tag.id)}
+            checked={selectedTags.includes(tag.id)}
             onChange={() => toggleTags(tag.id)}
           />
           {tag.name}

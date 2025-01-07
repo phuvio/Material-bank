@@ -149,7 +149,7 @@ router.put('/:id', upload.single('material'), async (req, res) => {
       { where: { id: materialId }, transaction }
     )
 
-    if (affectedRows === 0) {
+    if (affectedRows === 0 && !tagIds) {
       await transaction.rollback()
       return res.status(404).json({ error: 'Material not found' })
     }

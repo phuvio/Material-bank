@@ -37,23 +37,27 @@ const TagAdmin = () => {
         )
 
   return (
-    <div>
-      <h2>Etsi tageista</h2>
-      <Filter
-        value={filter}
-        handleChange={({ target }) => setFilter(target.value)}
-      />
-      <h1>Tagit</h1>
-      <ul>
-        {tagsToShow.map((tag) => (
-          <li key={tag.id}>
-            <Link to={`/tags/${tag.id}`}>{tag.name}</Link>
-          </li>
-        ))}
-      </ul>
-      <p>
-        <Link to={'/newtag'}>Luo uusi tagi</Link>
-      </p>
+    <div className="container">
+      <div className="column left">
+        <h2>Etsi tageista</h2>
+        <Filter
+          value={filter}
+          handleChange={({ target }) => setFilter(target.value)}
+        />
+        <p>
+          <Link to={'/newtag'}>Luo uusi tagi</Link>
+        </p>
+      </div>
+      <div className="column right">
+        <h1>Tagit</h1>
+        <ul>
+          {tagsToShow.map((tag) => (
+            <li key={tag.id}>
+              <Link to={`/tags/${tag.id}`}>{tag.name}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

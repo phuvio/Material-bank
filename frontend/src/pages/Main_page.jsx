@@ -25,8 +25,8 @@ const Main_page = ({ materials }) => {
   })
 
   return (
-    <div>
-      <div className="left-section">
+    <div className="container">
+      <div className="column left">
         <div className="filter">
           <h2>Etsi materaaleista</h2>
           <Filter
@@ -40,14 +40,21 @@ const Main_page = ({ materials }) => {
             toggleTags={toggleTags}
           />
         </div>
+        <p>
+          <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
+        </p>
       </div>
-      <div className="right-section">
+      <div className="column right">
         <h1>Materiaalit</h1>
         <ul>
           {materialsToShow.map(
             (material) =>
               material.visible && (
                 <li key={material.id}>
+                  {material.is_url && <LoadLinkButton url={material.url} />}
+                  {!material.is_url && (
+                    <LoadMaterialButton material={material} />
+                  )}
                   <Link to={`/materials/${material.id}`}>{material.name}</Link>
                   {material.Tags &&
                     material.Tags.slice()
@@ -61,18 +68,11 @@ const Main_page = ({ materials }) => {
                           {tag.name}
                         </span>
                       ))}
-                  {material.is_url && <LoadLinkButton url={material.url} />}
-                  {!material.is_url && (
-                    <LoadMaterialButton material={material} />
-                  )}
                 </li>
               )
           )}
         </ul>
       </div>
-      <p>
-        <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
-      </p>
     </div>
   )
 }

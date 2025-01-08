@@ -28,32 +28,36 @@ const Users = () => {
         )
 
   return (
-    <div>
-      <h2>Etsi käyttäjistä</h2>
-      <Filter
-        value={filter}
-        handleChange={({ target }) => setFilter(target.value)}
-      />
-      <h1>Käyttäjät</h1>
-      <ul>
-        {usersToShow
-          .slice()
-          .sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
-          .map((user) => (
-            <li key={user.id}>
-              <Link to={`/edituser/${user.id}`}>
-                {user.first_name} {user.last_name}
-              </Link>
-              <br />
-              {user.username}
-              <br />
-              {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
-            </li>
-          ))}
-      </ul>
-      <p>
-        <Link to={'/newuser'}>Luo uusi käyttäjä</Link>
-      </p>
+    <div className="container">
+      <div className="column left">
+        <h2>Etsi käyttäjistä</h2>
+        <Filter
+          value={filter}
+          handleChange={({ target }) => setFilter(target.value)}
+        />
+        <p>
+          <Link to={'/newuser'}>Luo uusi käyttäjä</Link>
+        </p>
+      </div>
+      <div className="column right">
+        <h1>Käyttäjät</h1>
+        <ul>
+          {usersToShow
+            .slice()
+            .sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+            .map((user) => (
+              <li key={user.id}>
+                <Link to={`/edituser/${user.id}`}>
+                  {user.first_name} {user.last_name}
+                </Link>
+                <br />
+                {user.username}
+                <br />
+                {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   )
 }

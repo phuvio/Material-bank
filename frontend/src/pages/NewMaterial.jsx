@@ -136,7 +136,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
 
         {!formData.is_url && (
           <>
-            <label htmlFor="material" aria-label="Material"></label>
+            <label htmlFor="material"></label>
             <input
               type="file"
               id="material"

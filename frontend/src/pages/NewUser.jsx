@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import userService from '../services/users'
+import { validateUser } from '../utils/userValidations'
 
 const NewUser = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -19,14 +20,17 @@ const NewUser = ({ showNotification }) => {
     }))
   }
 
-  const addUser = (event) => {
+  const addUser = async (event) => {
     event.preventDefault()
 
-    if (validate()) {
-      showNotification('Käyttäjä luotu onnistuneesti', 'message', 2000)
+    const validationErrors = await validateUser(formData)
+    setErrors(validationErrors)
+
+    if (Object.keys(validationErrors).length === 0) {
       userService
         .create(formData)
         .then(() => {
+          showNotification('Käyttäjä luotu onnistuneesti', 'message', 2000)
           setFormData({
             username: '@proneuron.fi',
             first_name: '',
@@ -43,53 +47,6 @@ const NewUser = ({ showNotification }) => {
     } else {
       showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
     }
-  }
-
-  const validate = () => {
-    let isValid = true
-    const newErrors = {}
-    const regexUsername =
-      /^[a-zA-Z]+(-[a-zA-Z]+)?\.[a-zA-Z]+(-[a-zA-Z]+)?@proneuron\.fi$/
-    const regexFirstname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
-    const regexLastname = /^[a-zA-ZäöåÄÖÅ]+(-[a-zA-ZäöåÄÖÅ]+)?$/
-    const regexPassword =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d@$!#%*?&]{8,}$/
-
-    if (!formData.username || !regexUsername.test(formData.username)) {
-      newErrors.username = !formData.username
-        ? 'Käyttäjätunnus on pakollinen'
-        : 'Käyttäjätunnuksen tulee olla pronen sähköpostiosoite'
-      isValid = false
-    }
-
-    if (!formData.first_name || !regexFirstname.test(formData.first_name)) {
-      newErrors.first_name = !formData.first_name
-        ? 'Etunimi on pakollinen'
-        : 'Etunimi saa sisältää vain kirjaimia ja väliviivan'
-      isValid = false
-    }
-
-    if (!formData.last_name || !regexLastname.test(formData.last_name)) {
-      newErrors.last_name = !formData.last_name
-        ? 'Sukunimi on pakollinen'
-        : 'Sukunimi saa sisältää vain kirjaimia ja väliviivan'
-      isValid = false
-    }
-
-    if (!formData.password || !regexPassword.test(formData.password)) {
-      newErrors.password = !formData.password
-        ? 'Salasana on pakollinen'
-        : 'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki: @$!#%*?&'
-      isValid = false
-    }
-
-    if (!formData.role) {
-      newErrors.role = 'Rooli on pakollinen'
-      isValid = false
-    }
-
-    setErrors(newErrors)
-    return isValid
   }
 
   return (

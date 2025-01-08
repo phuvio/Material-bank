@@ -7,18 +7,15 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-vi.mock('../services/users', () => ({
-  default: {
-    create: vi.fn().mockResolvedValue({}),
-    update: vi.fn().mockResolvedValue({}),
-    getSingle: vi.fn().mockResolvedValue({}),
-    getAll: vi.fn().mockResolvedValue([]),
-  },
-}))
+vi.mock('../services/users')
 
 const showNotificationMock = vi.fn()
 
 describe('NewUser Component', () => {
+  beforeEach(() => {
+    userService.create.mockResolvedValue()
+  })
+
   test('renders form inputs and submit button', () => {
     render(<NewUser showNotification={showNotificationMock} />)
 

@@ -89,73 +89,102 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Luo uusi materiaali</h1>
       <form onSubmit={addMaterial}>
-        <label htmlFor="name">Materiaalin nimi:</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleFormChange}
-        />
-        {errors.name && <span>{errors.name}</span>}
-
-        <label htmlFor="description">Kuvaus:</label>
-        <input
-          type="text"
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleFormChange}
-        />
-        {errors.description && <span>{errors.description}</span>}
-
-        <label htmlFor="is_url">Onko materiaali linkki:</label>
-        <input
-          type="checkbox"
-          id="is_url"
-          name="is_url"
-          checked={formData.is_url}
-          onChange={handleFormChange}
-        />
-        {formData.is_url && (
-          <>
-            <label htmlFor="url">Linkki:</label>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="name">Materiaalin nimi:</label>
+          </div>
+          <div className="col-75">
             <input
-              type="url"
-              id="url"
-              name="url"
-              value={formData.url}
+              id="name"
+              type="text"
+              name="name"
+              value={formData.name}
               onChange={handleFormChange}
             />
-            {errors.url && <span>{errors.url}</span>}
-          </>
-        )}
+            {errors.name && <span className="error-text">{errors.name}</span>}
+          </div>
+        </div>
 
-        {!formData.is_url && (
-          <>
-            <label htmlFor="material"></label>
-            <input
-              type="file"
-              id="material"
-              name="material"
-              aria-label="Material"
-              onChange={handleFileChange}
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="description">Kuvaus:</label>
+          </div>
+          <div className="col-75">
+            <textarea
+              type="text"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleFormChange}
             />
-            {errors.material && <span>{errors.material}</span>}
-          </>
-        )}
+            {errors.description && (
+              <span className="error-text">{errors.description}</span>
+            )}
+          </div>
+        </div>
 
-        <button type="submit">Tallenna</button>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="is_url">Onko materiaali linkki:</label>
+          </div>
+          <div className="col-75">
+            <input
+              type="checkbox"
+              id="is_url"
+              name="is_url"
+              checked={formData.is_url}
+              onChange={handleFormChange}
+            />
+            {formData.is_url && (
+              <>
+                <label htmlFor="url">Linkki:</label>
+                <input
+                  type="url"
+                  id="url"
+                  name="url"
+                  value={formData.url}
+                  onChange={handleFormChange}
+                />
+                {errors.url && <span className="error-text">{errors.url}</span>}
+              </>
+            )}
+
+            {!formData.is_url && (
+              <>
+                <label htmlFor="material"></label>
+                <input
+                  type="file"
+                  id="material"
+                  name="material"
+                  aria-label="Material"
+                  onChange={handleFileChange}
+                />
+                {errors.material && (
+                  <span className="error-text">{errors.material}</span>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="tags">Valitse tagit:</label>
+          </div>
+          <div className="col-75">
+            <TagFilter
+              tags={tags}
+              selectedTags={selectedTags}
+              toggleTags={toggleTags}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <button type="submit">Tallenna</button>
+        </div>
       </form>
-
-      <TagFilter
-        tags={tags}
-        selectedTags={selectedTags}
-        toggleTags={toggleTags}
-      />
     </div>
   )
 }

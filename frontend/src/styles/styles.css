@@ -21,6 +21,19 @@ body {
     width: 65%;
   }
   
+h1 {
+  font-size: 200%;
+}
+
+h2 {
+  font-size: 140%;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
 ul {
   list-style-type: none;
 }
@@ -42,4 +55,68 @@ li button {
   margin-right: auto;
   margin: 5px 2px 2px 10px;
   width: 110px;
+}
+
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.container {
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.col-75 {
+  position: relative;
+  width: 75%;
+  float: left;
+}
+
+input[type=text], input[type=url], select, textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=text], select, textarea {
+  width: 40%;
+}
+
+input[type=url] {
+  width: 35%;
+}
+
+button[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 60%;
+}
+
+button[type=submit]:hover {
+  background-color: #45a049;
+}
+
+textarea {
+  height: 100px;
+}
+
+.error-text {
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
 }

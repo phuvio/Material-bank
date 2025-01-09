@@ -33,7 +33,6 @@ const Main_page = ({ materials }) => {
             value={filter}
             handleChange={({ target }) => setFilter(target.value)}
           />
-          <br></br>
           <TagFilter
             tags={tags}
             selectedTags={selectedTags}

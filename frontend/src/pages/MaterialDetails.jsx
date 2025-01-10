@@ -115,7 +115,7 @@ const MaterialDetails = ({
         </button>
       </div>
       <div className="row">
-        {(loggedInUser.role === 0 || loggedInUser.id === material.User.id) && (
+        {(loggedInUser.role === 1 || loggedInUser.id === material.User.id) && (
           <>
             <div className="row">
               <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>

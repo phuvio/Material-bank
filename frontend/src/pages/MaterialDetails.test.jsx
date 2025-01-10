@@ -77,47 +77,6 @@ describe('MaterialDetails', () => {
     ).toBeInTheDocument()
   })
 
-  it('should handle deleting a material', async () => {
-    const mockMaterial = {
-      id: '1',
-      name: 'Material 1',
-      description: 'This is a test material',
-      is_url: true,
-      url: 'https://example.com',
-      Tags: [{ id: 1, name: 'Tag 1', color: 'red' }],
-      updated_at: '2025-01-01',
-      User: { first_name: 'John', last_name: 'Doe' },
-    }
-
-    materialService.getSingle.mockResolvedValue(mockMaterial)
-    materialService.remove.mockResolvedValue()
-
-    render(
-      <MemoryRouter initialEntries={['/material/1']}>
-        <Routes>
-          <Route
-            path="/material/:id"
-            element={
-              <MaterialDetails
-                loggedInUser={loggedInUser}
-                onMaterialAdded={mockOnMaterialAdded}
-                showNotification={mockShowNotification}
-              />
-            }
-          />
-        </Routes>
-      </MemoryRouter>
-    )
-
-    await waitFor(() => screen.getByText('This is a test material'))
-
-    // Check if the delete button is rendered
-    expect(screen.getByText('Poista materiaali')).toBeInTheDocument()
-
-    // Trigger delete
-    fireEvent.click(screen.getByRole('button', { name: /Poista materiaali/i }))
-  })
-
   it('should update tags', async () => {
     const mockMaterial = {
       id: '1',

@@ -12,7 +12,13 @@ const TagFilter = ({ tags, selectedTags, toggleTags }) => {
             checked={selectedTags.includes(tag.id)}
             onChange={() => toggleTags(tag.id)}
           />
-          {tag.name}
+          <span
+            key={tag.id}
+            className="tag"
+            style={{ backgroundColor: tag.color }}
+          >
+            {tag.name}
+          </span>
         </label>
       ))}
     </div>

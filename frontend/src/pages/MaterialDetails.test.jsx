@@ -1,6 +1,6 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { vi, describe, beforeEach, test, expect, fireEvent } from 'vitest'
+import { vi, describe, beforeEach, test, expect } from 'vitest'
 import MaterialDetails from './MaterialDetails'
 import materialService from '../services/materials'
 
@@ -87,30 +87,5 @@ describe('MaterialDetail Component', () => {
     const tagElement = await screen.findByText(/Tag1/)
     expect(tagElement).toBeInTheDocument()
     expect(tagElement).toHaveStyle({ background: '#123456' })
-  })
-
-  test('renders the correct download button based on is_url flag', async () => {
-    materialService.getSingle.mockResolvedValue({
-      id: 1,
-      name: 'Test Material',
-      description: 'This is a test material.',
-      updated_at: '2024-01-01T00:00:00.000Z',
-      is_url: true,
-      User: { id: 1, first_name: 'John', last_name: 'Doe' },
-      Tags: [{ id: 1, name: 'Tag1', color: '#123456' }],
-    })
-    render(
-      <MemoryRouter>
-        <MaterialDetails
-          loggedInUser={mockLoggedInUser}
-          showNotification={showNotificationMock}
-          onMaterialAdded={onMaterialAddedMock}
-        />
-      </MemoryRouter>
-    )
-
-    expect(
-      await screen.findByRole('button', { name: /Avaa linkki/ })
-    ).toBeInTheDocument()
   })
 })

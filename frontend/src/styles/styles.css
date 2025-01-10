@@ -120,6 +120,7 @@ button[type=submit]:hover {
 
 textarea {
   height: 100px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .error-text {

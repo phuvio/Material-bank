@@ -28,10 +28,18 @@ describe('TagAdmin Component', () => {
     expect(screen.getByText('Tagit')).toBeInTheDocument()
 
     // Wait for the tags to load and be displayed
-    await waitFor(() => screen.getByText('Tag1'))
-    expect(screen.getByText('Tag1')).toBeInTheDocument()
-    expect(screen.getByText('Tag2')).toBeInTheDocument()
-    expect(screen.getByText('Tag3')).toBeInTheDocument()
+    await waitFor(() => {
+      const tagElements = screen.getAllByText('Tag1')
+      expect(tagElements).toHaveLength(2)
+    })
+    await waitFor(() => {
+      const tagElements2 = screen.getAllByText('Tag2')
+      expect(tagElements2).toHaveLength(2)
+    })
+    await waitFor(() => {
+      const tagElements3 = screen.getAllByText('Tag3')
+      expect(tagElements3).toHaveLength(2)
+    })
   })
 
   it('filters tags based on input', async () => {
@@ -42,14 +50,16 @@ describe('TagAdmin Component', () => {
     )
 
     // Wait for tags to load
-    await waitFor(() => screen.getByText('Tag1'))
+    await waitFor(() => {
+      const tagElements = screen.getAllByText('Tag1')
+      expect(tagElements).toHaveLength(2)
+    })
 
     // Find filter input and change value
     const filterInput = screen.getByRole('textbox')
     fireEvent.change(filterInput, { target: { value: 'Tag1' } })
 
     // Check if only the filtered tag is displayed
-    await waitFor(() => expect(screen.getByText('Tag1')).toBeInTheDocument())
     expect(screen.queryByText('Tag2')).toBeNull()
     expect(screen.queryByText('Tag3')).toBeNull()
   })

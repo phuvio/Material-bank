@@ -79,10 +79,10 @@ describe('EditMaterial Component', () => {
     )
 
     // Change the name and description
-    fireEvent.change(screen.getByLabelText('Materiaalin nimi'), {
+    fireEvent.change(screen.getByLabelText('Materiaalin nimi:'), {
       target: { value: 'Updated Material' },
     })
-    fireEvent.change(screen.getByLabelText('Kuvaus'), {
+    fireEvent.change(screen.getByLabelText('Kuvaus:'), {
       target: { value: 'Updated description' },
     })
 
@@ -154,10 +154,10 @@ describe('EditMaterial Component', () => {
     )
 
     // Change form data
-    fireEvent.change(screen.getByLabelText('Materiaalin nimi'), {
+    fireEvent.change(screen.getByLabelText('Materiaalin nimi:'), {
       target: { value: 'Updated Material' },
     })
-    fireEvent.change(screen.getByLabelText('Kuvaus'), {
+    fireEvent.change(screen.getByLabelText('Kuvaus:'), {
       target: { value: 'Updated description' },
     })
 

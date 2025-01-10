@@ -74,30 +74,42 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>Muokkaa materiaalia</h2>
       <form onSubmit={updateMaterial}>
-        <label htmlFor="name">Materiaalin nimi</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleFormChange}
-        />
-        {errors.name && <span>{errors.name}</span>}
-
-        <label htmlFor="description">Kuvaus</label>
-        <input
-          id="description"
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleFormChange}
-        />
-        {errors.description && <span>{errors.description}</span>}
-
-        <button type="submit">Tallenna</button>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="name">Materiaalin nimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleFormChange}
+            />
+            {errors.name && <span>{errors.name}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="description">Kuvaus:</label>
+          </div>
+          <div className="col-75">
+            <textarea
+              id="description"
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleFormChange}
+            />
+            {errors.description && <span>{errors.description}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <button type="submit">Tallenna</button>
+        </div>
       </form>
     </div>
   )

@@ -16,8 +16,8 @@ describe('NewTag Component', () => {
     render(<NewTag showNotification={showNotificationMock} />)
 
     // Check if the form elements are rendered
-    expect(screen.getByLabelText('Nimi')).toBeInTheDocument()
-    expect(screen.getByRole('textbox', { name: /nimi/i })).toBeInTheDocument()
+    expect(screen.getByLabelText('Nimi:')).toBeInTheDocument()
+    expect(screen.getByRole('textbox', { name: /Nimi:/i })).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /luo tagi/i })
     ).toBeInTheDocument()

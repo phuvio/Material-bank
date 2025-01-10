@@ -8,14 +8,7 @@ beforeEach(() => {
   vi.clearAllMocks()
 })
 
-vi.mock('../services/users', () => ({
-  default: {
-    create: vi.fn(),
-    update: vi.fn(),
-    getSingle: vi.fn(),
-    getAll: vi.fn(),
-  },
-}))
+vi.mock('../services/users')
 
 const showNotificationMock = vi.fn()
 

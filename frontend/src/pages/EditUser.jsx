@@ -151,8 +151,8 @@ const EditUser = ({ showNotification }) => {
               onChange={handleFormChange}
             >
               <option value="">Valitse</option>
-              <option value="1">Pääkäyttäjä</option>
-              <option value="2">Peruskäyttäjä</option>
+              <option value="admin">Pääkäyttäjä</option>
+              <option value="basic">Peruskäyttäjä</option>
             </select>
             {errors.role && <span>{errors.role}</span>}
           </div>

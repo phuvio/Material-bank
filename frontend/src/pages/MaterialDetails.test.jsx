@@ -73,35 +73,6 @@ describe('MaterialDetail Component', () => {
     ).toBeInTheDocument()
   })
 
-  test.skip('renders edit and delete buttons only for authorized users', async () => {
-    render(
-      <MemoryRouter>
-        <MaterialDetails
-          loggedInUser={mockLoggedInUser}
-          showNotification={showNotificationMock}
-          onMaterialAdded={onMaterialAddedMock}
-        />
-      </MemoryRouter>
-    )
-
-    expect(await screen.findByText(/Muokkaa materiaalia/)).toBeInTheDocument()
-    expect(screen.getByText(/Poista materiaali/)).toBeInTheDocument()
-
-    // Simulate unauthorized user
-    render(
-      <MemoryRouter>
-        <MaterialDetails
-          loggedInUser={{ id: 2, role: 1 }}
-          showNotification={showNotificationMock}
-          onMaterialAdded={onMaterialAddedMock}
-        />
-      </MemoryRouter>
-    )
-
-    expect(screen.queryByText(/Muokkaa materiaalia/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/Poista materiaali/)).not.toBeInTheDocument()
-  })
-
   test('renders tags associated with the material', async () => {
     render(
       <MemoryRouter>

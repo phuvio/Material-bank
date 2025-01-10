@@ -5,7 +5,6 @@ import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
-import '../styles/styles.css'
 
 const Main_page = ({ materials }) => {
   const [filter, setFilter] = useState('')

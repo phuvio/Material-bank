@@ -50,58 +50,94 @@ const NewUser = ({ showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Luo uusi käyttäjä</h1>
       <form onSubmit={addUser}>
-        <label htmlFor="username">Käyttäjätunnus:</label>
-        <input
-          id="username"
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleFormChange}
-        />
-        {errors.username && <p>{errors.username}</p>}
-        <label htmlFor="first_name">Etunimi:</label>
-        <input
-          id="first_name"
-          type="text"
-          name="first_name"
-          value={formData.first_name}
-          onChange={handleFormChange}
-        />
-        {errors.first_name && <p>{errors.first_name}</p>}
-        <label htmlFor="last_name">Sukunimi:</label>
-        <input
-          id="last_name"
-          type="text"
-          name="last_name"
-          value={formData.last_name}
-          onChange={handleFormChange}
-        />
-        {errors.last_name && <p>{errors.last_name}</p>}
-        <label htmlFor="password">Salasana:</label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleFormChange}
-        />
-        {errors.password && <p>{errors.password}</p>}
-        <label htmlFor="role">Rooli:</label>
-        <select
-          id="role"
-          name="role"
-          value={formData.role}
-          onChange={handleFormChange}
-        >
-          <option value="">Valitse</option>
-          <option value="1">Pääkäyttäjä</option>
-          <option value="2">Peruskäyttäjä</option>
-        </select>
-        {errors.role && <p>{errors.role}</p>}
-        <button type="submit">Tallenna</button>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="username">Käyttäjätunnus:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="username"
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleFormChange}
+            />
+            {errors.username && <p className="error-text">{errors.username}</p>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="first_name">Etunimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="first_name"
+              type="text"
+              name="first_name"
+              value={formData.first_name}
+              onChange={handleFormChange}
+            />
+            {errors.first_name && (
+              <p className="error-text">{errors.first_name}</p>
+            )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="last_name">Sukunimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="last_name"
+              type="text"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleFormChange}
+            />
+            {errors.last_name && (
+              <p className="error-text">{errors.last_name}</p>
+            )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="password">Salasana:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleFormChange}
+            />
+            {errors.password && <p className="error-text">{errors.password}</p>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="role">Rooli:</label>
+          </div>
+          <div className="col-75">
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleFormChange}
+            >
+              <option value="">Valitse</option>
+              <option value="1">Pääkäyttäjä</option>
+              <option value="2">Peruskäyttäjä</option>
+            </select>
+            {errors.role && <p className="error-text">{errors.role}</p>}
+          </div>
+        </div>
+        <div className="row">
+          <button type="submit">Tallenna</button>
+        </div>
       </form>
     </div>
   )

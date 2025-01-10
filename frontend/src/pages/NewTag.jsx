@@ -52,30 +52,42 @@ const NewTag = ({ showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Luo uusi tagi</h1>
       <form onSubmit={addTag}>
-        <div>
-          <label htmlFor="name">Nimi</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleFormChange}
-          />
-          {errors.name && <span>{errors.name}</span>}
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="name">Nimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleFormChange}
+            />
+            {errors.name && <span className="error-text">{errors.name}</span>}
+          </div>
         </div>
         <br></br>
-        <div>
-          <ColorPicker
-            selectedColor={formData.color}
-            onColorChange={handleColorChange}
-          />
-          {errors.color && <span>{errors.color}</span>}
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="color">Valitse tagin väri:</label>
+          </div>
+          <div className="col-75">
+            <ColorPicker
+              selectedColor={formData.color}
+              onColorChange={handleColorChange}
+              className="color-picker"
+            />
+            {errors.color && <span className="error-text">{errors.color}</span>}
+          </div>
         </div>
         <br></br>
-        <button type="submit">Luo tagi</button>
+        <div className="row">
+          <button type="submit">Luo tagi</button>
+        </div>
       </form>
     </div>
   )

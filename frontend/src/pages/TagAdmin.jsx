@@ -54,6 +54,13 @@ const TagAdmin = () => {
           {tagsToShow.map((tag) => (
             <li key={tag.id}>
               <Link to={`/tags/${tag.id}`}>{tag.name}</Link>
+              <span
+                key={tag.id}
+                className="tag"
+                style={{ backgroundColor: tag.color }}
+              >
+                {tag.name}
+              </span>
             </li>
           ))}
         </ul>

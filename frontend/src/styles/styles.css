@@ -57,6 +57,11 @@ li button {
   width: 110px;
 }
 
+.row {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
 .row::after {
   content: "";
   display: table;
@@ -66,22 +71,25 @@ li button {
 .container {
   border-radius: 5px;
   padding: 20px;
+  overflow: hidden;
 }
 
 .col-25 {
   float: left;
   width: 25%;
-  margin-top: 6px;
+  margin-top: 1px;
+  margin-bottom: 6px;
   text-align: right;
 }
 
 .col-75 {
   position: relative;
+  margin-top: 7px;
   width: 75%;
   float: left;
 }
 
-input[type=text], input[type=url], select, textarea {
+input[type=text], input[type=password], input[type=url], select, textarea {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -97,7 +105,7 @@ input[type=url] {
 }
 
 button[type=submit] {
-  background-color: #04AA6D;
+  background-color: #45a049;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -107,7 +115,7 @@ button[type=submit] {
 }
 
 button[type=submit]:hover {
-  background-color: #45a049;
+  background-color: rgb(74, 211, 20);
 }
 
 textarea {
@@ -119,4 +127,9 @@ textarea {
   font-size: 14px;
   margin-top: 4px;
   display: block;
+}
+
+.color-picker {
+  display: inline-block;
+  max-width: 40%;
 }

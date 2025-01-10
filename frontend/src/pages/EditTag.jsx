@@ -71,31 +71,45 @@ const EditTag = ({ showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>Muokkaa tagia</h2>
       <form onSubmit={addTag}>
-        <div>
-          <label htmlFor="name">Nimi</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={tag.name}
-            onChange={handleNameChange}
-          />
-          {errors.name && <span>{errors.name}</span>}
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="name">Nimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={tag.name}
+              onChange={handleNameChange}
+            />
+            {errors.name && <span>{errors.name}</span>}
+          </div>
         </div>
         <br></br>
-        <div>
-          <ColorPicker
-            selectedColor={tag.color}
-            onColorChange={handleColorChange}
-          />
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="color">Valitse tagin väri:</label>
+          </div>
+          <div className="col-75">
+            <ColorPicker
+              selectedColor={tag.color}
+              onColorChange={handleColorChange}
+              className="color-picker"
+            />
+          </div>
         </div>
         <br></br>
-        <button type="submit">Tallenna tagi</button>
+        <div className="row">
+          <button type="submit">Tallenna tagi</button>
+        </div>
       </form>
-      <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
+      <div className="row">
+        <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
+      </div>
     </div>
   )
 }

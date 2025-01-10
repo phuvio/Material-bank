@@ -44,30 +44,41 @@ const Login = ({ onLoginSuccess, showNotification }) => {
   }
 
   return (
-    <div>
-      <h1>
-        Sisäänkirjautuminen:
-        <form onSubmit={handleLogin}>
-          <label htmlFor="username">Käyttäjätunnus:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            name="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-          <label htmlFor="password">Salasana:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            name="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-
+    <div className="container">
+      <h1>Sisäänkirjautuminen:</h1>
+      <form onSubmit={handleLogin}>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="username">Käyttäjätunnus:</label>
+          </div>
+          <div className="col-75">
+            <input
+              type="text"
+              id="username"
+              value={username}
+              name="username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="password">Salasana:</label>
+          </div>
+          <div className="col-75">
+            <input
+              type="password"
+              id="password"
+              value={password}
+              name="password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </div>
+        </div>
+        <div className="row">
           <button type="submit">Kirjaudu sisään</button>
-        </form>
-      </h1>
+        </div>
+      </form>
     </div>
   )
 }

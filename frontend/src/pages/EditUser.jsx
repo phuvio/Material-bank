@@ -89,51 +89,77 @@ const EditUser = ({ showNotification }) => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>Muokkaa käyttäjää</h2>
       <form onSubmit={updateUser}>
-        <label htmlFor="name">Etunimi:</label>
-        <input
-          id="first_name"
-          type="text"
-          name="first_name"
-          value={formData.first_name}
-          onChange={handleFormChange}
-        />
-        {errors.first_name && <span>{errors.first_name}</span>}
-        <label htmlFor="last_name">Sukunimi:</label>
-        <input
-          id="last_name"
-          type="text"
-          name="last_name"
-          value={formData.last_name}
-          onChange={handleFormChange}
-        />
-        {errors.last_name && <span>{errors.last_name}</span>}
-        <label htmlFor="password">
-          Salasana (jos jätät salasanan tyhjäksi, se ei vaihdu):
-        </label>
-        <input
-          id="password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleFormChange}
-        />
-        {errors.password && <span>{errors.password}</span>}
-        <label htmlFor="role">Rooli:</label>
-        <select
-          id="role"
-          name="role"
-          value={formData.role}
-          onChange={handleFormChange}
-        >
-          <option value="">Valitse</option>
-          <option value="1">Pääkäyttäjä</option>
-          <option value="2">Peruskäyttäjä</option>
-        </select>
-        {errors.role && <span>{errors.role}</span>}
-        <button type="submit">Tallenna</button>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="name">Etunimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="first_name"
+              type="text"
+              name="first_name"
+              value={formData.first_name}
+              onChange={handleFormChange}
+            />
+            {errors.first_name && <span>{errors.first_name}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="last_name">Sukunimi:</label>
+          </div>
+          <div className="col-75">
+            <input
+              id="last_name"
+              type="text"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleFormChange}
+            />
+            {errors.last_name && <span>{errors.last_name}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="password">
+              Salasana<br></br>(jos jätät salasanan tyhjäksi, se ei vaihdu):
+            </label>
+          </div>
+          <div className="col-75">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleFormChange}
+            />
+            {errors.password && <span>{errors.password}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-25">
+            <label htmlFor="role">Rooli:</label>
+          </div>
+          <div className="row-75">
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleFormChange}
+            >
+              <option value="">Valitse</option>
+              <option value="1">Pääkäyttäjä</option>
+              <option value="2">Peruskäyttäjä</option>
+            </select>
+            {errors.role && <span>{errors.role}</span>}
+          </div>
+        </div>
+        <div className="row">
+          <button type="submit">Tallenna</button>
+        </div>
       </form>
     </div>
   )

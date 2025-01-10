@@ -29,7 +29,7 @@ erDiagram
         VARCHAR(128) first_name
         VARCHAR(128) last_name
         VARCHAR(128) password
-        INTEGER role
+        VARCHAR(50) role
         TIMESTAMP created_at
         TIMESTAMP updated_at
     }

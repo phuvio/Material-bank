@@ -51,7 +51,7 @@ describe('App Component', () => {
 
   it('navigates to users page for admin', async () => {
     window.localStorage.getItem.mockReturnValue(
-      JSON.stringify({ username: 'admin', role: 1 })
+      JSON.stringify({ username: 'admin', role: 'admin' })
     )
     render(
       <MemoryRouter initialEntries={['/users']}>

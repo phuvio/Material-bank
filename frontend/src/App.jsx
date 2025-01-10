@@ -77,7 +77,7 @@ const App = () => {
         <div>
           <div>
             <Link to={'/'}>Materiaalit</Link>
-            {loggedInUser.role === 1 && (
+            {loggedInUser.role === 'admin' && (
               <>
                 <Link to={'/users'}>Käyttäjähallinta</Link>
                 <Link to={'/tagadmin'}>Tagien hallinta</Link>

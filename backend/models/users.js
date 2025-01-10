@@ -72,7 +72,7 @@ User.init(
       allowNull: false,
     },
     role: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     created_at: {

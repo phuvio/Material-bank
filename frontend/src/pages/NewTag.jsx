@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/tagValidations'
@@ -9,6 +10,7 @@ const NewTag = ({ showNotification }) => {
     color: '',
   })
   const [errors, setErrors] = useState({})
+  const navigate = useNavigate()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -23,6 +25,10 @@ const NewTag = ({ showNotification }) => {
       ...prevData,
       color: color,
     }))
+  }
+
+  const handleGoBack = () => {
+    navigate(-1)
   }
 
   const addTag = async (event) => {
@@ -89,6 +95,11 @@ const NewTag = ({ showNotification }) => {
           <button type="submit">Luo tagi</button>
         </div>
       </form>
+      <div className="row">
+        <button className="backButton" onClick={() => handleGoBack()}>
+          Takaisin
+        </button>
+      </div>
     </div>
   )
 }

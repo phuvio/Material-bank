@@ -23,6 +23,10 @@ const EditUser = ({ showNotification }) => {
     }))
   }
 
+  const handleGoBack = () => {
+    navigate(-1)
+  }
+
   useEffect(() => {
     userService
       .getSingle(id)
@@ -161,6 +165,9 @@ const EditUser = ({ showNotification }) => {
           <button type="submit">Tallenna</button>
         </div>
       </form>
+      <button className="backButton" onClick={() => handleGoBack()}>
+        Takaisin
+      </button>
     </div>
   )
 }

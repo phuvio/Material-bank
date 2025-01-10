@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { BrowserRouter } from 'react-router-dom'
 import NewUser from './NewUser'
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 import userService from '../services/users'
@@ -20,7 +21,11 @@ const showNotificationMock = vi.fn()
 
 describe('NewUser Component', () => {
   test('renders form inputs and submit button', () => {
-    render(<NewUser showNotification={showNotificationMock} />)
+    render(
+      <BrowserRouter>
+        <NewUser showNotification={showNotificationMock} />
+      </BrowserRouter>
+    )
 
     // Check that the form fields are rendered
     expect(screen.getByLabelText(/Käyttäjätunnus:/)).toBeInTheDocument()
@@ -34,7 +39,11 @@ describe('NewUser Component', () => {
   })
 
   test('updates form state on input change', () => {
-    render(<NewUser showNotification={showNotificationMock} />)
+    render(
+      <BrowserRouter>
+        <NewUser showNotification={showNotificationMock} />
+      </BrowserRouter>
+    )
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
     fireEvent.change(usernameInput, {
@@ -46,7 +55,11 @@ describe('NewUser Component', () => {
   })
 
   test('shows validation errors when form is submitted with missing or invalid data', async () => {
-    render(<NewUser showNotification={showNotificationMock} />)
+    render(
+      <BrowserRouter>
+        <NewUser showNotification={showNotificationMock} />
+      </BrowserRouter>
+    )
 
     const submitButton = screen.getByText(/Tallenna/)
 
@@ -71,7 +84,11 @@ describe('NewUser Component', () => {
       username: 'john.doe@proneuron.fi',
     })
 
-    render(<NewUser showNotification={showNotificationMock} />)
+    render(
+      <BrowserRouter>
+        <NewUser showNotification={showNotificationMock} />
+      </BrowserRouter>
+    )
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
     const firstNameInput = screen.getByLabelText(/Etunimi:/)
@@ -106,7 +123,11 @@ describe('NewUser Component', () => {
   test('displays failure notification after failed user creation', async () => {
     userService.create.mockRejectedValue(new Error('Error creating user'))
 
-    render(<NewUser showNotification={showNotificationMock} />)
+    render(
+      <BrowserRouter>
+        <NewUser showNotification={showNotificationMock} />
+      </BrowserRouter>
+    )
 
     const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
     const firstNameInput = screen.getByLabelText(/Etunimi:/)

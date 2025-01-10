@@ -55,6 +55,10 @@ const MaterialDetails = ({
     }
   }
 
+  const handleGoBack = () => {
+    navigate(-1)
+  }
+
   const handleUpdateTags = async (e) => {
     e.preventDefault()
 
@@ -132,6 +136,9 @@ const MaterialDetails = ({
             </div>
           </>
         )}
+        <button className="backButton" onClick={() => handleGoBack()}>
+          Takaisin
+        </button>
       </div>
       <p>
         Materiaalin tallentaja: {material.User.first_name}{' '}

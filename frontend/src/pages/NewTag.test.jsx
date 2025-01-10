@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import NewTag from './NewTag'
 import tagService from '../services/tags'
 import { vi, describe, beforeEach, it, expect } from 'vitest'
@@ -13,7 +14,11 @@ describe('NewTag Component', () => {
   })
 
   it('renders the form correctly', () => {
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     // Check if the form elements are rendered
     expect(screen.getByLabelText('Nimi:')).toBeInTheDocument()
@@ -25,7 +30,11 @@ describe('NewTag Component', () => {
   })
 
   it('displays an error message when the name is invalid', async () => {
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: '' } })
@@ -40,7 +49,11 @@ describe('NewTag Component', () => {
   })
 
   it('displays an error message when no color is selected', async () => {
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -55,7 +68,11 @@ describe('NewTag Component', () => {
   })
 
   it('calls tagService.create when the form is valid', async () => {
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -77,7 +94,11 @@ describe('NewTag Component', () => {
   })
 
   it('displays a success notification when tag is created successfully', async () => {
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     const inputName = screen.getByRole('textbox', { name: /nimi/i })
     fireEvent.change(inputName, { target: { value: 'Valid Name' } })
@@ -102,7 +123,11 @@ describe('NewTag Component', () => {
   it('displays an error notification when tag creation fails', async () => {
     tagService.create.mockRejectedValueOnce(new Error('Error creating tag'))
 
-    render(<NewTag showNotification={showNotificationMock} />)
+    render(
+      <MemoryRouter>
+        <NewTag showNotification={showNotificationMock} />
+      </MemoryRouter>
+    )
 
     fireEvent.change(screen.getByRole('textbox', { name: /nimi/i }), {
       target: { value: 'Valid Name' },

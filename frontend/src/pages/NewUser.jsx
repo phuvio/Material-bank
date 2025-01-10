@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import userService from '../services/users'
 import { validateUser } from '../utils/userValidations'
 
@@ -11,6 +12,7 @@ const NewUser = ({ showNotification }) => {
     role: '',
   })
   const [errors, setErrors] = useState({})
+  const navigate = useNavigate()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target
@@ -18,6 +20,10 @@ const NewUser = ({ showNotification }) => {
       ...prevData,
       [name]: value,
     }))
+  }
+
+  const handleGoBack = () => {
+    navigate(-1)
   }
 
   const addUser = async (event) => {
@@ -139,6 +145,9 @@ const NewUser = ({ showNotification }) => {
           <button type="submit">Tallenna</button>
         </div>
       </form>
+      <button className="backButton" onClick={() => handleGoBack()}>
+        Takaisin
+      </button>
     </div>
   )
 }

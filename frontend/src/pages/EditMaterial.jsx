@@ -36,6 +36,10 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
     }))
   }
 
+  const handleGoBack = () => {
+    navigate(-1)
+  }
+
   const updateMaterial = async (e) => {
     e.preventDefault()
 
@@ -111,6 +115,9 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
           <button type="submit">Tallenna</button>
         </div>
       </form>
+      <button className="backButton" onClick={() => handleGoBack()}>
+        Takaisin
+      </button>
     </div>
   )
 }

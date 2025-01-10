@@ -44,6 +44,10 @@ const EditTag = ({ showNotification }) => {
     }
   }
 
+  const handleGoBack = () => {
+    navigate(-1)
+  }
+
   const addTag = async (e) => {
     e.preventDefault()
 
@@ -113,6 +117,9 @@ const EditTag = ({ showNotification }) => {
           onClick={() => handleDeleteTag(tag.id)}
         >
           Poista tagi
+        </button>
+        <button className="backButton" onClick={() => handleGoBack()}>
+          Takaisin
         </button>
       </div>
     </div>

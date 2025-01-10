@@ -32,14 +32,17 @@ describe('validateTag function', () => {
     const data = { name: 'Ta', color: 'green' }
     const errors = await validateTag(data)
 
-    expect(errors.name).toBe('Nimen pituuden tulee olla 3-20 merkkiä')
+    expect(errors.name).toBe('Nimen pituuden tulee olla 3-30 merkkiä')
   })
 
-  it('should return an error if name is longer than 20 characters', async () => {
-    const data = { name: 'ThisIsAReallyLongTagName', color: 'yellow' }
+  it('should return an error if name is longer than 30 characters', async () => {
+    const data = {
+      name: 'ThisIsAReallyLongTagNameThatJustKeepsGoing',
+      color: 'yellow',
+    }
     const errors = await validateTag(data)
 
-    expect(errors.name).toBe('Nimen pituuden tulee olla 3-20 merkkiä')
+    expect(errors.name).toBe('Nimen pituuden tulee olla 3-30 merkkiä')
   })
 
   it('should return an error if the tag name is a duplicate', async () => {

@@ -22,8 +22,8 @@ export const validateTag = async (data) => {
     errors.name = 'Anna tagille nimi'
   } else if (!regexName.test(data.name)) {
     errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
-  } else if (data.name.length < 3 || data.name.length > 20) {
-    errors.name = 'Nimen pituuden tulee olla 3-20 merkkiä'
+  } else if (data.name.length < 3 || data.name.length > 30) {
+    errors.name = 'Nimen pituuden tulee olla 3-30 merkkiä'
   }
 
   const isDuplicate = await checkDuplicateTagName(data.name)

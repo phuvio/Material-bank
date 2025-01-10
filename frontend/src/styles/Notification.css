@@ -3,27 +3,31 @@
 /* Common styles for all notifications */
 .notification {
     position: fixed;
-    bottom: 20px;
+    font-size: 20px;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: 5px;
+    border-style: solid;
     color: white;
     z-index: 9999;
   }
   
   /* Style for regular message */
   .notification-message {
-    background-color: rgba(95, 225, 95, 0.658);
+    color: green;
+    background-color: lightgreen;
   }
   
   /* Style for warning message */
   .notification-warning {
-    background-color: rgba(255, 165, 0, 0.8);
+    color: rgb(194, 194, 15);
+    background-color: lightyellow;
   }
   
   /* Style for error message */
   .notification-error {
-    background-color: rgba(255, 0, 0, 0.8);
+    color: red;
+    background-color: rgb(240, 210, 210);
   }
-  

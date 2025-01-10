@@ -6,20 +6,18 @@ const TagFilter = ({ tags, selectedTags, toggleTags }) => {
   return (
     <div>
       {sortedTags.map((tag) => (
-        <label key={tag.id}>
-          <input
-            type="checkbox"
-            checked={selectedTags.includes(tag.id)}
-            onChange={() => toggleTags(tag.id)}
-          />
-          <span
-            key={tag.id}
-            className="tag"
-            style={{ backgroundColor: tag.color }}
-          >
-            {tag.name}
-          </span>
-        </label>
+        <div className="taglist" key={tag.id}>
+          <label>
+            <input
+              type="checkbox"
+              checked={selectedTags.includes(tag.id)}
+              onChange={() => toggleTags(tag.id)}
+            />
+            <span className="tag" style={{ backgroundColor: tag.color }}>
+              {tag.name}
+            </span>
+          </label>
+        </div>
       ))}
     </div>
   )

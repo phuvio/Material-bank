@@ -108,7 +108,12 @@ const EditTag = ({ showNotification }) => {
         </div>
       </form>
       <div className="row">
-        <button onClick={() => handleDeleteTag(tag.id)}>Poista tagi</button>
+        <button
+          className="deleteButton"
+          onClick={() => handleDeleteTag(tag.id)}
+        >
+          Poista tagi
+        </button>
       </div>
     </div>
   )

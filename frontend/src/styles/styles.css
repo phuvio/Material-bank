@@ -104,7 +104,7 @@ input[type=url] {
   width: 35%;
 }
 
-button[type=submit] {
+button[type=submit], .submit {
   background-color: #45a049;
   color: white;
   padding: 12px 20px;
@@ -114,8 +114,20 @@ button[type=submit] {
   margin-left: 60%;
 }
 
-button[type=submit]:hover {
+button[type=submit]:hover, .submit:hover {
   background-color: rgb(74, 211, 20);
+}
+
+.deleteButton {
+  color: #eee;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #b31919;
+}
+
+.deleteButton:hover{
+  background: #d38c85;
 }
 
 textarea {
@@ -133,4 +145,11 @@ textarea {
 .color-picker {
   display: inline-block;
   max-width: 40%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Ensure the container takes up full width */
 }

@@ -73,43 +73,62 @@ const MaterialDetails = ({
   }
 
   return (
-    <div>
+    <div className="container">
       <div>
         <h1>{material.name}</h1>
-        <p>{material.description}</p>
-        {material.Tags &&
-          material.Tags.slice()
-            .sort((a, b) => (a.name > b.name ? 1 : -1))
-            .map((tag) => (
-              <span
-                key={tag.id}
-                className="tag"
-                style={{ background: tag.color }}
-              >
-                {tag.name}
-              </span>
-            ))}
-        <br></br>
-        {material.is_url && <LoadLinkButton url={material.url} />}
-        {!material.is_url && <LoadMaterialButton material={material} />}
+        <div className="row">
+          <div className="col-25">
+            <br></br>
+            <div className="button-container">
+              {material.is_url && <LoadLinkButton url={material.url} />}
+              {!material.is_url && <LoadMaterialButton material={material} />}
+            </div>
+          </div>
+          <div className="col-75">
+            <p>{material.description}</p>
+            {material.Tags &&
+              material.Tags.slice()
+                .sort((a, b) => (a.name > b.name ? 1 : -1))
+                .map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="tag"
+                    style={{ background: tag.color }}
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+          </div>
+        </div>
       </div>
-      <div>
+      <div className="row">
         <h2>Muokkaa tageja</h2>
         <TagFilter
           tags={tags}
           selectedTags={selectedTags}
           toggleTags={toggleTags}
         />
-        <button onClick={(e) => handleUpdateTags(e)}>Päivitä tagit</button>
       </div>
-      <div>
+      <div className="row">
+        <button className="submit" onClick={(e) => handleUpdateTags(e)}>
+          Päivitä tagit
+        </button>
+      </div>
+      <div className="row">
         {(loggedInUser.role === 0 || loggedInUser.id === material.User.id) && (
           <>
-            <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>
+            <div className="row">
+              <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>
+            </div>
             <b></b>
-            <button onClick={() => handleDeleteMaterail(id)}>
-              Poista materiaali
-            </button>
+            <div className="row">
+              <button
+                className="deleteButton"
+                onClick={() => handleDeleteMaterail(id)}
+              >
+                Poista materiaali
+              </button>
+            </div>
           </>
         )}
       </div>

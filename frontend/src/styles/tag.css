@@ -2,7 +2,16 @@
     display: inline-block;
     padding: 4px 8px;
     margin: 3px;
+    margin-left: 7px;
     border-radius: 20px;
     color: white; /* Text color */
     font-size: 11px; /* Adjust the font size */
+    display: inline-block;
+  }
+
+  .taglist {
+    margin: 0; /* Adjust vertical spacing */
+    padding: 0;
+    display: inline-flex; /* Helps to align items horizontally if needed */
+    align-items: center; /* Align checkbox and tag text vertically */
   }

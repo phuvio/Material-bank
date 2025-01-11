@@ -91,7 +91,13 @@ const App = () => {
           <Routes>
             <Route
               path="/materials"
-              element={<Main_page materials={materials} />}
+              element={
+                <Main_page
+                  materials={materials}
+                  loggedInUser={loggedInUser}
+                  showNotification={showNotification}
+                />
+              }
             />
             <Route
               path="/materials/:id"

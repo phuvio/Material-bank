@@ -166,3 +166,25 @@ textarea {
   align-items: center;
   width: 100%; /* Ensure the container takes up full width */
 }
+
+.favoriteButton {
+  padding: 0;
+  background: none;
+  border: none;
+  width: auto;
+  height: auto;
+}
+
+
+.favoriteButtonImage {
+  flex-shrink: 0;
+  border: none;
+  width: 20px;
+  height: auto;
+  object-fit: contain;
+  transition: all 0.3 ease;
+}
+
+.favoriteButton:hover .favoriteButtonImage {
+  content: url('../images/thumbs_up_hover.png');
+}

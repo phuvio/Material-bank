@@ -1,12 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import userService from '../services/users'
 import { validateUser, validateUserUpdate } from './userValidations'
-import {
-  regexUsername,
-  regexFirstname,
-  regexLastname,
-  regexPassword,
-} from './validationRegex'
 
 // Mock the userService.getAll method for testing purposes
 vi.mock('../services/users', () => {

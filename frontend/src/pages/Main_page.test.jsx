@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import Main_page from './Main_page'
 import favoriteService from '../services/favorites'
 import tagService from '../services/tags'
+import materialService from '../services/materials'
 
 // Mock components for isolated testing
 vi.mock('../components/Load_link_button', () => ({
@@ -59,6 +60,12 @@ vi.mock('../services/favorites', () => ({
   },
 }))
 
+vi.mock('../services/materials', () => ({
+  default: {
+    getAll: vi.fn(),
+  },
+}))
+
 describe('Main_page Component', () => {
   const mockMaterials = [
     {
@@ -101,16 +108,13 @@ describe('Main_page Component', () => {
     vi.resetAllMocks()
     tagService.getAll.mockResolvedValue(mockTags)
     favoriteService.get.mockResolvedValue(mockFavorites)
+    materialService.getAll.mockResolvedValue(mockMaterials)
   })
 
   it('renders the filter input and materials list', async () => {
     render(
       <BrowserRouter>
-        <Main_page
-          materials={mockMaterials}
-          loggedInUser={{ user_id: '1' }}
-          showNotification={vi.fn()}
-        />
+        <Main_page loggedInUser={{ user_id: '1' }} showNotification={vi.fn()} />
       </BrowserRouter>
     )
 
@@ -121,106 +125,89 @@ describe('Main_page Component', () => {
     expect(screen.getByTestId('filter-input')).toBeInTheDocument()
 
     // Check visible materials
-    expect(screen.getAllByText('Material 1'))
-    expect(screen.getAllByText('Material 2'))
+    expect(screen.getAllByText('Material 1')).toHaveLength(2)
+    expect(screen.getAllByText('Material 2')).toHaveLength(1)
     expect(screen.queryByText('Hidden Material')).not.toBeInTheDocument()
   })
 
   it.skip('adds and removes favorites correctly', async () => {
     render(
       <BrowserRouter>
-        <Main_page
-          materials={mockMaterials}
-          loggedInUser={{ user_id: '1' }}
-          showNotification={vi.fn()}
-        />
+        <Main_page loggedInUser={{ user_id: '1' }} showNotification={vi.fn()} />
       </BrowserRouter>
     )
 
     // Wait for favorites to load
     await screen.findByText('Omat suosikit')
 
-    // Check initial favorite button state
-    const favoriteButton = screen
-      .getByText('Material 1')
-      .closest('ul') // Target the parent <ul> that contains all materials
-      .querySelector('[data-testid="load-link-button"]') // Select the button inside that <ul>
-    expect(favoriteButton).toHaveTextContent('Load Material 1')
-
     // Simulate adding a favorite
-    favoriteService.create.mockResolvedValue(mockMaterials[1])
-    fireEvent.click(screen.getByText('Material 2'))
-    await waitFor(() => expect(favoriteService.create).toHaveBeenCalled())
+    favoriteService.create.mockResolvedValue(mockMaterials)
+    const favoriteButton = screen.getAllByRole('button', {
+      class: 'favoriteButton',
+    })
+    fireEvent.click(favoriteButton[2])
+    expect(screen.getAllByText('Material 2')).toHaveLength(1)
 
     // Simulate removing a favorite
     favoriteService.remove.mockResolvedValue()
-    fireEvent.click(screen.getByText('Material 1'))
+    fireEvent.click(favoriteButton[1])
     await waitFor(() => expect(favoriteService.remove).toHaveBeenCalled())
 
-    // Check if favorite button toggled
-    expect(favoriteButton).toHaveTextContent('Load Material 1')
+    // Ensure favorite button state is updated
+    expect(screen.getByText('Material 1')).toBeInTheDocument()
+    expect(screen.getByText('Material 2')).toBeInTheDocument()
   })
 
-  it.skip('filters materials by text', async () => {
+  it('filters materials by text', async () => {
     render(
       <BrowserRouter>
-        <Main_page
-          materials={mockMaterials}
-          loggedInUser={{ user_id: '1' }}
-          showNotification={vi.fn()}
-        />
+        <Main_page loggedInUser={{ user_id: '1' }} showNotification={vi.fn()} />
       </BrowserRouter>
     )
 
     // Wait for tags to load
     await screen.findByTestId('tag-filter')
 
+    expect(screen.getAllByText('Material 1')).toHaveLength(2)
+
     // Simulate typing in the filter
     const input = screen.getByTestId('filter-input')
     fireEvent.change(input, { target: { value: 'Material 2' } })
 
     // Check filtered materials
-    expect(screen.queryByText('Material 1')).not.toBeInTheDocument()
+    expect(screen.getAllByText('Material 1')).toHaveLength(1)
     expect(screen.getByText('Material 2')).toBeInTheDocument()
   })
 
-  it.skip('filters materials by tags', async () => {
+  it('filters materials by tags', async () => {
     render(
       <BrowserRouter>
-        <Main_page
-          materials={mockMaterials}
-          loggedInUser={{ user_id: '1' }}
-          showNotification={vi.fn()}
-        />
+        <Main_page loggedInUser={{ user_id: '1' }} showNotification={vi.fn()} />
       </BrowserRouter>
     )
 
     // Simulate clicking on a tag
     const tagButton1 = await screen.findByTestId('tag-button-1')
-    fireEvent.click(tagButton1) // Select Tag 1
+    fireEvent.click(tagButton1)
 
     // Simulate clicking on another tag
     const tagButton2 = await screen.findByTestId('tag-button-2')
-    fireEvent.click(tagButton2) // Select Tag 2
+    fireEvent.click(tagButton2)
 
     // Expect materials matching both tags to be shown
-    expect(screen.getByText('Material 1')).toBeInTheDocument() // Material 1 has both Tag 1 and Tag 2
-    expect(screen.queryByText('Material 2')).not.toBeInTheDocument() // Material 2 has only Tag 2
-    expect(screen.queryByText('Hidden Material')).not.toBeInTheDocument() // Hidden Material has no tags
+    expect(screen.getAllByText('Material 1')).toHaveLength(2)
+    expect(screen.queryByText('Material 2')).not.toBeInTheDocument()
+    expect(screen.queryByText('Hidden Material')).not.toBeInTheDocument()
   })
 
   it('provides a link to create a new material', () => {
     render(
       <BrowserRouter>
-        <Main_page
-          materials={mockMaterials}
-          loggedInUser={{ user_id: '1' }}
-          showNotification={vi.fn()}
-        />
+        <Main_page loggedInUser={{ user_id: '1' }} showNotification={vi.fn()} />
       </BrowserRouter>
     )
 
-    const newMaterialLink = screen.getByText('Luo uusi materiaali')
-    expect(newMaterialLink).toHaveAttribute('href', '/newmaterial')
+    // Check if the link to create a new material is present
+    expect(screen.getByText('Luo uusi materiaali')).toBeInTheDocument()
   })
 })

@@ -14,7 +14,6 @@ import NewUser from './pages/NewUser'
 import NewMaterial from './pages/NewMaterial'
 import LoginForm from './pages/LoginForm'
 import LogoutButton from './components/Logout_button'
-import materialService from './services/materials'
 import Notification from './components/Notification'
 import TagAdmin from './pages/TagAdmin'
 import NewTag from './pages/NewTag'
@@ -24,7 +23,6 @@ import useNotification from './utils/useNotification'
 import EditUser from './pages/EditUser'
 
 const App = () => {
-  const [materials, setMaterials] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loggedInUser, setLoggedInUser] = useState({})
   const [materialsReloaded, setMaterialsReloaded] = useState(false)
@@ -40,23 +38,6 @@ const App = () => {
       setLoggedInUser(JSON.parse(savedLoggedInUser))
     }
   }, [])
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      materialService
-        .getAll()
-        .then((initialMaterials) => {
-          const sortedMaterials = initialMaterials.sort((a, b) =>
-            a.name > b.name ? 1 : -1
-          )
-          setMaterials(sortedMaterials)
-        })
-        .catch((error) => {
-          console.log('Error fetching data:', error)
-          showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
-        })
-    }
-  }, [isLoggedIn, materialsReloaded])
 
   const handleLoginForm = (loggedInUser) => {
     setIsLoggedIn(true)
@@ -93,7 +74,6 @@ const App = () => {
               path="/materials"
               element={
                 <Main_page
-                  materials={materials}
                   loggedInUser={loggedInUser}
                   showNotification={showNotification}
                 />

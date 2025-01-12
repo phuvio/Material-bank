@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import favoriteService from '../services/favorites'
+import materialService from '../services/materials'
 import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
 
-const Main_page = ({ materials, loggedInUser, showNotification }) => {
+const Main_page = ({ loggedInUser, showNotification }) => {
   const [filter, setFilter] = useState('')
+  const [materials, setMaterials] = useState([])
   const [favorites, setFavorites] = useState([])
 
   const { tags, selectedTags, toggleTags } = selectTags()
@@ -24,6 +26,21 @@ const Main_page = ({ materials, loggedInUser, showNotification }) => {
 
     return matchesText && matchesTags
   })
+
+  useEffect(() => {
+    materialService
+      .getAll()
+      .then((initialMaterials) => {
+        const sortedMaterials = initialMaterials.sort((a, b) =>
+          a.name > b.name ? 1 : -1
+        )
+        setMaterials(sortedMaterials)
+      })
+      .catch((error) => {
+        console.log('Error fetching data:', error)
+        showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
+      })
+  }, [])
 
   useEffect(() => {
     favoriteService

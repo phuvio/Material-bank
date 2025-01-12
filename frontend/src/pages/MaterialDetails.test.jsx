@@ -4,6 +4,10 @@ import { MemoryRouter } from 'react-router-dom'
 import MaterialDetails from './MaterialDetails'
 import materialService from '../services/materials'
 
+beforeEach(() => {
+  vi.clearAllMocks()
+})
+
 vi.mock('../services/materials') // Mocking the materialService
 
 describe('MaterialDetails', () => {

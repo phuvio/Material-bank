@@ -6,8 +6,6 @@ import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
-import thumbUpUnselected from '../images/thumbs_up_unselected.png'
-import thumbUpSelected from '../images/thumbs_up_selected.png'
 
 const Main_page = ({ materials, loggedInUser, showNotification }) => {
   const [filter, setFilter] = useState('')
@@ -43,10 +41,7 @@ const Main_page = ({ materials, loggedInUser, showNotification }) => {
   }, [loggedInUser.user_id])
 
   const handleFavorites = (materialId) => {
-    console.log('favorites', favorites)
-    console.log('materialId', materialId)
     const isAlreadyFavorite = isFavorite(materialId)
-    console.log(isAlreadyFavorite)
     if (isAlreadyFavorite) {
       favoriteService
         .remove(loggedInUser.user_id, materialId)
@@ -107,17 +102,11 @@ const Main_page = ({ materials, loggedInUser, showNotification }) => {
           )}
           {favorites.length > 0 &&
             favorites.map((favorite) => (
-              <li key={favorite.id}>
+              <li key={favorite.name}>
                 <button
-                  className="favoriteButton"
+                  className={`favoriteButton ${isFavorite(favorite.id) ? 'selected' : ''}`}
                   onClick={() => handleFavorites(favorite.id)}
-                >
-                  <img
-                    src={thumbUpSelected}
-                    alt="own favorite"
-                    className="favoriteButtonImage"
-                  ></img>
-                </button>
+                ></button>
                 {favorite.is_url && <LoadLinkButton url={favorite.url} />}
                 {!favorite.is_url && <LoadMaterialButton material={favorite} />}
                 {favorite.name}
@@ -133,19 +122,9 @@ const Main_page = ({ materials, loggedInUser, showNotification }) => {
               material.visible && (
                 <li key={material.id}>
                   <button
-                    className="favoriteButton"
+                    className={`favoriteButton ${isFavorite(material.id) ? 'selected' : ''}`}
                     onClick={() => handleFavorites(material.id)}
-                  >
-                    <img
-                      src={
-                        isFavorite(material.id)
-                          ? thumbUpSelected
-                          : thumbUpUnselected
-                      }
-                      alt="own favorite"
-                      className="favoriteButtonImage"
-                    ></img>
-                  </button>
+                  ></button>
                   {material.is_url && <LoadLinkButton url={material.url} />}
                   {!material.is_url && (
                     <LoadMaterialButton material={material} />

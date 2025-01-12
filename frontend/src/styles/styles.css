@@ -169,22 +169,27 @@ textarea {
 
 .favoriteButton {
   padding: 0;
+  margin: 0;
   background: none;
   border: none;
-  width: auto;
-  height: auto;
+  cursor: pointer;
+  font-size: 24px;
+  color: grey;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  justify-content: right;
 }
 
 
-.favoriteButtonImage {
-  flex-shrink: 0;
-  border: none;
-  width: 20px;
-  height: auto;
-  object-fit: contain;
-  transition: all 0.3 ease;
+.favoriteButton::before {
+  content: url('../images/star_unselected.png');
 }
 
-.favoriteButton:hover .favoriteButtonImage {
-  content: url('../images/thumbs_up_hover.png');
+.favoriteButton.selected::before {
+  content: url('../images/star_selected.png');
+  color: gold;
+}
+
+.favoriteButton:hover::before {
+  content: url('../images/star_selected.png');
 }

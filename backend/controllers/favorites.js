@@ -25,7 +25,11 @@ router.post('/:userId/:materialId', async (req, res) => {
       material_id: materialId,
     })
 
-    return res.status(200).json(favorite)
+    const materialDetails = await Material.findByPk(materialId, {
+      attributes: ['id', 'name', 'is_url', 'url'],
+    })
+
+    return res.status(200).json(materialDetails)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: 'Internal server error' })

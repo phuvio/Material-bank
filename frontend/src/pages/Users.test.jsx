@@ -16,14 +16,14 @@ describe('Users Component', () => {
         first_name: 'John',
         last_name: 'Doe',
         username: 'johndoe',
-        role: 1,
+        role: 'admin',
       },
       {
         id: 2,
         first_name: 'Jane',
         last_name: 'Doe',
         username: 'janedoe',
-        role: 0,
+        role: 'basic',
       },
     ]
     axios.get.mockResolvedValueOnce({ data: mockUsers })

@@ -193,3 +193,46 @@ textarea {
 .favoriteButton:hover::before {
   content: url('../images/star_selected.png');
 }
+
+.user-details {
+  display: grid;
+  grid-template-columns: 200px 300px auto;
+  gap: 40px;
+}
+
+.user-details span {
+  text-align: left;
+}
+
+.header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.header img {
+  height: 60px;
+  margin-right: 120px;
+  margin-left: 100px;
+}
+
+.header nav {
+  display: flex;
+  justify-content: left;
+  margin-top: 40px;
+  margin-right: 200;
+}
+
+.header nav a {
+  text-decoration: none;
+  color: inherit;
+  margin: 0 25px;
+}
+
+.header nav a:hover {
+  text-decoration: underline;
+}
+
+.header .logout {
+  margin-left: 400;
+}

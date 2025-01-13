@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
   BrowserRouter as Router,
-  Link,
   Routes,
   Route,
   Navigate,
@@ -13,7 +12,6 @@ import Users from './pages/Users'
 import NewUser from './pages/NewUser'
 import NewMaterial from './pages/NewMaterial'
 import LoginForm from './pages/LoginForm'
-import LogoutButton from './components/Logout_button'
 import Notification from './components/Notification'
 import TagAdmin from './pages/TagAdmin'
 import NewTag from './pages/NewTag'
@@ -21,6 +19,7 @@ import EditTag from './pages/EditTag'
 import EditMaterial from './pages/EditMaterial'
 import useNotification from './utils/useNotification'
 import EditUser from './pages/EditUser'
+import Header from './pages/Header'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -56,19 +55,11 @@ const App = () => {
 
       {isLoggedIn ? (
         <div>
-          <div>
-            <Link to={'/'}>Materiaalit</Link>
-            {loggedInUser.role === 'admin' && (
-              <>
-                <Link to={'/users'}>Käyttäjähallinta</Link>
-                <Link to={'/tagadmin'}>Tagien hallinta</Link>
-              </>
-            )}
-            <LogoutButton
-              setIsLoggedIn={setIsLoggedIn}
-              setLoggedInUser={setLoggedInUser}
-            />
-          </div>
+          <Header
+            loggedInUser={loggedInUser}
+            setIsLoggedIn={setIsLoggedIn}
+            setLoggedInUser={setLoggedInUser}
+          />
           <Routes>
             <Route
               path="/materials"

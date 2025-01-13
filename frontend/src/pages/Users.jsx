@@ -47,13 +47,17 @@ const Users = () => {
             .sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
             .map((user) => (
               <li key={user.id}>
-                <Link to={`/edituser/${user.id}`}>
-                  {user.first_name} {user.last_name}
-                </Link>
-                <br />
-                {user.username}
-                <br />
-                {user.role === 'admin' ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+                <div className="user-details">
+                  <span>
+                    <Link to={`/edituser/${user.id}`}>
+                      {user.first_name} {user.last_name}
+                    </Link>
+                  </span>
+                  <span>{user.username}</span>
+                  <span>
+                    {user.role === 'admin' ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+                  </span>
+                </div>
               </li>
             ))}
         </ul>

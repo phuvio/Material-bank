@@ -53,7 +53,7 @@ const Users = () => {
                 <br />
                 {user.username}
                 <br />
-                {user.role === 1 ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+                {user.role === 'admin' ? 'pääkäyttäjä' : 'peruskäyttäjä'}
               </li>
             ))}
         </ul>

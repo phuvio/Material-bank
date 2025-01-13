@@ -44,7 +44,7 @@ const LoadMaterialButton = ({ material }) => {
           responseType: 'blob',
         }
       )
-      console.log('headers', response.headers)
+
       if (response.data && response.data.size > 0) {
         const contentType = response.headers['content-type'] || ''
 
@@ -56,8 +56,7 @@ const LoadMaterialButton = ({ material }) => {
           const fileExtension = getFileExtensionFromContentType(contentType)
           fileName = `${fileName}${fileExtension}`
         }
-        console.log('filename', fileName)
-        console.log('response headers', response.headers)
+
         const fileBlob = response.data
         const blobUrl = window.URL.createObjectURL(fileBlob)
         const link = document.createElement('a')

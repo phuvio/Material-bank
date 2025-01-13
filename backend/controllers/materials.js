@@ -94,9 +94,6 @@ router.get('/:id/material', async (req, res) => {
       /%20/g,
       '_'
     )
-    console.log(`MIME Type: ${mimeType}`)
-    console.log(`File Extension: ${fileExtension}`)
-    console.log(`Sanitized File Name: ${sanitizedFileName}.${fileExtension}`)
     res.setHeader('Content-Type', mimeType)
     res.setHeader(
       'Content-Disposition',

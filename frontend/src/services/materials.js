@@ -31,3 +31,31 @@ const remove = id => {
 }
 
 export default { getAll, create, getSingle, update, remove }
+
+/*
+const getSingle = async (id) => {
+  try {
+    const response = await axios.get(`${apiUrl}/api/materials/${id}`, {
+      responseType: 'blob',
+    });
+
+    // Create a download link for the file
+    const contentDisposition = response.headers['content-disposition']
+    const fileNameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/)
+    const fileName = fileNameMatch ? fileNameMatch[1] : 'downloadedFile'
+
+    // Create a blob URL and trigger download
+    const blob = response.data;
+    // eslint-disable-next-line no-undef
+    const url = window.URL.createObjectURL(blob)
+    // eslint-disable-next-line no-undef
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    a.click()
+  } catch (error) {
+    // eslint-disable-next-line no-undef
+    console.error('Error downloading file:', error)
+  }
+}
+*/

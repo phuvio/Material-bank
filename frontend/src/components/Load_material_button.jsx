@@ -2,6 +2,39 @@ import React from 'react'
 import axios from 'axios'
 import apiUrl from '../config/config'
 
+const getFileExtensionFromContentType = (contentType) => {
+  switch (contentType) {
+    // Word document
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return '.docx'
+    // Excel spreadsheet
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      return '.xlsx'
+    // PowerPoint presentation
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      return '.pptx'
+    // PDF document
+    case 'application/pdf':
+      return '.pdf'
+    // Image formats
+    case 'image/jpeg':
+      return '.jpg'
+    case 'image/png':
+      return '.png'
+    case 'image/gif':
+      return '.gif'
+    case 'image/tiff':
+      return '.tiff'
+    case 'image/bmp':
+      return '.bmp'
+    case 'image/webp':
+      return '.webp'
+    // Default fallback for unknown types
+    default:
+      return '.bin'
+  }
+}
+
 const LoadMaterialButton = ({ material }) => {
   const handleClick = async () => {
     try {
@@ -11,15 +44,25 @@ const LoadMaterialButton = ({ material }) => {
           responseType: 'blob',
         }
       )
-
+      console.log('headers', response.headers)
       if (response.data && response.data.size > 0) {
-        const contentType =
-          response.headers['content-type'] || 'application/octet-stream'
+        const contentType = response.headers['content-type'] || ''
+
+        // Extract filename from content-disposition
+        let fileName = `${material.name}`
+
+        // If filename is not found in content-disposition, use content-type to determine extension
+        if (!fileName.includes('.')) {
+          const fileExtension = getFileExtensionFromContentType(contentType)
+          fileName = `${fileName}${fileExtension}`
+        }
+        console.log('filename', fileName)
+        console.log('response headers', response.headers)
         const fileBlob = response.data
         const blobUrl = window.URL.createObjectURL(fileBlob)
         const link = document.createElement('a')
         link.href = blobUrl
-        link.download = `${material.name}.${contentType.split('/')[1] || 'bin'}`
+        link.download = fileName
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)

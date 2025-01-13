@@ -26,6 +26,7 @@
 - Bcrypt
 - Crypto
 - Multer
+- Mime
 
 ## Project management
 

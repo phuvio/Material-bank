@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const { sequelize } = require('../config/database')
 const multer = require('multer')
+const mime = require('mime-types')
 const { Material, User, Tag, TagsMaterial } = require('../models/index')
 
 const upload = multer()
@@ -71,13 +72,35 @@ router.get('/:id/material', async (req, res) => {
     if (!material || !material.material) {
       return res.status(404).json({ error: 'Material was not found' })
     }
-    res.setHeader(
-      'Content-Type',
-      material.material_type || 'application/octet-stream'
+    const mimeType =
+      material.material_type?.trim() || 'application/octet-stream'
+    const getFileExtension = (mimeType) => {
+      const extension = mime.extension(mimeType)
+      return (
+        extension ||
+        {
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            'docx',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            'xlsx',
+          'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            'pptx',
+        }[mimeType] ||
+        'bin'
+      )
+    }
+    const fileExtension = getFileExtension(mimeType)
+    const sanitizedFileName = encodeURIComponent(material.name).replace(
+      /%20/g,
+      '_'
     )
+    console.log(`MIME Type: ${mimeType}`)
+    console.log(`File Extension: ${fileExtension}`)
+    console.log(`Sanitized File Name: ${sanitizedFileName}.${fileExtension}`)
+    res.setHeader('Content-Type', mimeType)
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="${material.name}.${material.material_type.split('/')[1] || 'bin'}"`
+      `attachment; filename="${sanitizedFileName}.${fileExtension}"`
     )
     res.send(material.material)
   } catch (error) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import userService from '../services/users'
 import { validateUserUpdate } from '../utils/userValidations'
+import GoBackButton from '../components/GoBackButton'
 
 const EditUser = ({ showNotification }) => {
   const { id } = useParams()
@@ -162,12 +163,12 @@ const EditUser = ({ showNotification }) => {
           </div>
         </div>
         <div className="row">
-          <button type="submit">Tallenna</button>
+          <div className="buttongroup">
+            <button type="submit">Tallenna</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
-      <button className="backButton" onClick={() => handleGoBack()}>
-        Takaisin
-      </button>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/tagValidations'
+import GoBackButton from '../components/GoBackButton'
 
 const NewTag = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -92,14 +93,12 @@ const NewTag = ({ showNotification }) => {
         </div>
         <br></br>
         <div className="row">
-          <button type="submit">Luo tagi</button>
+          <div className="buttongroup">
+            <button type="submit">Luo tagi</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
-      <div className="row">
-        <button className="backButton" onClick={() => handleGoBack()}>
-          Takaisin
-        </button>
-      </div>
     </div>
   )
 }

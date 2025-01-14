@@ -6,6 +6,7 @@ import materialService from '../services/materials'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
 import '../styles/tag.css'
+import GoBackButton from '../components/GoBackButton'
 
 const MaterialDetails = ({
   loggedInUser,
@@ -106,17 +107,24 @@ const MaterialDetails = ({
         </div>
       </div>
       <div className="row">
-        <h2>Muokkaa tageja</h2>
-        <TagFilter
-          tags={tags}
-          selectedTags={selectedTags}
-          toggleTags={toggleTags}
-        />
+        <div className="col-25">
+          <h2>Muokkaa tageja</h2>
+        </div>
+        <div className="col-75">
+          <TagFilter
+            tags={tags}
+            selectedTags={selectedTags}
+            toggleTags={toggleTags}
+          />
+        </div>
       </div>
       <div className="row">
-        <button className="submit" onClick={(e) => handleUpdateTags(e)}>
-          Päivitä tagit
-        </button>
+        <div className="buttongroup">
+          <button className="submit" onClick={(e) => handleUpdateTags(e)}>
+            Tallenna
+          </button>
+          <GoBackButton onGoBack={handleGoBack} />
+        </div>
       </div>
       <div className="row">
         {(loggedInUser.role === 'admin' ||
@@ -136,9 +144,6 @@ const MaterialDetails = ({
             </div>
           </>
         )}
-        <button className="backButton" onClick={() => handleGoBack()}>
-          Takaisin
-        </button>
       </div>
       <p>
         Materiaalin tallentaja: {material.User.first_name}{' '}

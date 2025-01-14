@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import userService from '../services/users'
 import { validateUser } from '../utils/userValidations'
+import GoBackButton from '../components/GoBackButton'
 
 const NewUser = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -142,12 +143,12 @@ const NewUser = ({ showNotification }) => {
           </div>
         </div>
         <div className="row">
-          <button type="submit">Tallenna</button>
+          <div className="buttongroup">
+            <button type="submit">Tallenna</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
-      <button className="backButton" onClick={() => handleGoBack()}>
-        Takaisin
-      </button>
     </div>
   )
 }

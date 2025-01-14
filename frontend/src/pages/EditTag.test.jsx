@@ -41,7 +41,7 @@ describe('EditTag Component', () => {
       expect(screen.getByLabelText(/Nimi/i)).toHaveValue('Test Tag')
     })
 
-    expect(screen.getByText(/Tallenna tagi/i)).toBeInTheDocument()
+    expect(screen.getByText(/Tallenna/i)).toBeInTheDocument()
     expect(screen.getByText(/Poista tagi/i)).toBeInTheDocument()
   })
 
@@ -63,7 +63,7 @@ describe('EditTag Component', () => {
 
     renderComponent()
 
-    const saveButton = screen.getByText(/Tallenna tagi/i)
+    const saveButton = screen.getByText(/Tallenna/i)
     fireEvent.click(saveButton)
 
     await waitFor(() => {
@@ -80,7 +80,7 @@ describe('EditTag Component', () => {
       expect(screen.getByLabelText(/Nimi/i)).toHaveValue('Test Tag')
     })
 
-    const saveButton = screen.getByText(/Tallenna tagi/i)
+    const saveButton = screen.getByText(/Tallenna/i)
     fireEvent.click(saveButton)
 
     await waitFor(() => {
@@ -99,7 +99,7 @@ describe('EditTag Component', () => {
 
     renderComponent()
 
-    const saveButton = screen.getByText(/Tallenna tagi/i)
+    const saveButton = screen.getByText(/Tallenna/i)
     fireEvent.click(saveButton)
 
     await waitFor(() => {

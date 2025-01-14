@@ -4,6 +4,7 @@ import materialService from '../services/materials'
 import { validateMaterial } from '../utils/materialValidations'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
+import GoBackButton from '../components/GoBackButton'
 
 const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
   const [formData, setFormData] = useState({
@@ -186,12 +187,12 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
           </div>
         </div>
         <div className="row">
-          <button type="submit">Tallenna</button>
+          <div className="buttongroup">
+            <button type="submit">Tallenna</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
-      <button className="backButton" onClick={() => handleGoBack()}>
-        Takaisin
-      </button>
     </div>
   )
 }

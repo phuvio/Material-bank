@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
 import validateTag from '../utils/tagValidations'
+import GoBackButton from '../components/GoBackButton'
 
 const EditTag = ({ showNotification }) => {
   const { id } = useParams()
@@ -108,7 +109,10 @@ const EditTag = ({ showNotification }) => {
         </div>
         <br></br>
         <div className="row">
-          <button type="submit">Tallenna tagi</button>
+          <div className="buttongroup">
+            <button type="submit">Tallenna</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
       <div className="row">
@@ -117,9 +121,6 @@ const EditTag = ({ showNotification }) => {
           onClick={() => handleDeleteTag(tag.id)}
         >
           Poista tagi
-        </button>
-        <button className="backButton" onClick={() => handleGoBack()}>
-          Takaisin
         </button>
       </div>
     </div>

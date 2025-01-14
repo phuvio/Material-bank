@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import materialService from '../services/materials'
 import { validateMaterialUpdate } from '../utils/materialValidations'
+import GoBackButton from '../components/GoBackButton'
 
 const EditMaterial = ({ onMaterialAdded, showNotification }) => {
   const navigate = useNavigate()
@@ -112,12 +113,12 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
           </div>
         </div>
         <div className="row">
-          <button type="submit">Tallenna</button>
+          <div className="buttongroup">
+            <button type="submit">Tallenna</button>
+            <GoBackButton onGoBack={handleGoBack} />
+          </div>
         </div>
       </form>
-      <button className="backButton" onClick={() => handleGoBack()}>
-        Takaisin
-      </button>
     </div>
   )
 }

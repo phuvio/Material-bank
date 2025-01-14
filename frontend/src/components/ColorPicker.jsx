@@ -11,8 +11,9 @@ const ColorPicker = ({ selectedColor, onColorChange }) => {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))',
+          gridTemplateColumns: 'repeat(12, 40px)',
           gap: '10px',
+          justifyContent: 'left',
         }}
       >
         {COLORS.map((color) => (

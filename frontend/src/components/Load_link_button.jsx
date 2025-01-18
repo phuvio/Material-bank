@@ -7,7 +7,7 @@ const LoadLinkButton = ({ url }) => {
 
   return (
     <button onClick={handleClick} title={url}>
-      Avaa linkki
+      Linkki
     </button>
   )
 }

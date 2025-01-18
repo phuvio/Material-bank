@@ -76,7 +76,7 @@ const LoadMaterialButton = ({ material }) => {
 
   return (
     <button onClick={handleClick} title="Avaa tiedosto">
-      Lataa tiedosto
+      Tiedosto
     </button>
   )
 }

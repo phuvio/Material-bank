@@ -13,6 +13,7 @@
 | 16.12.-22.12.2024 | 8.45 | 87.00 |
 | 23.12.-29.12.2024 | 1.30 | 88.30 |
 | 30.12.2024-5.1.2025 | 31.00 | 119.30 |
+| 6.1.-12.1.2025 | 31.45 | 157.15 |
 
 ## Detailed timesheets
 
@@ -32,3 +33,6 @@
 ![23.-29.12.2024](/Documentation/Timelogs/pictures/Näyttökuva%202024-12-31%20095834.png)
 ![30.12.2024-5.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-06%20112514.png)
 ![30.12.2024-5.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-06%20112542.png)
+![6.1.-12.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-18%20165740.png)
+![6.1.-12.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-18%20165814.png)
+![6.1.-12.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-18%20165839.png)

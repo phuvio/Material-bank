@@ -108,7 +108,6 @@ const Main_page = ({ loggedInUser, showNotification }) => {
         <p>
           <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
         </p>
-        <br></br>
         <div className="favorites">
           <h2>Omat suosikit</h2>
           {favorites.length === 0 && (

@@ -19,6 +19,7 @@ import EditTag from './pages/EditTag'
 import EditMaterial from './pages/EditMaterial'
 import useNotification from './utils/useNotification'
 import EditUser from './pages/EditUser'
+import ChangePassword from './pages/ChangePassword'
 import Header from './pages/Header'
 
 const App = () => {
@@ -50,7 +51,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="main_container">
       {message && <Notification message={message} type={type} />}
 
       {isLoggedIn ? (
@@ -83,6 +84,10 @@ const App = () => {
             <Route
               path="/"
               element={<Navigate to="/materials" replace={true} />}
+            />
+            <Route
+              path="/changepassword/:id"
+              element={<ChangePassword showNotification={showNotification} />}
             />
             <Route
               path="/users"

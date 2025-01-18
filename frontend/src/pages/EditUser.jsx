@@ -141,6 +141,14 @@ const EditUser = ({ showNotification }) => {
               value={formData.password}
               onChange={handleFormChange}
             />
+            <br></br>
+            <ul className="password">
+              <li>vähintään 8 merkkiä pitkä</li>
+              <li>vähintään yksi pieni kirjain</li>
+              <li>vähintään yksi iso kirjain</li>
+              <li>vähintään yksi numero</li>
+              <li>vähintään yksi erikoismerkki: @$!()_#%*?&</li>
+            </ul>
             {errors.password && <span>{errors.password}</span>}
           </div>
         </div>

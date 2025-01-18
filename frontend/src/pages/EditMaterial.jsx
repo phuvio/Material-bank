@@ -94,6 +94,7 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
               value={formData.name}
               onChange={handleFormChange}
             />
+            <p>Nimen pituus voi olla 3-50 kirjainta.</p>
             {errors.name && <span>{errors.name}</span>}
           </div>
         </div>
@@ -109,6 +110,7 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
               value={formData.description}
               onChange={handleFormChange}
             />
+            <p>Kuvaus voi olla enintään 500 kirjainta.</p>
             {errors.description && <span>{errors.description}</span>}
           </div>
         </div>

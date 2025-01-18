@@ -13,7 +13,7 @@ describe('LoadLinkButton Component', () => {
     render(<LoadLinkButton url={url} />)
 
     // Check if the button is rendered and has the correct title
-    const button = screen.getByText('Avaa linkki')
+    const button = screen.getByText('Linkki')
     expect(button).toBeInTheDocument()
     expect(button).toHaveAttribute('title', url)
   })
@@ -23,7 +23,7 @@ describe('LoadLinkButton Component', () => {
     render(<LoadLinkButton url={url} />)
 
     // Simulate button click
-    fireEvent.click(screen.getByText('Avaa linkki'))
+    fireEvent.click(screen.getByText('Linkki'))
 
     // Check if window.open was called with the correct URL and parameters
     expect(window.open).toHaveBeenCalledWith(

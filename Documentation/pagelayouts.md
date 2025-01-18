@@ -1,5 +1,7 @@
 # Page layouts
 
+Most users work on laptops. So the layout is optimized for laptop use.
+
 ![Pages](/Documentation/Pictures/pages.png)
 
 ## Main page

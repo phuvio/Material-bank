@@ -23,10 +23,10 @@ describe('LoadMaterialButton Component', () => {
     render(<LoadMaterialButton material={material} />)
 
     // Simulate button click
-    fireEvent.click(screen.getByText(/Lataa tiedosto/))
+    fireEvent.click(screen.getByText(/Tiedosto/))
 
     // Wait for any async operations to complete
-    await screen.findByText(/Lataa tiedosto/)
+    await screen.findByText(/Tiedosto/)
 
     // Check if the appropriate log message is shown when no file is returned
     expect(logSpy).toHaveBeenCalledWith('No file data returned')
@@ -43,10 +43,10 @@ describe('LoadMaterialButton Component', () => {
     render(<LoadMaterialButton material={material} />)
 
     // Simulate button click
-    fireEvent.click(screen.getByText(/Lataa tiedosto/))
+    fireEvent.click(screen.getByText(/Tiedosto/))
 
     // Wait for any async operations to complete
-    await screen.findByText(/Lataa tiedosto/)
+    await screen.findByText(/Tiedosto/)
 
     // Check if the appropriate error message is logged
     expect(logSpy).toHaveBeenCalledWith('Error opening file', expect.any(Error))

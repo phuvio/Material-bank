@@ -27,8 +27,6 @@ const getFileExtensionFromContentType = (contentType) => {
       return '.tiff'
     case 'image/bmp':
       return '.bmp'
-    case 'image/webp':
-      return '.webp'
     // Default fallback for unknown types
     default:
       return '.bin'

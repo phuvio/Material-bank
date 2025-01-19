@@ -19,6 +19,11 @@ const create = newObject => {
 const update = (id, newObject) => {
   const request = axios.put(`${apiUrl}/api/users/${id}`, newObject)
   return request.then(response => response.data)
-  }
+}
 
-export default { getAll, getSingle, create, update }
+const updatePassword = (id, password) => {
+  const request = axios.put(`${apiUrl}/api/users/update-password/${id}`, password)
+  return request.then(response => response.data)
+}
+
+export default { getAll, getSingle, create, update, updatePassword }

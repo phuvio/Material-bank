@@ -1,7 +1,5 @@
 const router = require('express').Router()
-
 const { User } = require('../models/index')
-
 const bcrypt = require('bcrypt')
 
 router.get('/', async (req, res) => {
@@ -57,7 +55,7 @@ router.put('/:id', async (req, res) => {
     }
 
     const { first_name, last_name, password, role } = req.body
-    console.log('body', req.body)
+
     const updateData = {}
     if (first_name) updateData.first_name = first_name
     if (last_name) updateData.last_name = last_name
@@ -82,6 +80,51 @@ router.put('/:id', async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Error saving material' })
+  }
+})
+
+router.put('/update-password/:id', async (req, res) => {
+  try {
+    const userId = req.params.id
+    const { old_password, new_password } = req.body
+
+    if (!old_password || !new_password) {
+      return res
+        .status(400)
+        .json({ error: 'Old and new passwords are required' })
+    }
+
+    const user = await User.findByPk(userId)
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(old_password, user.password)
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ error: 'Incorrect old password' })
+    }
+
+    if (new_password === old_password) {
+      return res
+        .status(400)
+        .json({ error: 'New password cannot be the same as the old password' })
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10)
+
+    const [affectedRows] = await User.update(
+      { password: hashedPassword },
+      { where: { id: userId } }
+    )
+
+    if (affectedRows === 0) {
+      return res.status(404).json({ error: 'User was not found' })
+    }
+
+    res.status(200)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
 

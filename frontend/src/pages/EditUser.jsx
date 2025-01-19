@@ -80,7 +80,7 @@ const EditUser = ({ showNotification }) => {
         navigate('/users')
       })
       .catch((error) => {
-        console.log('Error updateing user', error)
+        console.log('Error updating user', error)
         showNotification(
           'Käyttäjän tietojen päivitys epäonnistui',
           'error',
@@ -141,13 +141,15 @@ const EditUser = ({ showNotification }) => {
               value={formData.password}
               onChange={handleFormChange}
             />
-            <br></br>
             <ul className="password">
               <li>vähintään 8 merkkiä pitkä</li>
               <li>vähintään yksi pieni kirjain</li>
               <li>vähintään yksi iso kirjain</li>
               <li>vähintään yksi numero</li>
-              <li>vähintään yksi erikoismerkki: @$!()_#%*?&</li>
+              <li>
+                vähintään yksi erikoismerkki: !?.,+-*/=@$#%^&()_ &#123;
+                &#125;[];:´"
+              </li>
             </ul>
             {errors.password && <span>{errors.password}</span>}
           </div>

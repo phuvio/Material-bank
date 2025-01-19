@@ -126,7 +126,10 @@ const NewUser = ({ showNotification }) => {
               <li>vähintään yksi pieni kirjain</li>
               <li>vähintään yksi iso kirjain</li>
               <li>vähintään yksi numero</li>
-              <li>vähintään yksi erikoismerkki: @$!()_#%*?&</li>
+              <li>
+                vähintään yksi erikoismerkki: !?.,+-*/=@$#%^&()_ &#123;
+                &#125;[];:´"
+              </li>
             </ul>
             {errors.password && <p className="error-text">{errors.password}</p>}
           </div>

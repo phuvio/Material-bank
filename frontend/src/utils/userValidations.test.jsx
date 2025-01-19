@@ -127,7 +127,7 @@ describe('validateUser', () => {
     }
     const errors = await validateUser(data)
     expect(errors.password).toBe(
-      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki: @$!#%*?&'
+      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki'
     )
   })
 

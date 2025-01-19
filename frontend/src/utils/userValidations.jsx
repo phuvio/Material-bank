@@ -77,7 +77,7 @@ export const validateUser = async (data) => {
     errors.password = 'Salasana on pakollinen'
   } else if (!regexPassword.test(data.password)) {
     errors.password =
-      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki: @$!#%*?&'
+      'Salasanan tulee olla vähintään 8 merkkiä pitkä ja sisältää: pieni ja iso kirjain, numero ja erikoismerkki'
   }
 
   if (!data.role) {

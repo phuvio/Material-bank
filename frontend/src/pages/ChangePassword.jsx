@@ -194,6 +194,7 @@ const ChangePassword = ({ showNotification }) => {
               className={`password strength-${progressBars.newPassword}`}
               value={progressBars.newPassword}
               max="5"
+              data-testid="password-strength"
             ></progress>
           </div>
         </div>
@@ -213,6 +214,7 @@ const ChangePassword = ({ showNotification }) => {
               className={`password strength_again-${progressBars.newPasswordAgain}`}
               value={progressBars.newPasswordAgain}
               max="1"
+              data-testid="password-confirmation-strength"
             ></progress>
           </div>
         </div>

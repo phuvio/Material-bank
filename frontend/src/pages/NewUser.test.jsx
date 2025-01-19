@@ -104,7 +104,7 @@ describe('NewUser Component', () => {
     })
     fireEvent.change(firstNameInput, { target: { value: 'John' } })
     fireEvent.change(lastNameInput, { target: { value: 'Doe' } })
-    fireEvent.change(passwordInput, { target: { value: 'Password123' } })
+    fireEvent.change(passwordInput, { target: { value: 'Password123%' } })
     fireEvent.change(roleSelect, { target: { value: 'admin' } })
 
     const submitButton = screen.getByText(/Tallenna/)

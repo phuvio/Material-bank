@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import LogoutButton from '../components/Logout_button'
+import UserDropdown from '../components/UserDropdown'
 import logo from '../images/Logo_300x.png'
 
 const Header = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
@@ -16,8 +16,9 @@ const Header = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
               <Link to={'/tagadmin'}>Tagien hallinta</Link>
             </>
           )}
-          <div className="logoutButton">
-            <LogoutButton
+          <div className="user-dropdown">
+            <UserDropdown
+              loggedInUser={loggedInUser}
               setIsLoggedIn={setIsLoggedIn}
               setLoggedInUser={setLoggedInUser}
             />

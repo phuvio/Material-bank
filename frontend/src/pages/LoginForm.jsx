@@ -13,7 +13,7 @@ const Login = ({ onLoginSuccess, showNotification }) => {
         username,
         password,
       })
-      console.log('Login response:', response)
+
       if (response.status === 200) {
         const loggedInUser = response.data.loggedInUser
         const token = response.data.token
@@ -39,7 +39,6 @@ const Login = ({ onLoginSuccess, showNotification }) => {
 
       setUsername('')
       setPassword('')
-      console.log(exception)
     }
   }
 

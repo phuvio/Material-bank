@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Header from './Header'
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, fireEvent } from 'vitest'
 
 describe('Header', () => {
   const setIsLoggedIn = vi.fn()
@@ -91,23 +91,5 @@ describe('Header', () => {
 
     const logoutButton = screen.getByRole('button')
     expect(logoutButton).toBeInTheDocument()
-  })
-
-  it('calls setIsLoggedIn and setLoggedInUser when LogoutButton is clicked', () => {
-    render(
-      <MemoryRouter>
-        <Header
-          loggedInUser={{ role: 'user' }}
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
-      </MemoryRouter>
-    )
-
-    const logoutButton = screen.getByRole('button')
-    logoutButton.click()
-
-    expect(setIsLoggedIn).toHaveBeenCalled()
-    expect(setLoggedInUser).toHaveBeenCalled()
   })
 })

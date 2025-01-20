@@ -32,18 +32,24 @@ const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
       </button>
       {isOpen && (
         <div className="dropdown-menu">
-          <button
-            className="dropdown-item"
-            onClick={() => handleOptionClick('changePassword')}
-          >
-            Vaihda salasana
-          </button>
-          <button
-            className="dropdown-item"
-            onClick={() => handleOptionClick('logout')}
-          >
-            Kirjaudu ulos
-          </button>
+          <ul>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => handleOptionClick('changePassword')}
+              >
+                Vaihda salasana
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item"
+                onClick={() => handleOptionClick('logout')}
+              >
+                Kirjaudu ulos
+              </button>
+            </li>
+          </ul>
         </div>
       )}
     </div>

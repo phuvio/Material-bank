@@ -233,6 +233,7 @@ textarea {
   padding: 4px;
   display: flex;
   align-items: center;
+  justify-content:first baseline;
 }
 
 .header img {
@@ -243,9 +244,7 @@ textarea {
 
 .header nav {
   display: flex;
-  justify-content: left;
-  margin-top: 24px;
-  margin-right: 100;
+  align-items: center;
 }
 
 .header nav a {

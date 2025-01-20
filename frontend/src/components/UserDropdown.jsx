@@ -1,16 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import userIcon from '../images/user.png'
 
 const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
-  const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
-
   const userId = loggedInUser.user_id
+  const userName = loggedInUser.fullname
 
-  const toggleDropdown = () => setIsOpen(!isOpen)
-
-  const handleOptionClick = (option) => {
+  const handleOptionChange = (event) => {
+    const option = event.target.value
     if (option === 'changePassword') {
       navigate(`/changepassword/${userId}`)
     } else if (option === 'logout') {
@@ -23,35 +20,19 @@ const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
 
   return (
     <div className="user-dropdown">
-      <button
-        className="user-icon"
-        onClick={toggleDropdown}
-        aria-label="User menu"
+      <select
+        className="user-dropdown-select"
+        onChange={handleOptionChange}
+        defaultValue=""
+        title={`Kirjautuneena: ${userName}`}
+        style={{ width: '150px' }}
       >
-        <img src={userIcon} alt="User icon" className="user-avatar"></img>
-      </button>
-      {isOpen && (
-        <div className="dropdown-menu">
-          <ul>
-            <li>
-              <button
-                className="dropdown-item"
-                onClick={() => handleOptionClick('changePassword')}
-              >
-                Vaihda salasana
-              </button>
-            </li>
-            <li>
-              <button
-                className="dropdown-item"
-                onClick={() => handleOptionClick('logout')}
-              >
-                Kirjaudu ulos
-              </button>
-            </li>
-          </ul>
-        </div>
-      )}
+        <option value="" disabled hidden>
+          {userName}
+        </option>
+        <option value="changePassword">Vaihda salasana</option>
+        <option value="logout">Kirjaudu ulos</option>
+      </select>
     </div>
   )
 }

@@ -1,69 +1,30 @@
-  /* User dropdown container */
-  .user-dropdown {
-    position: relative; /* Position relative to this container */
-    display: inline-block;
-    border: none;
-    margin-left: auto; /* Align it to the right */
-  }
-  
-  /* User icon button */
-  .user-icon {
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 0;
-    display: inline-block;
-  }
-  
-  /* Ensure the user avatar is correctly sized */
-  .user-avatar {
-    width: 20px;
-    height: 20px;
-    border: none;
-    outline: none;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-/* Dropdown menu */
-.dropdown-menu {
-    position: absolute;
-    top: 100%; /* Position below the button */
-    right: 0; /* Align to the right of the button */
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    z-index: 1000; /* Ensure it's above other content */
-    min-width: 150px;
-    overflow: hidden;
-    display: block; /* Ensure it takes up space and the items are stacked */
-    outline: none; /* Remove outline */
-  }
-  
-  /* Dropdown item styling */
-  .dropdown-item {
-    display: block; /* Stack items vertically */
-    width: 100%;
-    padding: 10px 15px;
-    background: white;
-    border: none; /* Remove any border */
-    text-align: left;
-    cursor: pointer;
-    color: #333;
-    font-size: 14px;
-    outline: none; /* Remove outline */
-  }
-  
-  /* Hover effect */
-  .dropdown-item:hover {
-    background-color: #f0f0f0;
-    color: #000;
-  }
-  
-  /* Hover effect for user icon */
-  .user-dropdown:hover .dropdown-menu {
-    display: block; /* Show dropdown on hover */
-  }
-  
+.user-dropdown {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.user-dropdown-select {
+  width: 100%; /* Matches parent container */
+  padding: 8px; /* Adds spacing inside the dropdown */
+  border: 1px solid #ccc; /* Ensures visibility */
+  background-color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  appearance: none; /* Removes default browser styling */
+  cursor: pointer;
+  box-sizing: border-box; /* Avoids width issues with padding */
+}
+
+.user-dropdown-select:focus {
+  outline: none;
+  border-color: rgb(124, 221, 241);
+  box-shadow: 0 0 3px rgb(124, 221, 241);
+}
+
+.user-dropdown-select option {
+  padding: 4px; /* Adds spacing inside options */
+  font-size: 12px;
+  text-overflow: ellipsis; /* Ensures overflowing text is handled */
+  white-space: nowrap; /* Prevents wrapping of text */
+  overflow: hidden; /* Hides text overflow */
+}

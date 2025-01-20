@@ -17,7 +17,7 @@ describe('UserDropdown Component', () => {
   const mockSetIsLoggedIn = vi.fn()
   const mockSetLoggedInUser = vi.fn()
 
-  const loggedInUser = { user_id: '123', role: 'user' }
+  const loggedInUser = { user_id: '123', fullname: 'John Doe', role: 'user' }
 
   beforeEach(() => {
     render(
@@ -31,35 +31,30 @@ describe('UserDropdown Component', () => {
     )
   })
 
-  it('should render the user icon', () => {
-    const userIcon = screen.getByAltText('User icon')
-    expect(userIcon).toBeInTheDocument()
+  it('should display the correct user name in the dropdown', () => {
+    const dropdown = screen.getByTitle('Kirjautuneena: John Doe')
+    expect(dropdown).toBeInTheDocument()
   })
 
-  it('should toggle the dropdown menu on user icon click', () => {
-    const dropdownButton = screen.getByRole('button', { name: /User menu/i })
-    fireEvent.click(dropdownButton)
-    expect(screen.getByText('Vaihda salasana')).toBeInTheDocument()
-    fireEvent.click(dropdownButton)
-    expect(screen.queryByText('Vaihda salasana')).toBeNull()
-  })
-
-  it('should navigate to change password page when "Vaihda salasana" is clicked', async () => {
-    fireEvent.click(screen.getByRole('button', { name: /User menu/i }))
-    fireEvent.click(screen.getByText('Vaihda salasana'))
+  it('should navigate to change password page when "Vaihda salasana" is selected', async () => {
+    fireEvent.change(screen.getByTitle('Kirjautuneena: John Doe'), {
+      target: { value: 'changePassword' },
+    })
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/changepassword/123')
     })
   })
 
-  it('should log out the user when "Kirjaudu ulos" is clicked', async () => {
-    fireEvent.click(screen.getByRole('button', { name: /User menu/i }))
-    fireEvent.click(screen.getByText('Kirjaudu ulos'))
+  it('should log out the user when "Kirjaudu ulos" is selected', async () => {
+    fireEvent.change(screen.getByTitle('Kirjautuneena: John Doe'), {
+      target: { value: 'logout' },
+    })
 
     await waitFor(() => {
       expect(mockSetIsLoggedIn).toHaveBeenCalledWith(false)
       expect(mockSetLoggedInUser).toHaveBeenCalledWith({})
+      expect(mockNavigate).toHaveBeenCalledWith('/')
     })
   })
 })

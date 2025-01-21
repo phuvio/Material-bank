@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
   const navigate = useNavigate()
   const userId = loggedInUser.user_id
   const userName = loggedInUser.fullname
+  const [selectedOption, setSelectedOption] = useState('')
 
-  const handleOptionChange = (event) => {
-    const option = event.target.value
+  const handleOptionChange = (option) => {
+    setSelectedOption('')
     if (option === 'changePassword') {
       navigate(`/changepassword/${userId}`)
     } else if (option === 'logout') {
@@ -22,8 +23,10 @@ const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
     <div className="user-dropdown">
       <select
         className="user-dropdown-select"
-        onChange={handleOptionChange}
-        defaultValue=""
+        onChange={(e) => {
+          handleOptionChange(e.target.value)
+        }}
+        value={selectedOption}
         title={`Kirjautuneena: ${userName}`}
         style={{ width: '150px' }}
       >

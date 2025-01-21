@@ -233,7 +233,7 @@ textarea {
   padding: 4px;
   display: flex;
   align-items: center;
-  justify-content:first baseline;
+  justify-content: space-between;
 }
 
 .header img {

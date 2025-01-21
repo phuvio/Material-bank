@@ -16,14 +16,14 @@ const Header = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
               <Link to={'/tagadmin'}>Tagien hallinta</Link>
             </>
           )}
-          <div className="user-dropdown">
-            <UserDropdown
-              loggedInUser={loggedInUser}
-              setIsLoggedIn={setIsLoggedIn}
-              setLoggedInUser={setLoggedInUser}
-            />
-          </div>
         </nav>
+        <div className="user-dropdown">
+          <UserDropdown
+            loggedInUser={loggedInUser}
+            setIsLoggedIn={setIsLoggedIn}
+            setLoggedInUser={setLoggedInUser}
+          />
+        </div>
       </header>
       <div className="horizontalLine"></div>
     </>

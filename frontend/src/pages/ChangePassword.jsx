@@ -156,8 +156,9 @@ const ChangePassword = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="old_password"
-              type="text"
+              type="password"
               name="old_password"
+              className="password-input"
               value={formData.old_password}
               onChange={handleFormChange}
             />
@@ -185,8 +186,9 @@ const ChangePassword = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="new_password"
-              type="text"
+              type="password"
               name="new_password"
+              className="password-input"
               value={formData.new_password}
               onChange={handleFormChange}
             />
@@ -205,8 +207,9 @@ const ChangePassword = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="new_password_again"
-              type="text"
+              type="password"
               name="new_password_again"
+              className="password-input"
               value={formData.new_password_again}
               onChange={handleFormChange}
             />

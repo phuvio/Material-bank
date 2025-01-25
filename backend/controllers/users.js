@@ -1,18 +1,18 @@
 const router = require('express').Router()
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
+const CustomError = require('../utils/CustomError')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const users = await User.findAll()
     res.json(users)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving users' })
+    next(error)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const { username, first_name, last_name, password, role } = req.body
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -27,31 +27,29 @@ router.post('/', async (req, res) => {
     })
     res.status(201).json(user)
   } catch (error) {
-    console.log(error)
-    res.status(400).json({ error })
+    next(error)
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
     if (user) {
       res.json(user)
     } else {
-      res.status(404).json({ error: 'Error saving user' })
+      throw CustomError('Error saving user', 404)
     }
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'Error retrieving user' })
+    next(error)
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   try {
     const userId = req.params.id
 
     if (!userId) {
-      return res.status(400).json({ error: 'User ID is needed for update' })
+      throw CustomError('User ID is needed for update', 400)
     }
 
     const { first_name, last_name, password, role } = req.body
@@ -64,50 +62,47 @@ router.put('/:id', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10)
       updateData.password = hashedPassword
     }
-    console.log('updatedData', updateData)
 
     const [affectedRows] = await User.update(updateData, {
       where: { id: userId },
     })
 
     if (affectedRows === 0) {
-      return res.status(404).json({ error: 'User not found' })
+      throw CustomError('User not found', 404)
     }
 
     const updatedUser = await User.findByPk(userId)
 
     res.status(200).json(updatedUser)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'Error saving material' })
+    next(error)
   }
 })
 
-router.put('/update-password/:id', async (req, res) => {
+router.put('/update-password/:id', async (req, res, next) => {
   try {
     const userId = req.params.id
     const { old_password, new_password } = req.body
 
     if (!old_password || !new_password) {
-      return res
-        .status(400)
-        .json({ error: 'Old and new passwords are required' })
+      throw CustomError('Old and new passwords are required', 400)
     }
 
     const user = await User.findByPk(userId)
     if (!user) {
-      return res.status(404).json({ error: 'User not found' })
+      throw CustomError('User not found', 404)
     }
 
     const isPasswordCorrect = await bcrypt.compare(old_password, user.password)
     if (!isPasswordCorrect) {
-      return res.status(400).json({ error: 'Incorrect old password' })
+      throw CustomError('Incorrect old password', 400)
     }
 
     if (new_password === old_password) {
-      return res
-        .status(400)
-        .json({ error: 'New password cannot be the same as the old password' })
+      throw CustomError(
+        'New password cannot be the same as the old password',
+        400
+      )
     }
 
     const hashedPassword = await bcrypt.hash(new_password, 10)
@@ -118,13 +113,12 @@ router.put('/update-password/:id', async (req, res) => {
     )
 
     if (affectedRows === 0) {
-      return res.status(404).json({ error: 'User was not found' })
+      throw CustomError('User was not found', 400)
     }
 
     res.status(200)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 

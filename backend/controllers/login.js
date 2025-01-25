@@ -4,8 +4,9 @@ const router = require('express').Router()
 const { SECRET } = require('../config/database')
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
+const CustomError = require('../utils/CustomError')
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const body = req.body
 
   try {
@@ -14,17 +15,10 @@ router.post('/', async (req, res) => {
       return u.username === body.username
     })
 
-    if (!user) {
-      return res.status(401).json({
-        error: 'invalid username or password',
-      })
-    }
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
 
-    if (!passwordCorrect) {
-      return res.status(401).json({
-        error: 'invalid username or password',
-      })
+    if (!user || !passwordCorrect) {
+      throw CustomError('invalid username or password', 401)
     }
 
     const userForToken = {
@@ -44,8 +38,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send({ token, loggedInUser })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 

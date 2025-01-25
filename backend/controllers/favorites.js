@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const { Favorite, User, Material } = require('../models/index')
+const CustomError = require('../utils/CustomError')
 
-router.post('/:userId/:materialId', async (req, res) => {
+router.post('/:userId/:materialId', async (req, res, next) => {
   const { userId, materialId } = req.params
 
   try {
@@ -9,7 +10,7 @@ router.post('/:userId/:materialId', async (req, res) => {
     const material = await Material.findByPk(materialId)
 
     if (!user || !material) {
-      return res.status(404).json({ error: 'User or material not found' })
+      throw CustomError('User or material not found', 404)
     }
 
     const existingFavorites = await Favorite.findOne({
@@ -17,13 +18,8 @@ router.post('/:userId/:materialId', async (req, res) => {
     })
 
     if (existingFavorites) {
-      return res.status(400).json({ error: 'Material is already in favorites' })
+      throw CustomError('Material is already in favorites', 400)
     }
-
-    const favorite = await Favorite.create({
-      user_id: userId,
-      material_id: materialId,
-    })
 
     const materialDetails = await Material.findByPk(materialId, {
       attributes: ['id', 'name', 'is_url', 'url'],
@@ -31,12 +27,11 @@ router.post('/:userId/:materialId', async (req, res) => {
 
     return res.status(200).json(materialDetails)
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 
-router.delete('/:userId/:materialId', async (req, res) => {
+router.delete('/:userId/:materialId', async (req, res, next) => {
   const { userId, materialId } = req.params
 
   try {
@@ -45,26 +40,25 @@ router.delete('/:userId/:materialId', async (req, res) => {
     })
 
     if (!favorite) {
-      return res.status(404).json({ message: 'Favorite not found' })
+      throw CustomError('Favorite not found', 400)
     }
 
     await favorite.destroy()
 
     return res.status(200).json({ message: 'Favorite removed' })
   } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: 'Internal server error' })
+    next(error)
   }
 })
 
-router.get('/:userId', async (req, res) => {
+router.get('/:userId', async (req, res, next) => {
   const { userId } = req.params
 
   try {
     const user = await User.findByPk(userId)
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' })
+      throw CustomError('User not found', 404)
     }
 
     const favorites = await Favorite.findAll({
@@ -87,8 +81,7 @@ router.get('/:userId', async (req, res) => {
 
     return res.status(200).json(materialDetails)
   } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: 'Internal server error' })
+    next(error)
   }
 })
 

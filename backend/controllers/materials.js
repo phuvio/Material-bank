@@ -3,11 +3,12 @@ const { sequelize } = require('../config/database')
 const multer = require('multer')
 const mime = require('mime-types')
 const { Material, User, Tag, TagsMaterial } = require('../models/index')
+const CustomError = require('../utils/CustomError')
 
 const upload = multer()
 
 // get info from all materials, but no files
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const materials = await Material.findAll({
       attributes: ['id', 'name', 'description', 'visible', 'is_url', 'url'],
@@ -17,13 +18,12 @@ router.get('/', async (req, res) => {
     })
     res.json(materials)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving materials' })
+    next(error)
   }
 })
 
 // get single material info, but not file
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const result = await Material.findOne({
       where: { id: req.params.id },
@@ -52,25 +52,25 @@ router.get('/:id', async (req, res) => {
         },
       ],
     })
-    console.log(JSON.stringify(result))
+
     if (!result) {
-      return res.status(404).json({ error: 'Material was not found' })
+      throw CustomError('Material was not found', 404)
     }
+
     res.json(result)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving material' })
+    next(error)
   }
 })
 
 // get file of a single material
-router.get('/:id/material', async (req, res) => {
+router.get('/:id/material', async (req, res, next) => {
   try {
     const material = await Material.findByPk(req.params.id, {
       attributes: ['id', 'name', 'material', 'material_type'],
     })
     if (!material || !material.material) {
-      return res.status(404).json({ error: 'Material was not found' })
+      throw CustomError('Material was not found', 401)
     }
     const mimeType =
       material.material_type?.trim() || 'application/octet-stream'
@@ -101,12 +101,11 @@ router.get('/:id/material', async (req, res) => {
     )
     res.send(material.material)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving material' })
+    next(error)
   }
 })
 
-router.post('/', upload.single('material'), async (req, res) => {
+router.post('/', upload.single('material'), async (req, res, next) => {
   const transaction = await sequelize.transaction()
   try {
     const materialData = {
@@ -149,17 +148,17 @@ router.post('/', upload.single('material'), async (req, res) => {
   } catch (error) {
     console.log(error)
     await transaction.rollback()
-    res.status(400).json({ error: 'Error saving material' })
+    next(new CustomError('Error saving material', 400))
   }
 })
 
-router.put('/:id', upload.single('material'), async (req, res) => {
+router.put('/:id', upload.single('material'), async (req, res, next) => {
   const transaction = await sequelize.transaction()
   try {
     const materialId = req.params.id
 
     if (!materialId) {
-      return res.status(400).json({ error: 'Material ID is needed for update' })
+      throw CustomError('Material ID is needed for update', 400)
     }
 
     const { name, description, tagIds } = req.body
@@ -171,7 +170,7 @@ router.put('/:id', upload.single('material'), async (req, res) => {
 
     if (affectedRows === 0 && !tagIds) {
       await transaction.rollback()
-      return res.status(404).json({ error: 'Material not found' })
+      throw CustomError('Material not found', 404)
     }
 
     if (tagIds) {
@@ -206,11 +205,11 @@ router.put('/:id', upload.single('material'), async (req, res) => {
   } catch (error) {
     console.log(error)
     await transaction.rollback()
-    res.status(400).json({ error: 'Error saving material' })
+    next(new CustomError('Error saving material', 400))
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const result = await Material.destroy({ where: { id: req.params.id } })
     if (result === 0) {
@@ -218,8 +217,7 @@ router.delete('/:id', async (req, res) => {
     }
     res.json({ message: 'Material deleted successfully' })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ error: 'Error deleting material' })
+    next(error)
   }
 })
 

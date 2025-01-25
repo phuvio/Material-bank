@@ -11,6 +11,7 @@ const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const tagRouter = require('./controllers/tags')
 const favoriteRouter = require('./controllers/favorites')
+const errorHandler = require('./middlewares/errorHandler')
 
 const app = express()
 
@@ -31,6 +32,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/tags', tagRouter)
 app.use('/api/favorites', favoriteRouter)
+app.use(errorHandler)
 
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
 

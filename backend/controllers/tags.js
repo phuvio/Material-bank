@@ -1,52 +1,50 @@
 const router = require('express').Router()
 const { Tag } = require('../models/index')
+const CustomError = require('../utils/CustomError')
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const tags = await Tag.findAll()
     res.json(tags)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving tags' })
+    next(error)
   }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const tag = await Tag.findByPk(req.params.id)
     if (!tag) {
-      return res.status(404).json({ error: 'Tag was not found' })
+      throw CustomError('Tag was not found', 404)
     }
     res.json(tag)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error retrieving tag' })
+    next(error)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const { name, color } = req.body
   if (!name) {
-    return res.status(400).json({ error: 'Name is required' })
+    throw CustomError('Name is required', 400)
   } else if (!color) {
-    return res.status(400).json({ error: 'Color is required' })
+    throw CustomError('Color is required', 400)
   }
 
   try {
     const result = await Tag.create({ name, color })
     res.status(201).json(result)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error creating tag' })
+    next(error)
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req, res, next) => {
   const { name, color } = req.body
   if (!name) {
-    return res.status(400).json({ error: 'Name is required' })
+    throw CustomError('Name is required', 400)
   } else if (!color) {
-    return res.status(400).json({ error: 'Color is required' })
+    throw CustomError('Color is required', 400)
   }
 
   try {
@@ -56,21 +54,19 @@ router.put('/:id', async (req, res) => {
     )
     res.json(result)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error updating tag' })
+    next(error)
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const result = await Tag.destroy({ where: { id: req.params.id } })
     if (result === 0) {
-      return res.status(404).json({ error: 'Tag not found' })
+      throw CustomError('Tag not found', 404)
     }
     res.json({ message: 'Tag deleted successfully' })
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error deleting tag' })
+    next(error)
   }
 })
 

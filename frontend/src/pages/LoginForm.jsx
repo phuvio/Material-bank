@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
+import decodeToken from '../utils/decode'
 
 const Login = ({ onLoginSuccess, showNotification }) => {
   const [username, setUsername] = useState('')
@@ -15,8 +16,14 @@ const Login = ({ onLoginSuccess, showNotification }) => {
       })
 
       if (response.status === 200) {
-        const loggedInUser = response.data.loggedInUser
         const token = response.data.token
+
+        const loggedInUser = {
+          fullname: decodeToken(token).fullname,
+          username: decodeToken(token).username,
+          role: decodeToken(token).role,
+          user_id: decodeToken(token).user_id,
+        }
 
         window.localStorage.setItem(
           'loggedInUser',
@@ -75,7 +82,9 @@ const Login = ({ onLoginSuccess, showNotification }) => {
           </div>
         </div>
         <div className="row">
-          <button type="submit">Kirjaudu sisään</button>
+          <button type="submit" data-testid="login-button">
+            Kirjaudu sisään
+          </button>
         </div>
       </form>
     </div>

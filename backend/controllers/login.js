@@ -15,6 +15,10 @@ router.post('/', async (req, res, next) => {
       return u.username === body.username
     })
 
+    if (!user) {
+      throw CustomError('invalid username or password', 401)
+    }
+
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
 
     if (!user || !passwordCorrect) {
@@ -22,21 +26,15 @@ router.post('/', async (req, res, next) => {
     }
 
     const userForToken = {
-      username: user.username,
-      id: user.id,
-    }
-
-    const token = jwt.sign(userForToken, SECRET)
-
-    const fullName = user.first_name + ' ' + user.last_name
-    const loggedInUser = {
-      fullname: fullName,
+      fullname: user.first_name + ' ' + user.last_name,
       username: user.username,
       user_id: user.id,
       role: user.role,
     }
 
-    res.status(200).send({ token, loggedInUser })
+    const token = jwt.sign(userForToken, SECRET)
+
+    res.status(200).send({ token })
   } catch (error) {
     next(error)
   }

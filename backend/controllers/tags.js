@@ -15,7 +15,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const tag = await Tag.findByPk(req.params.id)
     if (!tag) {
-      throw CustomError('Tag was not found', 404)
+      throw new CustomError('Tag was not found', 404)
     }
     res.json(tag)
   } catch (error) {
@@ -26,9 +26,9 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const { name, color } = req.body
   if (!name) {
-    throw CustomError('Name is required', 400)
+    throw new CustomError('Name is required', 400)
   } else if (!color) {
-    throw CustomError('Color is required', 400)
+    throw new CustomError('Color is required', 400)
   }
 
   try {
@@ -42,9 +42,9 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
   const { name, color } = req.body
   if (!name) {
-    throw CustomError('Name is required', 400)
+    throw new CustomError('Name is required', 400)
   } else if (!color) {
-    throw CustomError('Color is required', 400)
+    throw new CustomError('Color is required', 400)
   }
 
   try {
@@ -62,7 +62,7 @@ router.delete('/:id', async (req, res, next) => {
   try {
     const result = await Tag.destroy({ where: { id: req.params.id } })
     if (result === 0) {
-      throw CustomError('Tag not found', 404)
+      throw new CustomError('Tag not found', 404)
     }
     res.json({ message: 'Tag deleted successfully' })
   } catch (error) {

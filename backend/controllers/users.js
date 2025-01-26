@@ -37,7 +37,7 @@ router.get('/:id', async (req, res, next) => {
     if (user) {
       res.json(user)
     } else {
-      throw CustomError('Error saving user', 404)
+      throw new CustomError('Error saving user', 404)
     }
   } catch (error) {
     next(error)
@@ -49,7 +49,7 @@ router.put('/:id', async (req, res, next) => {
     const userId = req.params.id
 
     if (!userId) {
-      throw CustomError('User ID is needed for update', 400)
+      throw new CustomError('User ID is needed for update', 400)
     }
 
     const { first_name, last_name, password, role } = req.body
@@ -68,7 +68,7 @@ router.put('/:id', async (req, res, next) => {
     })
 
     if (affectedRows === 0) {
-      throw CustomError('User not found', 404)
+      throw new CustomError('User not found', 404)
     }
 
     const updatedUser = await User.findByPk(userId)
@@ -85,21 +85,21 @@ router.put('/update-password/:id', async (req, res, next) => {
     const { old_password, new_password } = req.body
 
     if (!old_password || !new_password) {
-      throw CustomError('Old and new passwords are required', 400)
+      throw new CustomError('Old and new passwords are required', 400)
     }
 
     const user = await User.findByPk(userId)
     if (!user) {
-      throw CustomError('User not found', 404)
+      throw new CustomError('User not found', 404)
     }
 
     const isPasswordCorrect = await bcrypt.compare(old_password, user.password)
     if (!isPasswordCorrect) {
-      throw CustomError('Incorrect old password', 400)
+      throw new CustomError('Incorrect old password', 400)
     }
 
     if (new_password === old_password) {
-      throw CustomError(
+      throw new CustomError(
         'New password cannot be the same as the old password',
         400
       )
@@ -113,7 +113,7 @@ router.put('/update-password/:id', async (req, res, next) => {
     )
 
     if (affectedRows === 0) {
-      throw CustomError('User was not found', 400)
+      throw new CustomError('User was not found', 400)
     }
 
     res.status(200)

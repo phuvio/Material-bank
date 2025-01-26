@@ -16,13 +16,13 @@ router.post('/', async (req, res, next) => {
     })
 
     if (!user) {
-      throw CustomError('invalid username or password', 401)
+      throw new CustomError('invalid username or password', 401)
     }
 
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
 
     if (!user || !passwordCorrect) {
-      throw CustomError('invalid username or password', 401)
+      throw new CustomError('invalid username or password', 401)
     }
 
     const userForToken = {

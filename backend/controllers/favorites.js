@@ -10,7 +10,7 @@ router.post('/:userId/:materialId', async (req, res, next) => {
     const material = await Material.findByPk(materialId)
 
     if (!user || !material) {
-      throw CustomError('User or material not found', 404)
+      throw new CustomError('User or material not found', 404)
     }
 
     const existingFavorites = await Favorite.findOne({
@@ -18,7 +18,7 @@ router.post('/:userId/:materialId', async (req, res, next) => {
     })
 
     if (existingFavorites) {
-      throw CustomError('Material is already in favorites', 400)
+      throw new CustomError('Material is already in favorites', 400)
     }
 
     const materialDetails = await Material.findByPk(materialId, {
@@ -40,7 +40,7 @@ router.delete('/:userId/:materialId', async (req, res, next) => {
     })
 
     if (!favorite) {
-      throw CustomError('Favorite not found', 400)
+      throw new CustomError('Favorite not found', 400)
     }
 
     await favorite.destroy()
@@ -58,7 +58,7 @@ router.get('/:userId', async (req, res, next) => {
     const user = await User.findByPk(userId)
 
     if (!user) {
-      throw CustomError('User not found', 404)
+      throw new CustomError('User not found', 404)
     }
 
     const favorites = await Favorite.findAll({

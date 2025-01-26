@@ -54,7 +54,7 @@ router.get('/:id', async (req, res, next) => {
     })
 
     if (!result) {
-      throw CustomError('Material was not found', 404)
+      throw new CustomError('Material was not found', 404)
     }
 
     res.json(result)
@@ -158,7 +158,7 @@ router.put('/:id', upload.single('material'), async (req, res, next) => {
     const materialId = req.params.id
 
     if (!materialId) {
-      throw CustomError('Material ID is needed for update', 400)
+      throw new CustomError('Material ID is needed for update', 400)
     }
 
     const { name, description, tagIds } = req.body
@@ -170,7 +170,7 @@ router.put('/:id', upload.single('material'), async (req, res, next) => {
 
     if (affectedRows === 0 && !tagIds) {
       await transaction.rollback()
-      throw CustomError('Material not found', 404)
+      throw new CustomError('Material not found', 404)
     }
 
     if (tagIds) {

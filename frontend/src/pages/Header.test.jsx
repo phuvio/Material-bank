@@ -1,21 +1,25 @@
-// Header.test.js
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import Header from './Header'
-import { vi, describe, it, expect, fireEvent, waitFor } from 'vitest'
+import { vi, describe, it, expect } from 'vitest'
+import decodeToken from '../utils/decode'
+
+// Mock the decodeToken module
+vi.mock('../utils/decode', () => ({
+  default: vi.fn(() => ({
+    role: 'user', // Default role
+    user_id: '123',
+    fullname: 'John Doe',
+  })),
+}))
 
 describe('Header', () => {
-  const setIsLoggedIn = vi.fn()
-  const setLoggedInUser = vi.fn()
+  const mockSetIsLoggedIn = vi.fn()
 
   it('renders the logo', () => {
     render(
       <MemoryRouter>
-        <Header
-          loggedInUser={{ role: 'user' }}
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 
@@ -26,11 +30,7 @@ describe('Header', () => {
   it('renders Materiaalit link', () => {
     render(
       <MemoryRouter>
-        <Header
-          loggedInUser={{ role: 'user' }}
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 
@@ -40,13 +40,10 @@ describe('Header', () => {
   })
 
   it('renders admin links when user is admin', () => {
+    decodeToken.mockReturnValue({ role: 'admin' }) // Mock admin role
     render(
       <MemoryRouter>
-        <Header
-          loggedInUser={{ role: 'admin' }}
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 
@@ -61,13 +58,10 @@ describe('Header', () => {
   })
 
   it('does not render admin links when user is not admin', () => {
+    decodeToken.mockReturnValue({ role: 'user' }) // Mock user role
     render(
       <MemoryRouter>
-        <Header
-          loggedInUser={{ role: 'user' }}
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 

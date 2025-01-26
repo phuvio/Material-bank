@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import decodeToken from '../utils/decode'
 
-const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
+const UserDropdown = ({ setIsLoggedIn }) => {
   const navigate = useNavigate()
-  const userId = loggedInUser.user_id
-  const userName = loggedInUser.fullname
+  const userId = decodeToken().user_id
+  const userName = decodeToken().fullname
   const [selectedOption, setSelectedOption] = useState('')
 
   const handleOptionChange = (option) => {
@@ -14,7 +15,6 @@ const UserDropdown = ({ loggedInUser, setIsLoggedIn, setLoggedInUser }) => {
     } else if (option === 'logout') {
       window.localStorage.clear()
       setIsLoggedIn(false)
-      setLoggedInUser({})
       navigate('/')
     }
   }

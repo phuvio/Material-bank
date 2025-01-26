@@ -13,20 +13,20 @@ vi.mock('react-router-dom', async (importOriginal) => {
   }
 })
 
+vi.mock('../utils/decode', () => ({
+  default: vi.fn(() => ({
+    user_id: '123',
+    fullname: 'John Doe',
+  })),
+}))
+
 describe('UserDropdown Component', () => {
   const mockSetIsLoggedIn = vi.fn()
-  const mockSetLoggedInUser = vi.fn()
-
-  const loggedInUser = { user_id: '123', fullname: 'John Doe', role: 'user' }
 
   beforeEach(() => {
     render(
       <div>
-        <UserDropdown
-          loggedInUser={loggedInUser}
-          setIsLoggedIn={mockSetIsLoggedIn}
-          setLoggedInUser={mockSetLoggedInUser}
-        />
+        <UserDropdown setIsLoggedIn={mockSetIsLoggedIn} />
       </div>
     )
   })
@@ -53,7 +53,6 @@ describe('UserDropdown Component', () => {
 
     await waitFor(() => {
       expect(mockSetIsLoggedIn).toHaveBeenCalledWith(false)
-      expect(mockSetLoggedInUser).toHaveBeenCalledWith({})
       expect(mockNavigate).toHaveBeenCalledWith('/')
     })
   })

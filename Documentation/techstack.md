@@ -14,6 +14,7 @@
 - Vite
 - Axios
 - React Router
+- Jwt-decode
 
 ## Backend
 

@@ -7,8 +7,9 @@ import LoadMaterialButton from '../components/Load_material_button'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
+import decodeToken from '../utils/decode'
 
-const Main_page = ({ loggedInUser, showNotification }) => {
+const Main_page = ({ showNotification }) => {
   const [filter, setFilter] = useState('')
   const [materials, setMaterials] = useState([])
   const [favorites, setFavorites] = useState([])
@@ -44,7 +45,7 @@ const Main_page = ({ loggedInUser, showNotification }) => {
 
   useEffect(() => {
     favoriteService
-      .get(loggedInUser.user_id)
+      .get(decodeToken().user_id)
       .then((favorites) => {
         const sortedFavorites = Array.isArray(favorites)
           ? favorites.sort((a, b) => (a.name > b.name ? 1 : -1))
@@ -55,13 +56,14 @@ const Main_page = ({ loggedInUser, showNotification }) => {
         console.log('Error fetching favorites:', error)
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
       })
-  }, [loggedInUser.user_id])
+  }, [])
 
   const handleFavorites = (materialId) => {
     const isAlreadyFavorite = isFavorite(materialId)
+
     if (isAlreadyFavorite) {
       favoriteService
-        .remove(loggedInUser.user_id, materialId)
+        .remove(decodeToken().user_id, materialId)
         .then(() => {
           const filteredFavorites = favorites.filter(
             (fav) => fav.id !== materialId
@@ -74,7 +76,7 @@ const Main_page = ({ loggedInUser, showNotification }) => {
         })
     } else {
       favoriteService
-        .create(loggedInUser.user_id, materialId)
+        .create(decodeToken().user_id, materialId)
         .then((newFavorite) => {
           setFavorites((prevFavorites) => {
             return [...prevFavorites, newFavorite]

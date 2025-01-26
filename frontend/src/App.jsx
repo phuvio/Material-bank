@@ -56,20 +56,11 @@ const App = () => {
 
       {isLoggedIn ? (
         <div>
-          <Header
-            loggedInUser={loggedInUser}
-            setIsLoggedIn={setIsLoggedIn}
-            setLoggedInUser={setLoggedInUser}
-          />
+          <Header setIsLoggedIn={setIsLoggedIn} />
           <Routes>
             <Route
               path="/materials"
-              element={
-                <Main_page
-                  loggedInUser={loggedInUser}
-                  showNotification={showNotification}
-                />
-              }
+              element={<Main_page showNotification={showNotification} />}
             />
             <Route
               path="/materials/:id"

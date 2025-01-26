@@ -4,13 +4,14 @@ import materialService from '../services/materials'
 import { validateMaterial } from '../utils/materialValidations'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
+import decodeToken from '../utils/decode'
 import GoBackButton from '../components/GoBackButton'
 
-const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
+const NewMaterial = ({ onMaterialAdded, showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    user_id: loggedInUser.user_id,
+    user_id: decodeToken().user_id,
     visible: true,
     is_url: false,
     url: '',
@@ -59,7 +60,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
 
     formToSubmit.append('name', formData.name)
     formToSubmit.append('description', formData.description)
-    formToSubmit.append('user_id', loggedInUser.user_id)
+    formToSubmit.append('user_id', decodeToken().user_id)
     formToSubmit.append('visible', true)
     formToSubmit.append('is_url', formData.is_url)
 
@@ -78,7 +79,7 @@ const NewMaterial = ({ loggedInUser, onMaterialAdded, showNotification }) => {
       setFormData({
         name: '',
         description: '',
-        user_id: loggedInUser.user_id,
+        user_id: decodeToken().user_id,
         visible: true,
         is_url: false,
         url: '',

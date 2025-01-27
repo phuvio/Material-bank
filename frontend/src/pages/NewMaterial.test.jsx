@@ -130,43 +130,4 @@ describe('NewMaterial Component', () => {
       )
     })
   })
-
-  test.skip('submits form data correctly', async () => {
-    decodeToken.mockReturnValue({ user_id: 123 })
-
-    render(
-      <MemoryRouter>
-        <NewMaterial
-          showNotification={showNotificationMock}
-          onMaterialAdded={onMaterialAddedMock}
-        />
-      </MemoryRouter>
-    )
-
-    const materialNameInput = screen.getByLabelText(/Materiaalin nimi:/)
-    fireEvent.change(materialNameInput, { target: { value: 'Test Material' } })
-
-    const descriptionInput = screen.getByLabelText(/Kuvaus:/)
-    fireEvent.change(descriptionInput, {
-      target: { value: 'A test description' },
-    })
-
-    const isUrlCheckbox = screen.getByLabelText(/Onko materiaali linkki:/)
-    fireEvent.click(isUrlCheckbox)
-
-    const urlInput = screen.getByLabelText(/Linkki:/)
-    fireEvent.change(urlInput, { target: { value: 'https://example.com' } })
-
-    const submitButton = screen.getByText(/Tallenna/)
-    fireEvent.click(submitButton)
-
-    await waitFor(() => {
-      expect(showNotificationMock).toHaveBeenCalledWith(
-        'Materiaali lisätty',
-        'message',
-        2000
-      )
-    })
-    expect(onMaterialAddedMock).toHaveBeenCalled()
-  })
 })

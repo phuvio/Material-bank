@@ -39,10 +39,8 @@ const App = () => {
     }
   }, [])
 
-  const handleLoginForm = (loggedInUser) => {
+  const handleLoginForm = () => {
     setIsLoggedIn(true)
-    setLoggedInUser(loggedInUser)
-    window.localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser))
     navigate('/')
   }
 
@@ -66,7 +64,6 @@ const App = () => {
               path="/materials/:id"
               element={
                 <MaterialDetails
-                  loggedInUser={loggedInUser}
                   onMaterialAdded={handleMaterialAdded}
                   showNotification={showNotification}
                 />
@@ -96,7 +93,6 @@ const App = () => {
               path="/newmaterial"
               element={
                 <NewMaterial
-                  loggedInUser={loggedInUser}
                   onMaterialAdded={handleMaterialAdded}
                   showNotification={showNotification}
                 />

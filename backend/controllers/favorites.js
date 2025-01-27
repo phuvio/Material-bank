@@ -21,13 +21,13 @@ router.post('/:userId/:materialId', async (req, res, next) => {
       throw new CustomError('Material is already in favorites', 400)
     }
 
-    const newFavorite = await Favorite.create({
+    await Favorite.create({
       user_id: userId,
       material_id: materialId,
     })
 
     const materialDetails = {
-      id: newFavorite.id,
+      id: material.id,
       name: material.name,
       is_url: material.is_url,
       url: material.url,

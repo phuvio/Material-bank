@@ -5,14 +5,11 @@ import LoadMaterialButton from '../components/Load_material_button'
 import materialService from '../services/materials'
 import TagFilter from '../components/TagFilter'
 import { selectTags } from '../utils/selectTags'
+import decodeToken from '../utils/decode'
 import '../styles/tag.css'
 import GoBackButton from '../components/GoBackButton'
 
-const MaterialDetails = ({
-  loggedInUser,
-  onMaterialAdded,
-  showNotification,
-}) => {
+const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
@@ -127,8 +124,8 @@ const MaterialDetails = ({
         </div>
       </div>
       <div className="row">
-        {(loggedInUser.role === 'admin' ||
-          loggedInUser.user_id === material.user_id) && (
+        {(decodeToken().role === 'admin' ||
+          decodeToken().user_id === material.user_id) && (
           <>
             <div className="row">
               <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>

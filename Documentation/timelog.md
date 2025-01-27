@@ -15,6 +15,7 @@
 | 30.12.2024-5.1.2025 | 31.00 | 119.30 |
 | 6.1.-12.1.2025 | 31.45 | 157.15 |
 | 13.1.-19.1.2025 | 14.15 | 165.30 |
+| 20.1.-26.1.2025 | 8.45 | 174.15 |
 
 ## Detailed timesheets
 
@@ -39,3 +40,4 @@
 ![6.1.-12.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-18%20165839.png)
 ![13.1.-19.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-20%20192352.png)
 ![13.1.-19.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-20%20192419.png)
+![20.1-26.1.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-01-27%20192321.png)

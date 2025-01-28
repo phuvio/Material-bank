@@ -74,6 +74,7 @@ const NewTag = ({ showNotification }) => {
               value={formData.name}
               onChange={handleFormChange}
             />
+            <p>Nimen pituus voi olla 3-30 kirjainta.</p>
             {errors.name && <span className="error-text">{errors.name}</span>}
           </div>
         </div>

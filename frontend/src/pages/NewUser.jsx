@@ -72,6 +72,7 @@ const NewUser = ({ showNotification }) => {
               value={formData.username}
               onChange={handleFormChange}
             />
+            <p>Käyttäjätunnus on muotoa etunimi.sukunimi@proneuron.fi.</p>
             {errors.username && <p className="error-text">{errors.username}</p>}
           </div>
         </div>
@@ -147,8 +148,14 @@ const NewUser = ({ showNotification }) => {
             >
               <option value="">Valitse</option>
               <option value="admin">Pääkäyttäjä</option>
+              <option value="moderator">Moderaattori</option>
               <option value="basic">Peruskäyttäjä</option>
             </select>
+            <p>
+              Peruskäyttäjä voi luoda uusia materiaaleja, muokata materiaalien
+              tageja ja muokata tai poistaa itse luomiaan materiaaleja.
+            </p>
+            <p>Moderaattori voi myös luoda ja muokata tageja.</p>
             {errors.role && <p className="error-text">{errors.role}</p>}
           </div>
         </div>

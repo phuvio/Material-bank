@@ -128,7 +128,7 @@ const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
           decodeToken().user_id === material.user_id) && (
           <>
             <div className="row">
-              <Link to={`/editmaterial/${id}`}>Muokkaa materiaalia</Link>
+              <Link to={`/muokkaamateriaalia/${id}`}>Muokkaa materiaalia</Link>
             </div>
             <b></b>
             <div className="row">

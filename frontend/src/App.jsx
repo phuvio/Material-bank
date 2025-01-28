@@ -57,11 +57,11 @@ const App = () => {
           <Header setIsLoggedIn={setIsLoggedIn} />
           <Routes>
             <Route
-              path="/materials"
+              path="/materiaalit"
               element={<Main_page showNotification={showNotification} />}
             />
             <Route
-              path="/materials/:id"
+              path="/materiaalit/:id"
               element={
                 <MaterialDetails
                   onMaterialAdded={handleMaterialAdded}
@@ -71,26 +71,26 @@ const App = () => {
             />
             <Route
               path="/"
-              element={<Navigate to="/materials" replace={true} />}
+              element={<Navigate to="/materiaalit" replace={true} />}
             />
             <Route
-              path="/changepassword/:id"
+              path="/vaihdasalasana/:id"
               element={<ChangePassword showNotification={showNotification} />}
             />
             <Route
-              path="/users"
+              path="/kayttajat"
               element={isLoggedIn ? <Users /> : <Navigate to="/login" />}
             />
             <Route
-              path="/edituser/:id"
+              path="/muokkaakayttajaa/:id"
               element={<EditUser showNotification={showNotification} />}
             />
             <Route
-              path="/newuser"
+              path="/uusikayttaja"
               element={<NewUser showNotification={showNotification} />}
             />
             <Route
-              path="/newmaterial"
+              path="/uusimateriaali"
               element={
                 <NewMaterial
                   onMaterialAdded={handleMaterialAdded}
@@ -99,7 +99,7 @@ const App = () => {
               }
             />
             <Route
-              path="/editmaterial/:id"
+              path="/muokkaamateriaalia/:id"
               element={
                 <EditMaterial
                   onMaterialAdded={handleMaterialAdded}
@@ -108,15 +108,15 @@ const App = () => {
               }
             />
             <Route
-              path="/tagadmin"
+              path="/tagit"
               element={<TagAdmin showNotification={showNotification} />}
             />
             <Route
-              path="/tags/:id"
+              path="/tagit/:id"
               element={<EditTag showNotification={showNotification} />}
             />
             <Route
-              path="/newtag"
+              path="/uusitagi"
               element={<NewTag showNotification={showNotification} />}
             />
           </Routes>

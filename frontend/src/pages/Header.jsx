@@ -13,8 +13,8 @@ const Header = ({ setIsLoggedIn }) => {
           <Link to={'/'}>Materiaalit</Link>
           {decodeToken().role === 'admin' && (
             <>
-              <Link to={'/users'}>Käyttäjähallinta</Link>
-              <Link to={'/tagadmin'}>Tagien hallinta</Link>
+              <Link to={'/kayttajat'}>Käyttäjähallinta</Link>
+              <Link to={'/tagit'}>Tagien hallinta</Link>
             </>
           )}
         </nav>

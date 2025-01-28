@@ -36,7 +36,7 @@ const EditTag = ({ showNotification }) => {
         .remove(id)
         .then(() => {
           showNotification('Tagi poistettu onnistuneesti', 'message', 2000)
-          navigate('/tagadmin')
+          navigate('/tagit')
         })
         .catch((error) => {
           console.log('Error deleting tag:', error)
@@ -60,7 +60,7 @@ const EditTag = ({ showNotification }) => {
         .update(id, tag)
         .then(() => {
           showNotification('Tagi päivitetty onnistuneesti', 'message', 2000)
-          navigate('/tagadmin')
+          navigate('/tagit')
         })
         .catch((error) => {
           console.log('Error updating tag:', error)

@@ -42,7 +42,7 @@ describe('UserDropdown Component', () => {
     })
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/changepassword/123')
+      expect(mockNavigate).toHaveBeenCalledWith('/vaihdasalasana/123')
     })
   })
 

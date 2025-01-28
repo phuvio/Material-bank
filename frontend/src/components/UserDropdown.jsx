@@ -11,7 +11,7 @@ const UserDropdown = ({ setIsLoggedIn }) => {
   const handleOptionChange = (option) => {
     setSelectedOption('')
     if (option === 'changePassword') {
-      navigate(`/changepassword/${userId}`)
+      navigate(`/vaihdasalasana/${userId}`)
     } else if (option === 'logout') {
       window.localStorage.clear()
       setIsLoggedIn(false)

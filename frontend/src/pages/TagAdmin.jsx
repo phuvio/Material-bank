@@ -45,7 +45,7 @@ const TagAdmin = () => {
           handleChange={({ target }) => setFilter(target.value)}
         />
         <p>
-          <Link to={'/newtag'}>Luo uusi tagi</Link>
+          <Link to={'/uusitagi'}>Luo uusi tagi</Link>
         </p>
       </div>
       <div className="column right">
@@ -53,7 +53,7 @@ const TagAdmin = () => {
         <ul>
           {tagsToShow.map((tag) => (
             <li key={tag.id}>
-              <Link to={`/tags/${tag.id}`}>{tag.name}</Link>
+              <Link to={`/tagit/${tag.id}`}>{tag.name}</Link>
               <span className="tag" style={{ backgroundColor: tag.color }}>
                 {tag.name}
               </span>

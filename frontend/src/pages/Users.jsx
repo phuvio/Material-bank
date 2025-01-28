@@ -36,7 +36,7 @@ const Users = () => {
           handleChange={({ target }) => setFilter(target.value)}
         />
         <p>
-          <Link to={'/newuser'}>Luo uusi käyttäjä</Link>
+          <Link to={'/uusikayttaja'}>Luo uusi käyttäjä</Link>
         </p>
       </div>
       <div className="column right">
@@ -49,7 +49,7 @@ const Users = () => {
               <li key={user.id}>
                 <div className="user-details">
                   <span>
-                    <Link to={`/edituser/${user.id}`}>
+                    <Link to={`/muokkaakayttajaa/${user.id}`}>
                       {user.first_name} {user.last_name}
                     </Link>
                   </span>

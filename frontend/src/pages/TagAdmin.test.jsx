@@ -71,7 +71,10 @@ describe('TagAdmin Component', () => {
       </Router>
     )
 
-    expect(screen.getByText('Luo uusi tagi')).toHaveAttribute('href', '/newtag')
+    expect(screen.getByText('Luo uusi tagi')).toHaveAttribute(
+      'href',
+      '/uusitagi'
+    )
   })
 
   it('handles error if fetching tags fails', async () => {

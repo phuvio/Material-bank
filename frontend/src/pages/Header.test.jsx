@@ -51,10 +51,10 @@ describe('Header', () => {
     const tagAdminLink = screen.getByText('Tagien hallinta')
 
     expect(usersLink).toBeInTheDocument()
-    expect(usersLink).toHaveAttribute('href', '/users')
+    expect(usersLink).toHaveAttribute('href', '/kayttajat')
 
     expect(tagAdminLink).toBeInTheDocument()
-    expect(tagAdminLink).toHaveAttribute('href', '/tagadmin')
+    expect(tagAdminLink).toHaveAttribute('href', '/tagit')
   })
 
   it('does not render admin links when user is not admin', () => {

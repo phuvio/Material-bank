@@ -114,7 +114,7 @@ const Main_page = ({ showNotification }) => {
           />
         </div>
         <p>
-          <Link to={'/newmaterial'}>Luo uusi materiaali</Link>
+          <Link to={'/uusimateriaali'}>Luo uusi materiaali</Link>
         </p>
         <div className="favorites">
           <h2>Omat suosikit</h2>
@@ -153,7 +153,9 @@ const Main_page = ({ showNotification }) => {
                   {!material.is_url && (
                     <LoadMaterialButton material={material} />
                   )}
-                  <Link to={`/materials/${material.id}`}>{material.name}</Link>
+                  <Link to={`/materiaalit/${material.id}`}>
+                    {material.name}
+                  </Link>
                   {material.Tags &&
                     material.Tags.slice()
                       .sort((a, b) => (a.name > b.name ? 1 : -1))

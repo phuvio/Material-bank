@@ -77,7 +77,7 @@ const EditUser = ({ showNotification }) => {
         setFormData({
           ...formData,
         })
-        navigate('/users')
+        navigate('/kayttajat')
       })
       .catch((error) => {
         console.log('Error updating user', error)

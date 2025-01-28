@@ -4,7 +4,7 @@ const router = require('express').Router()
 const { SECRET } = require('../config/database')
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
-const CustomError = require('../utils/CustomError')
+const CustomError = require('../utils/customError')
 
 router.post('/', async (req, res, next) => {
   const body = req.body

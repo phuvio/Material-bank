@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
-const CustomError = require('../utils/CustomError')
+const CustomError = require('../utils/customError')
 
 router.get('/', async (req, res, next) => {
   try {

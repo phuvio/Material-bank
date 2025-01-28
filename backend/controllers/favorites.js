@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { Favorite, User, Material } = require('../models/index')
-const CustomError = require('../utils/CustomError')
+const CustomError = require('../utils/customError')
 
 router.post('/:userId/:materialId', async (req, res, next) => {
   const { userId, materialId } = req.params

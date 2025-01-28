@@ -3,7 +3,7 @@ const { sequelize } = require('../config/database')
 const multer = require('multer')
 const mime = require('mime-types')
 const { Material, User, Tag, TagsMaterial } = require('../models/index')
-const CustomError = require('../utils/CustomError')
+const CustomError = require('../utils/customError')
 
 const upload = multer()
 

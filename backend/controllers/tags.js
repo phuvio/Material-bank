@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const { Tag } = require('../models/index')
-const CustomError = require('../utils/CustomError')
+const CustomError = require('../utils/customError')
 
 router.get('/', async (req, res, next) => {
   try {

@@ -2,8 +2,9 @@ const router = require('express').Router()
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
 const CustomError = require('../utils/customError')
+const authenticateToken = require('../middlewares/authMiddleware')
 
-router.get('/', async (req, res, next) => {
+router.get('/', authenticateToken(['admin']), async (req, res, next) => {
   try {
     const users = await User.findAll()
     res.json(users)
@@ -12,7 +13,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', authenticateToken(['admin']), async (req, res, next) => {
   const { username, first_name, last_name, password, role } = req.body
 
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -31,7 +32,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authenticateToken(['admin']), async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)
     if (user) {
@@ -44,7 +45,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authenticateToken(['admin']), async (req, res, next) => {
   try {
     const userId = req.params.id
 
@@ -79,47 +80,54 @@ router.put('/:id', async (req, res, next) => {
   }
 })
 
-router.put('/update-password/:id', async (req, res, next) => {
-  try {
-    const userId = req.params.id
-    const { old_password, new_password } = req.body
+router.put(
+  '/update-password/:id',
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    try {
+      const userId = req.params.id
+      const { old_password, new_password } = req.body
 
-    if (!old_password || !new_password) {
-      throw new CustomError('Old and new passwords are required', 400)
-    }
+      if (!old_password || !new_password) {
+        throw new CustomError('Old and new passwords are required', 400)
+      }
 
-    const user = await User.findByPk(userId)
-    if (!user) {
-      throw new CustomError('User not found', 404)
-    }
+      const user = await User.findByPk(userId)
+      if (!user) {
+        throw new CustomError('User not found', 404)
+      }
 
-    const isPasswordCorrect = await bcrypt.compare(old_password, user.password)
-    if (!isPasswordCorrect) {
-      throw new CustomError('Incorrect old password', 400)
-    }
-
-    if (new_password === old_password) {
-      throw new CustomError(
-        'New password cannot be the same as the old password',
-        400
+      const isPasswordCorrect = await bcrypt.compare(
+        old_password,
+        user.password
       )
+      if (!isPasswordCorrect) {
+        throw new CustomError('Incorrect old password', 400)
+      }
+
+      if (new_password === old_password) {
+        throw new CustomError(
+          'New password cannot be the same as the old password',
+          400
+        )
+      }
+
+      const hashedPassword = await bcrypt.hash(new_password, 10)
+
+      const [affectedRows] = await User.update(
+        { password: hashedPassword },
+        { where: { id: userId } }
+      )
+
+      if (affectedRows === 0) {
+        throw new CustomError('User was not found', 400)
+      }
+
+      res.status(200)
+    } catch (error) {
+      next(error)
     }
-
-    const hashedPassword = await bcrypt.hash(new_password, 10)
-
-    const [affectedRows] = await User.update(
-      { password: hashedPassword },
-      { where: { id: userId } }
-    )
-
-    if (affectedRows === 0) {
-      throw new CustomError('User was not found', 400)
-    }
-
-    res.status(200)
-  } catch (error) {
-    next(error)
   }
-})
+)
 
 module.exports = router

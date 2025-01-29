@@ -1,11 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import Users from './Users'
-import axios from 'axios'
 import { vi, describe, test, expect } from 'vitest'
 import { BrowserRouter as Router } from 'react-router-dom'
+import userService from '../services/users'
 
-// Mock axios
+// Mock axios and userService
 vi.mock('axios')
+vi.mock('../services/users', () => ({
+  default: {
+    getAll: vi.fn(),
+  },
+}))
 
 describe('Users Component', () => {
   test('renders users list when data is fetched successfully', async () => {
@@ -26,7 +31,7 @@ describe('Users Component', () => {
         role: 'basic',
       },
     ]
-    axios.get.mockResolvedValueOnce({ data: mockUsers })
+    userService.getAll.mockResolvedValueOnce(mockUsers)
 
     render(
       <Router>
@@ -36,7 +41,7 @@ describe('Users Component', () => {
 
     // Wait for the component to update after the API call
     await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledWith('http://localhost:3001/api/users')
+      expect(userService.getAll).toHaveBeenCalled()
     })
 
     // Check if the user data is rendered
@@ -51,7 +56,7 @@ describe('Users Component', () => {
 
   test('displays error message when API request fails', async () => {
     // Mock API error
-    axios.get.mockRejectedValueOnce(new Error('Error fetching data'))
+    userService.getAll.mockRejectedValueOnce(new Error('Error fetching data'))
 
     render(
       <Router>
@@ -61,13 +66,11 @@ describe('Users Component', () => {
 
     // Wait for the component to attempt the API call
     await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledWith('http://localhost:3001/api/users')
+      expect(userService.getAll).toHaveBeenCalled()
     })
 
     // Since the users list is empty, there should be no user data rendered
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument()
     expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument()
-
-    // You can also test if an error message is logged or displayed as needed
   })
 })

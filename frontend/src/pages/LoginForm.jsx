@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
-import decodeToken from '../utils/decode'
 
 const Login = ({ onLoginSuccess, showNotification }) => {
   const [username, setUsername] = useState('')
@@ -18,19 +17,8 @@ const Login = ({ onLoginSuccess, showNotification }) => {
       if (response.status === 200) {
         const token = response.data.token
 
-        const loggedInUser = {
-          fullname: decodeToken(token).fullname,
-          username: decodeToken(token).username,
-          role: decodeToken(token).role,
-          user_id: decodeToken(token).user_id,
-        }
-
-        window.localStorage.setItem(
-          'loggedInUser',
-          JSON.stringify(loggedInUser)
-        )
         window.localStorage.setItem('token', token)
-        onLoginSuccess(loggedInUser)
+        onLoginSuccess()
       } else {
         console.log('Error logging in:', response)
         showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)

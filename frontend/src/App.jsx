@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,22 +24,13 @@ import Header from './pages/Header'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [loggedInUser, setLoggedInUser] = useState({})
   const [materialsReloaded, setMaterialsReloaded] = useState(false)
 
   const { message, type, showNotification } = useNotification()
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const savedLoggedInUser = window.localStorage.getItem('loggedInUser')
-    if (savedLoggedInUser) {
-      setIsLoggedIn(true)
-      setLoggedInUser(JSON.parse(savedLoggedInUser))
-    }
-  }, [])
-
-  const handleLoginForm = () => {
+  const onLoginSuccess = () => {
     setIsLoggedIn(true)
     navigate('/')
   }
@@ -123,7 +114,7 @@ const App = () => {
         </div>
       ) : (
         <LoginForm
-          onLoginSuccess={handleLoginForm}
+          onLoginSuccess={onLoginSuccess}
           showNotification={showNotification}
         />
       )}

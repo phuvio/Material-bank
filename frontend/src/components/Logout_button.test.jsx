@@ -12,9 +12,7 @@ vi.mock('react-router-dom', () => ({
 
 describe('LogoutButton Component', () => {
   test('clears localStorage, updates state and navigates on click', () => {
-    // Mock functions for setIsLoggedIn and setLoggedInUser
     const setIsLoggedIn = vi.fn()
-    const setLoggedInUser = vi.fn()
 
     // Create a mock navigate function
     const navigate = vi.fn()
@@ -29,10 +27,7 @@ describe('LogoutButton Component', () => {
     // Render the LogoutButton component
     render(
       <Router>
-        <LogoutButton
-          setIsLoggedIn={setIsLoggedIn}
-          setLoggedInUser={setLoggedInUser}
-        />
+        <LogoutButton setIsLoggedIn={setIsLoggedIn} />
       </Router>
     )
 
@@ -42,9 +37,7 @@ describe('LogoutButton Component', () => {
     // Check that localStorage.clear was called
     expect(window.localStorage.clear).toHaveBeenCalled()
 
-    // Verify that setIsLoggedIn and setLoggedInUser were called
     expect(setIsLoggedIn).toHaveBeenCalledWith(false)
-    expect(setLoggedInUser).toHaveBeenCalledWith({})
 
     // Verify navigation to the home page
     expect(navigate).toHaveBeenCalledWith('/')

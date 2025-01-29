@@ -2,18 +2,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Login from './LoginForm'
 import loginService from '../services/login'
 import { vi, describe, test, beforeEach, expect } from 'vitest'
-import decodeToken from '../utils/decode'
 
 // Mock loginService.login function
 vi.mock('../services/login')
-vi.mock('../utils/decode', () => ({
-  default: vi.fn(() => ({
-    fullname: 'Test User',
-    username: 'test_user',
-    role: 'admin',
-    user_id: 123,
-  })),
-}))
 
 const showNotificationMock = vi.fn()
 
@@ -83,13 +74,6 @@ describe('Login Component', () => {
       data: { token: 'fake_token' },
     })
 
-    decodeToken.mockReturnValueOnce({
-      fullname: 'Test User',
-      username: 'test_user',
-      role: 'admin',
-      user_id: 123,
-    })
-
     render(
       <Login
         onLoginSuccess={onLoginSuccess}
@@ -116,21 +100,7 @@ describe('Login Component', () => {
         'token',
         'fake_token'
       )
-      expect(window.localStorage.setItem).toHaveBeenCalledWith(
-        'loggedInUser',
-        JSON.stringify({
-          fullname: 'Test User',
-          username: 'test_user',
-          role: 'admin',
-          user_id: 123,
-        })
-      )
-      expect(onLoginSuccess).toHaveBeenCalledWith({
-        fullname: 'Test User',
-        username: 'test_user',
-        role: 'admin',
-        user_id: 123,
-      })
+      expect(onLoginSuccess).toHaveBeenCalledOnce()
     })
   })
 

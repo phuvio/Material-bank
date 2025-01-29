@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import userService from '../services/users'
 import { validateUser } from '../utils/userValidations'
 import GoBackButton from '../components/GoBackButton'
+import SelectUserRole from '../components/SelectUserRole'
 
 const NewUser = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -140,17 +141,10 @@ const NewUser = ({ showNotification }) => {
             <label htmlFor="role">Rooli:</label>
           </div>
           <div className="col-75">
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleFormChange}
-            >
-              <option value="">Valitse</option>
-              <option value="admin">Pääkäyttäjä</option>
-              <option value="moderator">Moderaattori</option>
-              <option value="basic">Peruskäyttäjä</option>
-            </select>
+            <SelectUserRole
+              formData={formData}
+              handleFormChange={handleFormChange}
+            />
             <p>
               Peruskäyttäjä voi luoda uusia materiaaleja, muokata materiaalien
               tageja ja muokata tai poistaa itse luomiaan materiaaleja.

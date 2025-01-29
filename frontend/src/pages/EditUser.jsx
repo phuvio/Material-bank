@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import userService from '../services/users'
 import { validateUserUpdate } from '../utils/userValidations'
 import GoBackButton from '../components/GoBackButton'
+import SelectUserRole from '../components/SelectUserRole'
 
 const EditUser = ({ showNotification }) => {
   const { id } = useParams()
@@ -159,16 +160,10 @@ const EditUser = ({ showNotification }) => {
             <label htmlFor="role">Rooli:</label>
           </div>
           <div className="row-75">
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleFormChange}
-            >
-              <option value="">Valitse</option>
-              <option value="admin">Pääkäyttäjä</option>
-              <option value="basic">Peruskäyttäjä</option>
-            </select>
+            <SelectUserRole
+              formData={formData}
+              handleFormChange={handleFormChange}
+            />
             {errors.role && <span>{errors.role}</span>}
           </div>
         </div>

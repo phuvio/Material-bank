@@ -109,6 +109,7 @@ const NewMaterial = ({ onMaterialAdded, showNotification }) => {
               name="name"
               value={formData.name}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             <p>Nimen pituus voi olla 3-50 kirjainta.</p>
             {errors.name && <span className="error-text">{errors.name}</span>}
@@ -183,9 +184,9 @@ const NewMaterial = ({ onMaterialAdded, showNotification }) => {
         </div>
         <div className="row">
           <div className="col-25">
-            <label htmlFor="tags">Valitse tagit:</label>
+            <legend>Valitse tagit:</legend>
           </div>
-          <div className="col-75">
+          <div className="col-75" aria-labelledby="tags-label">
             <TagFilter
               tags={tags}
               selectedTags={selectedTags}

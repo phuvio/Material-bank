@@ -11,6 +11,8 @@ const TagFilter = ({ tags, selectedTags, toggleTags }) => {
             <label>
               <input
                 type="checkbox"
+                name="tag"
+                id={tag.id}
                 checked={selectedTags.includes(tag.id)}
                 onChange={() => toggleTags(tag.id)}
               />

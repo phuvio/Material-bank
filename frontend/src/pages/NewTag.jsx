@@ -73,6 +73,7 @@ const NewTag = ({ showNotification }) => {
               name="name"
               value={formData.name}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             <p>Nimen pituus voi olla 3-30 kirjainta.</p>
             {errors.name && <span className="error-text">{errors.name}</span>}
@@ -81,7 +82,7 @@ const NewTag = ({ showNotification }) => {
         <br></br>
         <div className="row">
           <div className="col-25">
-            <label htmlFor="color">Valitse tagin väri:</label>
+            <legend>Valitse tagin väri:</legend>
           </div>
           <div className="col-75">
             <ColorPicker

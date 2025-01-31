@@ -23,6 +23,8 @@ const UserDropdown = ({ setIsLoggedIn }) => {
     <div className="user-dropdown">
       <select
         className="user-dropdown-select"
+        name="userOptions"
+        id="user-dropdown"
         onChange={(e) => {
           handleOptionChange(e.target.value)
         }}

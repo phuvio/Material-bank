@@ -51,6 +51,7 @@ const Login = ({ onLoginSuccess, showNotification }) => {
               id="username"
               value={username}
               name="username"
+              autoComplete="username"
               onChange={({ target }) => setUsername(target.value)}
             />
           </div>
@@ -65,6 +66,7 @@ const Login = ({ onLoginSuccess, showNotification }) => {
               id="password"
               value={password}
               name="password"
+              autoComplete="current-password"
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>

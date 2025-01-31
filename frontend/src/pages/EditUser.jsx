@@ -100,7 +100,7 @@ const EditUser = ({ showNotification }) => {
       <form onSubmit={updateUser}>
         <div className="row">
           <div className="col-25">
-            <label htmlFor="name">Etunimi:</label>
+            <label htmlFor="first_name">Etunimi:</label>
           </div>
           <div className="col-75">
             <input
@@ -109,6 +109,7 @@ const EditUser = ({ showNotification }) => {
               name="first_name"
               value={formData.first_name}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             {errors.first_name && <span>{errors.first_name}</span>}
           </div>

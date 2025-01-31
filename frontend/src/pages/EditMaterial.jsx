@@ -93,6 +93,7 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
               name="name"
               value={formData.name}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             <p>Nimen pituus voi olla 3-50 kirjainta.</p>
             {errors.name && <span>{errors.name}</span>}

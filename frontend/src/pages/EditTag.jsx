@@ -90,6 +90,7 @@ const EditTag = ({ showNotification }) => {
               name="name"
               value={tag.name}
               onChange={handleNameChange}
+              autoComplete="off"
             />
             {errors.name && <span>{errors.name}</span>}
           </div>
@@ -97,7 +98,7 @@ const EditTag = ({ showNotification }) => {
         <br></br>
         <div className="row">
           <div className="col-25">
-            <label htmlFor="color">Valitse tagin väri:</label>
+            <legend>Valitse tagin väri:</legend>
           </div>
           <div className="col-75">
             <ColorPicker

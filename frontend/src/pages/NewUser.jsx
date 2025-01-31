@@ -72,6 +72,7 @@ const NewUser = ({ showNotification }) => {
               name="username"
               value={formData.username}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             <p>Käyttäjätunnus on muotoa etunimi.sukunimi@proneuron.fi.</p>
             {errors.username && <p className="error-text">{errors.username}</p>}
@@ -88,6 +89,7 @@ const NewUser = ({ showNotification }) => {
               name="first_name"
               value={formData.first_name}
               onChange={handleFormChange}
+              autoComplete="off"
             />
             {errors.first_name && (
               <p className="error-text">{errors.first_name}</p>

@@ -5,6 +5,9 @@ import apiUrl from '../config/config'
 
 // Mock axios
 vi.mock('axios')
+vi.mock('../utils/getAuthHeaders', () => ({
+  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+}))
 
 describe('materialService', () => {
   afterEach(() => {
@@ -22,7 +25,9 @@ describe('materialService', () => {
     const result = await materialService.getAll()
 
     // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`)
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
     // Check that the result matches the mock data
     expect(result).toEqual(mockMaterials)
   })
@@ -34,7 +39,9 @@ describe('materialService', () => {
     await expect(materialService.getAll()).rejects.toThrow('Network Error')
 
     // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`)
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
   })
 
   test('create posts a new material successfully', async () => {
@@ -50,7 +57,10 @@ describe('materialService', () => {
       `${apiUrl}/api/materials`,
       newMaterial,
       expect.objectContaining({
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer mockToken',
+        },
       })
     )
     // Check that the result matches the mock created material
@@ -71,7 +81,10 @@ describe('materialService', () => {
       `${apiUrl}/api/materials`,
       newMaterial,
       expect.objectContaining({
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer mockToken',
+        },
       })
     )
   })
@@ -84,7 +97,9 @@ describe('materialService', () => {
     const result = await materialService.getSingle(1)
 
     // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
     // Check that the result matches the mock data
     expect(result).toEqual(mockMaterial)
   })
@@ -98,7 +113,9 @@ describe('materialService', () => {
     )
 
     // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
+    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
   })
 
   test('update updates a material successfully', async () => {
@@ -113,7 +130,10 @@ describe('materialService', () => {
       `${apiUrl}/api/materials/1`,
       updatedMaterial,
       expect.objectContaining({
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer mockToken',
+        },
       })
     )
     // Check that the result matches the mock updated material
@@ -135,7 +155,10 @@ describe('materialService', () => {
       `${apiUrl}/api/materials/1`,
       updatedMaterial,
       expect.objectContaining({
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer mockToken',
+        },
       })
     )
   })
@@ -148,7 +171,9 @@ describe('materialService', () => {
     const result = await materialService.remove(1)
 
     // Check that axios.delete was called with the correct API URL
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
+    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
     // Check that the result matches the mock removed material
     expect(result).toEqual(removedMaterial)
   })
@@ -162,6 +187,8 @@ describe('materialService', () => {
     )
 
     // Check that axios.delete was called with the correct API URL
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`)
+    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
+      headers: { Authorization: 'Bearer mockToken' },
+    })
   })
 })

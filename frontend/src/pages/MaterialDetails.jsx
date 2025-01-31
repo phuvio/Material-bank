@@ -45,7 +45,7 @@ const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
         await materialService.remove(id)
         showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
         onMaterialAdded()
-        navigate('/materials')
+        navigate('/materiaalit')
       } catch (error) {
         console.log('Error deleting material:', error)
         showNotification('Materiaalin poisto epäonnistui', 'error', 3000)

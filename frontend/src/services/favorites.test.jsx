@@ -5,6 +5,9 @@ import apiUrl from '../config/config'
 
 // Mock the axios module
 vi.mock('axios')
+vi.mock('../utils/getAuthHeaders', () => ({
+  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+}))
 
 describe('favorites API', () => {
   afterEach(() => {
@@ -25,7 +28,10 @@ describe('favorites API', () => {
       const result = await favorites.get(userId)
 
       expect(axios.get).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}`
+        `${apiUrl}/api/favorites/${userId}`,
+        {
+          headers: { Authorization: 'Bearer mockToken' },
+        }
       )
       expect(result).toEqual(mockData)
     })
@@ -48,7 +54,11 @@ describe('favorites API', () => {
       const result = await favorites.create(userId, materialId)
 
       expect(axios.post).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}/${materialId}`
+        `${apiUrl}/api/favorites/${userId}/${materialId}`,
+        {},
+        {
+          headers: { Authorization: 'Bearer mockToken' },
+        }
       )
       expect(result).toEqual(mockResponse)
     })
@@ -66,7 +76,10 @@ describe('favorites API', () => {
       const result = await favorites.remove(userId, materialId)
 
       expect(axios.delete).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}/${materialId}`
+        `${apiUrl}/api/favorites/${userId}/${materialId}`,
+        {
+          headers: { Authorization: 'Bearer mockToken' },
+        }
       )
       expect(result).toEqual(mockResponse)
     })

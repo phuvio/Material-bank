@@ -28,9 +28,7 @@ const Main_page = ({ showNotification }) => {
     return matchesText && matchesTags
   })
 
-  console.log('Before material fetch')
   useEffect(() => {
-    console.log('fetching materials')
     materialService
       .getAll()
       .then((initialMaterials) => {
@@ -44,11 +42,8 @@ const Main_page = ({ showNotification }) => {
         showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
       })
   }, [])
-  console.log('Materials fetched', materials)
 
-  console.log('Before favorite fetch')
   useEffect(() => {
-    console.log('fetching favorites')
     favoriteService
       .get(decodeToken().user_id)
       .then((favorites) => {
@@ -62,7 +57,6 @@ const Main_page = ({ showNotification }) => {
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
       })
   }, [])
-  console.log('Favorites fetched', favorites)
 
   const handleFavorites = (materialId) => {
     const isAlreadyFavorite = isFavorite(materialId)

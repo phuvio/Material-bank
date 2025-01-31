@@ -70,7 +70,7 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
           ...formData,
         })
         onMaterialAdded()
-        navigate(`/materials/${id}`)
+        navigate(`/materiaalit/${id}`)
       })
       .catch((error) => {
         console.log('Error updating material', error)

@@ -11,10 +11,15 @@ const Header = ({ setIsLoggedIn }) => {
         <img src={logo} alt="Logo" />
         <nav>
           <Link to={'/'}>Materiaalit</Link>
+          {(decodeToken().role === 'admin' ||
+            decodeToken().role === 'moderator') && (
+            <>
+              <Link to={'/tagit'}>Tagien hallinta</Link>
+            </>
+          )}
           {decodeToken().role === 'admin' && (
             <>
               <Link to={'/kayttajat'}>Käyttäjähallinta</Link>
-              <Link to={'/tagit'}>Tagien hallinta</Link>
             </>
           )}
         </nav>

@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode'
 
 const decodeToken = (token) => {
-  token = token || localStorage.getItem('token')
+  token = token || localStorage.getItem('accessToken')
 
   if (!token) {
     return null

@@ -7,6 +7,7 @@ import { vi, describe, test, beforeEach, expect } from 'vitest'
 vi.mock('../services/login')
 
 const showNotificationMock = vi.fn()
+const onLoginSuccessMock = vi.fn()
 
 beforeEach(() => {
   window.localStorage.clear()
@@ -66,41 +67,39 @@ describe('Login Component', () => {
     })
   })
 
-  test('calls onLoginSuccess on successful login', async () => {
-    const onLoginSuccess = vi.fn()
-
-    loginService.login.mockResolvedValueOnce({
+  test('successful login stores tokens and calls onLoginSuccess', async () => {
+    loginService.login.mockResolvedValue({
       status: 200,
-      data: { token: 'fake_token' },
+      data: {
+        accessToken: 'mockAccessToken',
+        refreshToken: 'mockRefreshToken',
+      },
     })
 
     render(
       <Login
-        onLoginSuccess={onLoginSuccess}
+        onLoginSuccess={onLoginSuccessMock}
         showNotification={showNotificationMock}
       />
     )
 
-    const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
-    const passwordInput = screen.getByLabelText(/Salasana:/)
-
-    fireEvent.change(usernameInput, {
-      target: { value: 'test.user@proneuron.fi' },
+    fireEvent.change(screen.getByLabelText(/käyttäjätunnus:/i), {
+      target: { value: 'testuser' },
     })
-    fireEvent.change(passwordInput, { target: { value: 'password123' } })
-
-    fireEvent.submit(screen.getByText(/Kirjaudu sisään/))
+    fireEvent.change(screen.getByLabelText(/salasana:/i), {
+      target: { value: 'password123' },
+    })
+    fireEvent.click(screen.getByTestId('login-button'))
 
     await waitFor(() => {
-      expect(loginService.login).toHaveBeenCalledWith({
-        username: 'test.user@proneuron.fi',
-        password: 'password123',
-      })
-      expect(window.localStorage.setItem).toHaveBeenCalledWith(
-        'token',
-        'fake_token'
+      expect(window.localStorage.getItem('accessToken')).toBe('mockAccessToken')
+      expect(window.localStorage.getItem('refreshToken')).toBe(
+        'mockRefreshToken'
       )
-      expect(onLoginSuccess).toHaveBeenCalledOnce()
+      expect(onLoginSuccessMock).toHaveBeenCalledWith(
+        'mockAccessToken',
+        'mockRefreshToken'
+      )
     })
   })
 

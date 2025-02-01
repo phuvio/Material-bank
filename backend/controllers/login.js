@@ -21,7 +21,7 @@ router.post('/', async (req, res, next) => {
 
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
 
-    if (!user || !passwordCorrect) {
+    if (!passwordCorrect) {
       throw new CustomError('invalid username or password', 401)
     }
 
@@ -32,12 +32,46 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const token = jwt.sign(userForToken, SECRET)
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15m' })
+    const refreshToken = jwt.sign(userForToken, SECRET, { expiresIn: '2d' })
 
-    res.status(200).send({ token })
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    })
+
+    res.status(200).send({ accessToken })
   } catch (error) {
     next(error)
   }
+})
+
+router.post('/refresh', (req, res) => {
+  const refreshToken = req.body.token || req.cookies.refreshToken
+
+  if (!refreshToken) {
+    return res.status(401).json({ error: 'Refresh token missing' })
+  }
+
+  jwt.verify(refreshToken, SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid refresh token' })
+    }
+
+    const newAccessToken = jwt.sign(
+      {
+        fullname: user.fullname,
+        username: user.username,
+        user_id: user.user_id,
+        role: user.role,
+      },
+      SECRET,
+      { expiresIn: '15m' }
+    )
+
+    res.status(200).json({ accessToken: newAccessToken })
+  })
 })
 
 module.exports = router

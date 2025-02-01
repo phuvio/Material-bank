@@ -88,7 +88,7 @@ describe('decodeToken', () => {
     jwtDecode.mockReturnValue(decodedPayload)
 
     // Set the token in localStorage
-    window.localStorage.setItem('token', mockToken)
+    window.localStorage.setItem('accessToken', mockToken)
 
     // Call decodeToken without passing a token
     const result = decodeToken()

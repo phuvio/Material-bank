@@ -1,17 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import decodeToken from '../utils/decode'
 
 const UserDropdown = ({ setIsLoggedIn }) => {
   const navigate = useNavigate()
-  const userId = decodeToken().user_id
-  const userName = decodeToken().fullname
-  const [selectedOption, setSelectedOption] = useState('')
+  const [user, setUser] = useState({ userId: null, fullname: '' })
+
+  useEffect(() => {
+    const decodedToken = decodeToken()
+    if (decodedToken) {
+      localStorage.setItem('fullname', decodedToken.fullname)
+      setUser({ userId: decodedToken.user_id, fullname: decodedToken.fullname })
+    } else {
+      navigate('/')
+    }
+  }, [])
+
+  useEffect(() => {
+    const savedFullname = localStorage.getItem('fullname')
+    if (savedFullname) {
+      setUser((prevUser) => ({ ...prevUser, fullname: savedFullname }))
+    }
+  }, [])
 
   const handleOptionChange = (option) => {
-    setSelectedOption('')
     if (option === 'changePassword') {
-      navigate(`/vaihdasalasana/${userId}`)
+      navigate(`/vaihdasalasana/${user.userId}`)
     } else if (option === 'logout') {
       window.localStorage.clear()
       setIsLoggedIn(false)
@@ -28,12 +42,12 @@ const UserDropdown = ({ setIsLoggedIn }) => {
         onChange={(e) => {
           handleOptionChange(e.target.value)
         }}
-        value={selectedOption}
-        title={`Kirjautuneena: ${userName}`}
+        value={''}
+        title={`Kirjautuneena: ${user.fullname}`}
         style={{ width: '150px' }}
       >
         <option value="" disabled hidden>
-          {userName}
+          {user.fullname}
         </option>
         <option value="changePassword">Vaihda salasana</option>
         <option value="logout">Kirjaudu ulos</option>

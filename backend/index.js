@@ -5,6 +5,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const path = require('path')
+const cookieParser = require('cookie-parser')
 
 const materialsRouter = require('./controllers/materials')
 const usersRouter = require('./controllers/users')
@@ -23,9 +24,16 @@ process.env.NODE_ENV === 'production'
   ])
   : (allowedOrigins = ['http://localhost:5173'])
 
-app.use(cors({ origin: allowedOrigins }))
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}))
 
 app.use(express.json())
+
+app.use(cookieParser())
 
 app.use('/api/materials', materialsRouter)
 app.use('/api/users', usersRouter)

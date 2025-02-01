@@ -15,10 +15,11 @@ const Login = ({ onLoginSuccess, showNotification }) => {
       })
 
       if (response.status === 200) {
-        const token = response.data.token
+        const { accessToken, refreshToken } = response.data
 
-        window.localStorage.setItem('token', token)
-        onLoginSuccess()
+        window.localStorage.setItem('accessToken', accessToken)
+        window.localStorage.setItem('refreshToken', refreshToken)
+        onLoginSuccess(accessToken, refreshToken)
       } else {
         console.log('Error logging in:', response)
         showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)

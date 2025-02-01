@@ -4,7 +4,7 @@ import materialService from '../services/materials'
 import { validateMaterialUpdate } from '../utils/materialValidations'
 import GoBackButton from '../components/GoBackButton'
 
-const EditMaterial = ({ onMaterialAdded, showNotification }) => {
+const EditMaterial = ({ showNotification }) => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [errors, setErrors] = useState({})
@@ -69,7 +69,6 @@ const EditMaterial = ({ onMaterialAdded, showNotification }) => {
         setFormData({
           ...formData,
         })
-        onMaterialAdded()
         navigate(`/materiaalit/${id}`)
       })
       .catch((error) => {

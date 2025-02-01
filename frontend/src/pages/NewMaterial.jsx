@@ -7,7 +7,7 @@ import { selectTags } from '../utils/selectTags'
 import decodeToken from '../utils/decode'
 import GoBackButton from '../components/GoBackButton'
 
-const NewMaterial = ({ onMaterialAdded, showNotification }) => {
+const NewMaterial = ({ showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -86,7 +86,6 @@ const NewMaterial = ({ onMaterialAdded, showNotification }) => {
         material: null,
         material_type: null,
       })
-      onMaterialAdded()
       navigate('/')
     } catch (error) {
       showNotification('Materiaalin luonti epäonnistui', 'error', 3000)

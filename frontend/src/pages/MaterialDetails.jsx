@@ -9,7 +9,7 @@ import decodeToken from '../utils/decode'
 import '../styles/tag.css'
 import GoBackButton from '../components/GoBackButton'
 
-const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
+const MaterialDetails = ({ showNotification }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
@@ -44,7 +44,6 @@ const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
       try {
         await materialService.remove(id)
         showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
-        onMaterialAdded()
         navigate('/materiaalit')
       } catch (error) {
         console.log('Error deleting material:', error)
@@ -67,7 +66,6 @@ const MaterialDetails = ({ onMaterialAdded, showNotification }) => {
     try {
       await materialService.update(id, formToSubmit)
       showNotification('Tagit päivitetty onnistuneesti', 'message', 2000)
-      onMaterialAdded()
     } catch (error) {
       console.log('Error updating tags', error)
       showNotification('Tagien päivitys epäonnistui', 'error', 3000)

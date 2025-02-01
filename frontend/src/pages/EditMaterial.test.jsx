@@ -178,7 +178,6 @@ describe('EditMaterial Component', () => {
         2000
       )
     )
-    expect(mockOnMaterialAdded).toHaveBeenCalled()
     expect(materialService.update).toHaveBeenCalledWith(
       '1',
       expect.any(FormData)

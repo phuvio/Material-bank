@@ -27,7 +27,7 @@ jobs:
               run: npm run build
 
             - name: Run tests
-              run: npm test:coverage
+              run: npm run test:coverage
               
             - name: Install Heroku CLI
               run: |

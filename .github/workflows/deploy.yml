@@ -27,7 +27,7 @@ jobs:
               run: npm run build
 
             - name: Run tests
-              run: npm run test:coverage
+              run: npm test
               
             - name: Install Heroku CLI
               run: |
@@ -41,8 +41,3 @@ jobs:
                 heroku_app_name: 'material-bank-backend'
                 heroku_email: ${{ secrets.HEROKU_EMAIL }}
                 usedocker: false
-
-            - name: Upload coverage reports to Codecov
-              uses: codecov/codecov-action@v5
-              with:
-                token: ${{ secrets.CODECOV_TOKEN }}

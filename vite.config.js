@@ -27,11 +27,5 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js',
-    coverage: {
-      provider: 'c8',
-      reporter: ['lcov', 'text'],
-      include: ['frontend/src/**/*.{js,ts,jsx,tsx}'],
-      exclude: ['frontend/node_modules', 'frontend/tests'],
-    },
   },
 })

@@ -2,6 +2,7 @@ const router = require('express').Router()
 const { Tag } = require('../models/index')
 const CustomError = require('../utils/customError')
 const authenticateToken = require('../middlewares/authMiddleware')
+const { logAction } = require('../utils/logger')
 
 router.get(
   '/',
@@ -45,6 +46,7 @@ router.post(
 
     try {
       const result = await Tag.create({ name, color })
+      logAction(result.id, 'New tag created')
       res.status(201).json(result)
     } catch (error) {
       next(error)
@@ -68,6 +70,7 @@ router.put(
         { name, color },
         { where: { id: req.params.id } }
       )
+      logAction(result.id, 'Tag updated')
       res.json(result)
     } catch (error) {
       next(error)
@@ -84,6 +87,7 @@ router.delete(
       if (result === 0) {
         throw new CustomError('Tag not found', 404)
       }
+      logAction(req.params.id, 'Tag deleted')
       res.json({ message: 'Tag deleted successfully' })
     } catch (error) {
       next(error)

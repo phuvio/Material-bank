@@ -1,5 +1,6 @@
 require('dotenv').config()
 const { Sequelize } = require('sequelize')
+const { logError } = require('../utils/logger')
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialectOptions: {
@@ -13,10 +14,10 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 sequelize
   .authenticate()
   .then(() => {
-    console.log('Connection to the database has been established successfully.')
+    logError('Connection to the database has been established successfully.')
   })
   .catch((err) => {
-    console.error('Unable to connect to the database:', err)
+    logError('Unable to connect to the database:', err)
   })
 
 module.exports = {

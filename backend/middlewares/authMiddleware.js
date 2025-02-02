@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken')
+const { logAction } = require('../utils/logger')
 
 const authenticateToken = (allowedRoles) => (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized: No token provided' })
   }
-  console.log('token accepted')
+  logAction('token accepted')
   try {
     const decoded = jwt.verify(token, process.env.SECRET)
 

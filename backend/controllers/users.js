@@ -3,6 +3,7 @@ const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
 const CustomError = require('../utils/customError')
 const authenticateToken = require('../middlewares/authMiddleware')
+const { logAction } = require('../utils/logger')
 
 router.get('/', authenticateToken(['admin']), async (req, res, next) => {
   try {
@@ -26,6 +27,7 @@ router.post('/', authenticateToken(['admin']), async (req, res, next) => {
       password: hashedPassword,
       role,
     })
+    logAction(user.username, 'New user created')
     res.status(201).json(user)
   } catch (error) {
     next(error)
@@ -74,6 +76,7 @@ router.put('/:id', authenticateToken(['admin']), async (req, res, next) => {
 
     const updatedUser = await User.findByPk(userId)
 
+    logAction(updatedUser.userId, 'User was updated')
     res.status(200).json(updatedUser)
   } catch (error) {
     next(error)

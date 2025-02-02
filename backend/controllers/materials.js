@@ -5,6 +5,7 @@ const mime = require('mime-types')
 const { Material, User, Tag, TagsMaterial } = require('../models/index')
 const CustomError = require('../utils/customError')
 const authenticateToken = require('../middlewares/authMiddleware')
+const { logError, logAction } = require('../utils/logger')
 
 const upload = multer()
 
@@ -111,6 +112,8 @@ router.get(
         'Content-Disposition',
         `attachment; filename="${sanitizedFileName}.${fileExtension}"`
       )
+
+      logAction(sanitizedFileName, 'Material was downloaded')
       res.send(material.material)
     } catch (error) {
       next(error)
@@ -161,9 +164,11 @@ router.post(
         ],
       })
 
+      logAction(material.user_id, 'User uploaded material')
+      logAction(material.name, 'Material was uploaded')
       res.status(200).json(materialWithTags)
     } catch (error) {
-      console.log(error)
+      logError(error)
       await transaction.rollback()
       next(new CustomError('Error saving material', 400))
     }
@@ -223,9 +228,10 @@ router.put(
         ],
       })
 
+      logAction(updatedMaterial.name, 'Material was updated')
       res.status(200).json(updatedMaterial)
     } catch (error) {
-      console.log(error)
+      logError(error)
       await transaction.rollback()
       next(new CustomError('Error saving material', 400))
     }
@@ -241,6 +247,7 @@ router.delete(
       if (result === 0) {
         return res.status(404).json({ error: 'Material not found' })
       }
+      logAction(req.params.id, 'Material was deleted')
       res.json({ message: 'Material deleted successfully' })
     } catch (error) {
       next(error)

@@ -29,6 +29,7 @@
 - Multer
 - Mime
 - Cookie-parser
+- Winston
 
 ## Project management
 

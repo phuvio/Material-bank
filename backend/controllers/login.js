@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const router = require('express').Router()
+const { logAction } = require('../utils/logger')
 
 const { SECRET } = require('../config/database')
 const { User } = require('../models/index')
@@ -32,7 +33,7 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '2m' })
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15m' })
     const refreshToken = jwt.sign(userForToken, SECRET, { expiresIn: '2d' })
 
     res.cookie('refreshToken', refreshToken, {
@@ -41,6 +42,7 @@ router.post('/', async (req, res, next) => {
       sameSite: 'strict',
     })
 
+    logAction(user.id, 'Logged in')
     res.status(200).send({ accessToken })
   } catch (error) {
     next(error)
@@ -67,7 +69,7 @@ router.post('/refresh', (req, res) => {
         role: user.role,
       },
       SECRET,
-      { expiresIn: '2m' }
+      { expiresIn: '15m' }
     )
 
     res.status(200).json({ accessToken: newAccessToken })

@@ -6,7 +6,7 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const cookieParser = require('cookie-parser')
-const { logAction } = require('../utils/logger')
+const { logAction } = require('./utils/logger')
 
 const materialsRouter = require('./controllers/materials')
 const usersRouter = require('./controllers/users')

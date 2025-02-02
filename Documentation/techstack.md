@@ -28,6 +28,7 @@
 - Crypto
 - Multer
 - Mime
+- Cookie-parser
 
 ## Project management
 

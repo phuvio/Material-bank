@@ -72,7 +72,6 @@ describe('Login Component', () => {
       status: 200,
       data: {
         accessToken: 'mockAccessToken',
-        refreshToken: 'mockRefreshToken',
       },
     })
 
@@ -93,13 +92,7 @@ describe('Login Component', () => {
 
     await waitFor(() => {
       expect(window.localStorage.getItem('accessToken')).toBe('mockAccessToken')
-      expect(window.localStorage.getItem('refreshToken')).toBe(
-        'mockRefreshToken'
-      )
-      expect(onLoginSuccessMock).toHaveBeenCalledWith(
-        'mockAccessToken',
-        'mockRefreshToken'
-      )
+      expect(onLoginSuccessMock).toHaveBeenCalledWith('mockAccessToken')
     })
   })
 

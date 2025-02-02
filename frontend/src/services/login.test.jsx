@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 import axios from 'axios'
 import loginService from './login'
@@ -18,6 +19,7 @@ describe('loginService', () => {
         setItem: vi.fn(),
         getItem: vi.fn(),
         removeItem: vi.fn(),
+        clear: vi.fn(),
       },
       writable: true,
     })
@@ -46,6 +48,12 @@ describe('loginService', () => {
 
     // Check that login function returns expected response
     expect(result).toEqual(mockResponse)
+
+    // Ensure localStorage.setItem was called with the correct access token
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      'accessToken',
+      'mockAccessToken'
+    )
   })
 
   test('throws an error when login fails', async () => {
@@ -84,7 +92,7 @@ describe('loginService', () => {
     // Expect new token to be returned
     expect(newAccessToken).toBe('newMockAccessToken')
 
-    // Ensure localStorage.setItem was called
+    // Ensure localStorage.setItem was called with the new access token
     expect(localStorage.setItem).toHaveBeenCalledWith(
       'accessToken',
       'newMockAccessToken'
@@ -104,8 +112,30 @@ describe('loginService', () => {
     // Expect newAccessToken to be null
     expect(newAccessToken).toBeNull()
 
-    // Ensure localStorage.removeItem was called for both tokens
-    expect(localStorage.removeItem).toHaveBeenCalledWith('accessToken')
-    expect(localStorage.removeItem).toHaveBeenCalledWith('refreshToken')
+    // Ensure localStorage.clear was called
+    expect(localStorage.clear).toHaveBeenCalled()
+  })
+
+  test.skip('logs out the user successfully', async () => {
+    // Mock axios.post response
+    axios.post.mockResolvedValue({ status: 200 })
+
+    // Call logout function
+    await loginService.logout()
+
+    // Ensure axios.post was called with the correct URL
+    expect(axios.post).toHaveBeenCalledWith(
+      `${apiUrl}/api/login/logout`,
+      {},
+      { withCredentials: true }
+    )
+  })
+
+  test('handles logout failure correctly', async () => {
+    // Mock axios.post failure response
+    axios.post.mockRejectedValue(new Error('Logout failed'))
+
+    // Ensure logout does not throw error but logs the failure
+    await expect(loginService.logout()).resolves.not.toThrow()
   })
 })

@@ -32,7 +32,7 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15m' })
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '2m' })
     const refreshToken = jwt.sign(userForToken, SECRET, { expiresIn: '2d' })
 
     res.cookie('refreshToken', refreshToken, {
@@ -48,7 +48,7 @@ router.post('/', async (req, res, next) => {
 })
 
 router.post('/refresh', (req, res) => {
-  const refreshToken = req.body.token || req.cookies.refreshToken
+  const refreshToken = req.cookies.refreshToken
 
   if (!refreshToken) {
     return res.status(401).json({ error: 'Refresh token missing' })
@@ -67,11 +67,21 @@ router.post('/refresh', (req, res) => {
         role: user.role,
       },
       SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: '2m' }
     )
 
     res.status(200).json({ accessToken: newAccessToken })
   })
+})
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Strict',
+    path: '/',
+  })
+  res.status(200).json({ message: 'Logged out successfully' })
 })
 
 module.exports = router

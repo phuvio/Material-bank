@@ -18,16 +18,14 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (isLoggedIn) {
+    const token = localStorage.getItem('accessToken')
+    if (token) {
       refreshToken()
     }
-  }, [isLoggedIn])
+  }, [])
 
   const refreshToken = async () => {
     try {
-      const refreshToken = localStorage.getItem('refreshToken')
-      if (!refreshToken) return logout()
-
       const newAccessToken = await loginService.refreshToken()
       if (newAccessToken) {
         localStorage.setItem('accessToken', newAccessToken)
@@ -40,16 +38,14 @@ const App = () => {
     }
   }
 
-  const onLoginSuccess = (accessToken, refreshToken) => {
+  const onLoginSuccess = (accessToken) => {
     localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
     setIsLoggedIn(true)
     navigate('/')
   }
 
   const logout = () => {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
+    localStorage.clear()
     setIsLoggedIn(false)
     navigate('/')
   }

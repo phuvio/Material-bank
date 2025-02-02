@@ -6,7 +6,7 @@ const PrivateRoute = ({ element, requiredRoles }) => {
   const token = decodeToken()
 
   if (!token || (requiredRoles && !requiredRoles.includes(token.role))) {
-    return <Navigate to="/login" />
+    return <Navigate to="/" />
   }
 
   return element

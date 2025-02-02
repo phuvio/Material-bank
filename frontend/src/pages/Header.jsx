@@ -5,19 +5,22 @@ import decodeToken from '../utils/decode'
 import logo from '../images/Logo_300x.png'
 
 const Header = ({ setIsLoggedIn }) => {
+  const decoded = decodeToken()
+
+  const role = decoded ? decoded.role : ''
+
   return (
     <>
       <header className="header">
         <img src={logo} alt="Logo" />
         <nav>
           <Link to={'/'}>Materiaalit</Link>
-          {(decodeToken().role === 'admin' ||
-            decodeToken().role === 'moderator') && (
+          {(role === 'admin' || role === 'moderator') && (
             <>
               <Link to={'/tagit'}>Tagien hallinta</Link>
             </>
           )}
-          {decodeToken().role === 'admin' && (
+          {role === 'admin' && (
             <>
               <Link to={'/kayttajat'}>Käyttäjähallinta</Link>
             </>

@@ -1,10 +1,10 @@
 # Database
 
-PostgrSQL was chosen, because it offers ACID transactions. There will only be hundreds of users and materials. Material files are most single page pdf-, word- or powerpoint files. Because of that it was decided to upload material files to Postgres as blobs.
+PostgrSQL was chosen, because it offers ACID transactions. There will only be hundreds of users and materials. Material files can be pdf-, word-, powerpoint, excel or picture files or a link to another webpage. Most of them have single page. Because of that it was decided to upload material files to Postgres as blobs.
 
 ## Schema
 
-Schema is based around materials. Each material has a single user who has downloaded that material to the database. Each material can have several tags which mark what the material is used for. Each user has a favorites list where they can mark their favorite materials. Admins can create groups to which group of materials can be added for a specific purposes. Customers are end users to whom the user gives the materials. User can then mark if the material has been given to the customer and whether the customer has completed the materials.
+Schema is based around materials. Each material has a single user who has uploaded that material to the database. Each material can have several tags which mark what the material is used for. Each user has a favorites list where they can mark their favorite materials.
 
 ```mermaid
 erDiagram
@@ -34,16 +34,16 @@ erDiagram
         TIMESTAMP updated_at
     }
 
-    Favorites {
-        SERIAL id
-        INTEGER material_id
-        INTEGER user_id
-    }
-
     Tags {
         SERIAL id
         VARCHAR(50) name
         VARCHAR(10) color
+    }
+
+    Favorites {
+        SERIAL id
+        INTEGER material_id
+        INTEGER user_id
     }
 
     Tags_Materials {
@@ -51,51 +51,15 @@ erDiagram
         INTEGER tag_id
     }
 
-    Groups {
-        SERIAL id
-        INTEGER user_id
-        INTEGER material_id
-        VARCHAR(500) description
-        BOOLEAN visible
-    }
-
-    Groups_Materials {
-        SERIAL id
-        INTEGER group_id
-        INTEGER material_id
-    }
-
-    Customers {
-        SERIAL id
-        INTEGER code
-        INTEGER user_id
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
-    }
-
-    Customers_Materials {
-        SERIAL id
-        INTEGER customer_id
-        INTEGER material_id
-        VARCHAR(20) status
-    }
-
     %% Relationships
     Users ||--o{ Favorites : "user_id"
     Materials ||--o{ Favorites : "material_id"
-    Tags ||--o{ Tags_Materials : "tag_id"
     Materials ||--o{ Tags_Materials : "material_id"
-    Materials ||--o{ Groups : "material_id"
+    Tags ||--o{ Tags_Materials : "tag_id"
     Users ||--o{ Materials : "user_id"
-    Users ||--o{ Groups : "user_id"
-    Groups ||--o{ Groups_Materials : "group_id"
-    Materials ||--o{ Groups_Materials : "material_id"
-    Users ||--o{ Customers : "user_id"
-    Customers ||--o{ Customers_Materials : "customer_id"
-    Materials ||--o{ Customers_Materials : "material_id"
 ```
 
-There are timestamps on materials, users and customers. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for customers are for GDPR purposes. When the customer ends his/her customership with ProNeuron the data is kept 3 years and then deleted. Timestamps for materials have no use at the moment, but are inserted for future use. PostgreSQL triggers are used to update timestamps updated_at.
+There are timestamps on materials and users. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for materials have no use at the moment, but are inserted for future use. PostgreSQL triggers are used to update timestamps updated_at.
 
 Sequelize is used for queries. It does not handle database-level triggers. The schema has been run directly to the database. To avoid problems do not use ```sequelize.sync()``` with ```force``` or ```alter``` options.
 

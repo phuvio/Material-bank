@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode'
 
 const decodeToken = (token) => {
   token = token || localStorage.getItem('accessToken')
-  console.log('decodeToken', token)
+
   if (!token) {
     return null
   }
@@ -10,7 +10,6 @@ const decodeToken = (token) => {
   try {
     const decodedToken = jwtDecode(token)
     if (decodedToken.exp < Date.now() / 1000) {
-      console.log('token expired in decodeToken')
       return null
     }
     return decodedToken

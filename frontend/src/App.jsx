@@ -19,7 +19,6 @@ const App = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken')
-    console.log('App useEffect', token)
     if (token) {
       refreshToken()
     }
@@ -27,16 +26,12 @@ const App = () => {
 
   const refreshToken = async () => {
     try {
-      console.log('Refreshing token...')
       const newAccessToken = await loginService.refreshToken()
-      console.log('New token received:', newAccessToken)
 
       if (newAccessToken) {
         localStorage.setItem('accessToken', newAccessToken)
         setIsLoggedIn(true)
-        console.log('Token updated in localStorage')
       } else {
-        console.log('No new token received, logging out...')
         logout()
       }
     } catch (error) {

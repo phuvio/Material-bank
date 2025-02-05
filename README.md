@@ -13,6 +13,10 @@ This material bank is intended for remote therapy. More and more often, therapie
 - [Page layouts](/Documentation/pagelayouts.md)
 - [Time log](/Documentation/timelog.md)
 
+OpenSFF scorecard
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/phuvio/Material-bank/badge)](https://scorecard.dev/viewer/?uri=github.com/phuvio/Material-bank)
+
 ## Quickstart
 
 ### Downloading

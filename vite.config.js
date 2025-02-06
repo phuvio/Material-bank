@@ -30,6 +30,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8', // or 'istanbul' for detailed reports
       reporter: ['text', 'lcov'],
+      outputDirectory: './coverage',
     },
   },
 })

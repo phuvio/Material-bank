@@ -20,7 +20,10 @@ jobs:
       - name: Run tests with coverage
         run: npm run test -- --coverage
 
+      - name: Check if coverage report exists
+        run: ls -alh ./frontend/coverage
+
       - name: Upload coverage to Coveralls
-        run: cat ./coverage/lcov.info | npx coveralls
+        run: cat ./frontend/coverage/lcov.info | npx coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

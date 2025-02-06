@@ -27,5 +27,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js',
+    coverage: {
+      provider: 'v8', // or 'istanbul' for detailed reports
+      reporter: ['text', 'lcov'],
+    },
   },
 })

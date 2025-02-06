@@ -7,6 +7,7 @@ const cors = require('cors')
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const { logAction } = require('./utils/logger')
+const rateLimit = require('express-rate-limit')
 
 const materialsRouter = require('./controllers/materials')
 const usersRouter = require('./controllers/users')
@@ -16,6 +17,14 @@ const favoriteRouter = require('./controllers/favorites')
 const errorHandler = require('./middlewares/errorHandler')
 
 const app = express()
+
+// Global rate limiter (e.g., 200 requests per 15 min for all routes)
+const globalRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // Limit each IP to 200 requests per window
+  message: { error: 'Too many requests, slow down!' },
+  headers: true,
+})
 
 let allowedOrigins
 
@@ -31,6 +40,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }))
+
+app.use('/api', globalRateLimiter)
 
 app.use(express.json())
 

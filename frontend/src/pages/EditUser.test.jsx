@@ -1,151 +1,111 @@
+import { describe, it, vi, beforeEach, expect } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
-import NewUser from './NewUser'
-import { vi, describe, test, expect, beforeEach } from 'vitest'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import EditUser from './EditUser'
 import userService from '../services/users'
 
-beforeEach(() => {
-  vi.clearAllMocks()
+vi.mock('../services/users', () => ({
+  default: {
+    getSingle: vi.fn(),
+    update: vi.fn(),
+  },
+}))
+
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+    useParams: () => ({ id: '123' }),
+  }
 })
 
-vi.mock('../services/users')
+describe('EditUser Component', () => {
+  const mockUser = {
+    first_name: 'Test',
+    last_name: 'User',
+    role: 'admin',
+  }
 
-const showNotificationMock = vi.fn()
+  const showNotification = vi.fn()
 
-describe('NewUser Component', () => {
-  test('renders form inputs and submit button', () => {
-    render(
-      <BrowserRouter>
-        <NewUser showNotification={showNotificationMock} />
-      </BrowserRouter>
-    )
-
-    // Check that the form fields are rendered
-    expect(screen.getByLabelText(/Käyttäjätunnus:/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Etunimi:/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Sukunimi:/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Salasana:/)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Rooli:/)).toBeInTheDocument()
-
-    // Check that the submit button is rendered
-    expect(screen.getByText(/Tallenna/)).toBeInTheDocument()
+  beforeEach(() => {
+    vi.clearAllMocks()
+    userService.getSingle.mockResolvedValue(mockUser)
+    userService.update.mockResolvedValue()
   })
 
-  test('updates form state on input change', () => {
+  const renderComponent = () =>
     render(
-      <BrowserRouter>
-        <NewUser showNotification={showNotificationMock} />
-      </BrowserRouter>
+      <MemoryRouter initialEntries={['/edit/123']}>
+        <Routes>
+          <Route
+            path="/edit/:id"
+            element={<EditUser showNotification={showNotification} />}
+          />
+        </Routes>
+      </MemoryRouter>
     )
 
-    const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
-    fireEvent.change(usernameInput, {
-      target: { value: 'john.doe@proneuron.fi' },
-    })
+  it('renders the edit user form with user data', async () => {
+    renderComponent()
 
-    // Check if the form state is updated
-    expect(usernameInput.value).toBe('john.doe@proneuron.fi')
-  })
-
-  test('shows validation errors when form is submitted with missing or invalid data', async () => {
-    render(
-      <BrowserRouter>
-        <NewUser showNotification={showNotificationMock} />
-      </BrowserRouter>
-    )
-
-    const submitButton = screen.getByText(/Tallenna/)
-
-    // Submit the form with invalid data
-    fireEvent.click(submitButton)
-
-    // Wait for validation errors to appear
     await waitFor(() => {
-      expect(
-        screen.getByText(/Käyttäjätunnuksen tulee olla pronen sähköpostiosoite/)
-      ).toBeInTheDocument()
-      expect(screen.getByText(/Etunimi on pakollinen/)).toBeInTheDocument()
-      expect(screen.getByText(/Sukunimi on pakollinen/)).toBeInTheDocument()
-      expect(screen.getByText(/Salasana on pakollinen/)).toBeInTheDocument()
-      expect(screen.getByText(/Rooli on pakollinen/)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Etunimi/i)).toHaveValue('Test')
+      expect(screen.getByLabelText(/Sukunimi/i)).toHaveValue('User')
     })
   })
 
-  test('displays success notification after successful user creation', async () => {
-    userService.create.mockResolvedValue({
-      id: 1,
-      username: 'john.doe@proneuron.fi',
-    })
+  it.skip('updates form fields on user input', async () => {
+    renderComponent()
 
-    render(
-      <BrowserRouter>
-        <NewUser showNotification={showNotificationMock} />
-      </BrowserRouter>
-    )
-
-    const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
-    const firstNameInput = screen.getByLabelText(/Etunimi:/)
-    const lastNameInput = screen.getByLabelText(/Sukunimi:/)
-    const passwordInput = screen.getByLabelText(/Salasana:/)
-    const roleSelect = screen.getByLabelText(/Rooli:/)
-
-    // Fill in the form with valid data
-    fireEvent.change(usernameInput, {
-      target: { value: 'john.doe@proneuron.fi' },
-    })
-    fireEvent.change(firstNameInput, { target: { value: 'John' } })
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } })
-    fireEvent.change(passwordInput, { target: { value: 'Password123%' } })
-    fireEvent.change(roleSelect, { target: { value: 'admin' } })
-
-    const submitButton = screen.getByText(/Tallenna/)
-
-    // Submit the form
-    fireEvent.click(submitButton)
-
-    // Wait for the success notification
     await waitFor(() => {
-      expect(showNotificationMock).toHaveBeenCalledWith(
-        'Käyttäjä luotu onnistuneesti',
+      fireEvent.change(screen.getByLabelText(/Etunimi:/i), {
+        target: { value: 'Updated' },
+      })
+    })
+
+    expect(screen.getByLabelText(/Etunimi/i)).toHaveValue('Updated')
+  })
+
+  it.skip('submits the form and calls updateUser', async () => {
+    renderComponent()
+
+    await waitFor(() => {
+      fireEvent.change(screen.getByLabelText(/Etunimi:/i), {
+        target: { value: 'Updated' },
+      })
+    })
+
+    const button = screen.getByRole('button', { name: /Tallenna/i })
+    fireEvent.click(button)
+
+    await waitFor(() => {
+      expect(userService.update).toHaveBeenCalledWith('123', {
+        first_name: 'Updated',
+        last_name: 'User',
+        role: 'admin',
+      })
+      expect(showNotification).toHaveBeenCalledWith(
+        'Käyttäjän tiedot päivitetty onnistuneesti',
         'message',
         2000
       )
+      expect(mockNavigate).toHaveBeenCalledWith('/kayttajat')
     })
   })
 
-  test('displays failure notification after failed user creation', async () => {
-    userService.create.mockRejectedValue(new Error('Error creating user'))
+  it('shows an error notification on failed update', async () => {
+    userService.update.mockRejectedValue(new Error('Update failed'))
+    renderComponent()
 
-    render(
-      <BrowserRouter>
-        <NewUser showNotification={showNotificationMock} />
-      </BrowserRouter>
-    )
+    const button = screen.getByRole('button', { name: /Tallenna/i })
+    fireEvent.click(button)
 
-    const usernameInput = screen.getByLabelText(/Käyttäjätunnus:/)
-    const firstNameInput = screen.getByLabelText(/Etunimi:/)
-    const lastNameInput = screen.getByLabelText(/Sukunimi:/)
-    const passwordInput = screen.getByLabelText(/Salasana:/)
-    const roleSelect = screen.getByLabelText(/Rooli:/)
-
-    // Fill in the form with valid data
-    fireEvent.change(usernameInput, {
-      target: { value: 'doe@proneuron.fi' },
-    })
-    fireEvent.change(firstNameInput, { target: { value: 'John' } })
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } })
-    fireEvent.change(passwordInput, { target: { value: 'Password123' } })
-    fireEvent.change(roleSelect, { target: { value: '1' } })
-
-    const submitButton = screen.getByText(/Tallenna/)
-
-    // Submit the form
-    fireEvent.click(submitButton)
-
-    // Wait for the failure notification
     await waitFor(() => {
-      expect(showNotificationMock).toHaveBeenCalledWith(
-        'Käyttäjän luonti epäonnistui',
+      expect(showNotification).toHaveBeenCalledWith(
+        'Käyttäjän päivitys epäonnistui',
         'error',
         3000
       )

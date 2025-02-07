@@ -33,7 +33,7 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '2h' })
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15min' })
     const refreshToken = jwt.sign(userForToken, SECRET, { expiresIn: '2d' })
 
     res.cookie('refreshToken', refreshToken, {
@@ -69,7 +69,7 @@ router.post('/refresh', (req, res) => {
         role: user.role,
       },
       SECRET,
-      { expiresIn: '2h' }
+      { expiresIn: '15min' }
     )
 
     res.status(200).json({ accessToken: newAccessToken })

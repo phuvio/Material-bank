@@ -7,6 +7,7 @@ import Header from './pages/Header'
 import useNotification from './utils/useNotification'
 import LoginForm from './pages/LoginForm'
 import loginService from './services/login'
+import NotFoundPage from './pages/NotFoundPage'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -88,6 +89,7 @@ const App = () => {
                   />
                 )
             )}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       ) : (

@@ -6,7 +6,7 @@ const { logAction } = require('../utils/logger')
 
 router.get(
   '/',
-  authenticateToken(['admin', 'moderator']),
+  authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
       const tags = await Tag.findAll()

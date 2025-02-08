@@ -13,3 +13,6 @@ jobs:
 
       - name: "Check if SARIF file exists"
         run: ls -lah results.sarif || echo "SARIF file missing!"
+
+      - name: Debug SARIF file path
+        run: ls -lah /tmp/bundle2539827020

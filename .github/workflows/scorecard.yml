@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@97a0fba1372883ab732affbe8f94b823f91727db # v3.pre.node20
         with:
           name: SARIF file
-          path: results.sarif
+          path: /tmp/bundle2539827020
           retention-days: 5
 
       # Upload the results to GitHub's code scanning dashboard (optional).

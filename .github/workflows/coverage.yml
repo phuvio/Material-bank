@@ -23,6 +23,13 @@ jobs:
       - name: Check if coverage report exists
         run: ls -alh ./frontend/coverage
 
+      - name: Debug Coverage File
+        run: |
+          echo "Checking if lcov.info exists..."
+          ls -alh ./frontend/coverage
+          echo "Showing first 20 lines of lcov.info"
+          head -n 20 ./frontend/coverage/lcov.info
+
       - name: Upload coverage to Coveralls
         run: cat ./frontend/coverage/lcov.info | npx coveralls
         env:

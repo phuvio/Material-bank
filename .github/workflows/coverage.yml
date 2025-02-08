@@ -23,6 +23,11 @@ jobs:
       - name: Check if coverage report exists
         run: ls -alh ./frontend/coverage
 
+      - name: Convert LCOV Paths
+        run: |
+          npx lcov-result-merger ./frontend/coverage/lcov.info > merged-lcov.info
+          mv merged-lcov.info ./frontend/coverage/lcov.info
+
       - name: Debug Coverage File
         run: |
           echo "Checking if lcov.info exists..."
@@ -31,9 +36,7 @@ jobs:
           head -n 20 ./frontend/coverage/lcov.info
 
       - name: Upload coverage to Coveralls
-        run: |
-          export DEBUG=coveralls
-          cat ./frontend/coverage/lcov.info | npx coveralls --verbose
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          COVERALLS_BASE_PATH: ${{ github.workspace }}/frontend
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./frontend/coverage/lcov.info

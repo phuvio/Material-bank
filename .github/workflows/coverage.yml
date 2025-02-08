@@ -27,3 +27,4 @@ jobs:
         run: cat ./frontend/coverage/lcov.info | npx coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_BASE_PATH: ${{ github.workspace }}/frontend

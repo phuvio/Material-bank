@@ -77,7 +77,10 @@ describe('EditTag Component', () => {
     render(
       <MemoryRouter initialEntries={['/edit/1']}>
         <Routes>
-          <Route path="/edit/:id" element={<EditTag />} />
+          <Route
+            path="/edit/:id"
+            element={<EditTag showNotification={showNotificationMock} />}
+          />
         </Routes>
       </MemoryRouter>
     )

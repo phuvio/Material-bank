@@ -19,6 +19,7 @@ const EditTag = ({ showNotification }) => {
       })
       .catch((error) => {
         console.log('Error fetching tag:', error)
+        setTag(null)
       })
   }, [id])
 
@@ -71,8 +72,8 @@ const EditTag = ({ showNotification }) => {
     }
   }
 
-  if (tag === null) {
-    return <div>Ladataan...</div>
+  if (!tag) {
+    return <div>Virhe ladattaessa tagia</div>
   }
 
   return (

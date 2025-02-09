@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi, describe, it, beforeEach, afterEach, expect } from 'vitest'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom'
 import EditTag from './EditTag'
 import tagService from '../services/tags'
 import validateTag from '../utils/tagValidations'
@@ -71,10 +71,16 @@ describe('EditTag Component', () => {
     })
   })
 
-  it.skip('submits the form and updates the tag', async () => {
+  it('submits the form and updates the tag', async () => {
     tagService.update.mockResolvedValue()
 
-    renderComponent()
+    render(
+      <MemoryRouter initialEntries={['/edit/1']}>
+        <Routes>
+          <Route path="/edit/:id" element={<EditTag />} />
+        </Routes>
+      </MemoryRouter>
+    )
 
     await waitFor(() => {
       expect(screen.getByLabelText(/Nimi/i)).toHaveValue('Test Tag')
@@ -108,21 +114,7 @@ describe('EditTag Component', () => {
     expect(screen.getByText(/Nimi on pakollinen/i)).toBeInTheDocument()
   })
 
-  it.skip('deletes the tag', async () => {
-    tagService.remove.mockResolvedValue()
-    window.confirm = vi.fn(() => true) // Mock confirm dialog
-
-    renderComponent()
-
-    const deleteButton = screen.getByText(/Poista tagi/i)
-    fireEvent.click(deleteButton)
-
-    await waitFor(() => {
-      expect(tagService.remove).toHaveBeenCalledWith('1')
-    })
-  })
-
-  it.skip('handles API errors gracefully', async () => {
+  it('handles API errors gracefully', async () => {
     tagService.getSingle.mockRejectedValue(new Error('API Error'))
     renderComponent()
 

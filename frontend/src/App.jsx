@@ -8,6 +8,7 @@ import useNotification from './utils/useNotification'
 import LoginForm from './pages/LoginForm'
 import loginService from './services/login'
 import NotFoundPage from './pages/NotFoundPage'
+import decodeToken from './utils/decode'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -23,7 +24,7 @@ const App = () => {
     if (token) {
       refreshToken()
     }
-  }, [location.pathname])
+  }, [])
 
   const refreshToken = async () => {
     try {
@@ -40,6 +41,36 @@ const App = () => {
       logout()
     }
   }
+
+  useEffect(() => {
+    let refreshAccessTokenTimerId
+    const decodedToken = decodeToken()
+
+    if (!decodedToken || !decodedToken.exp) {
+      console.error('Token decoding failed or missing exp')
+      return
+    }
+
+    const expiresInMs = decodedToken.exp * 1000 - Date.now()
+
+    if (expiresInMs <= 0) {
+      console.warn('Token already expired')
+      return
+    }
+
+    refreshAccessTokenTimerId = setTimeout(
+      () => {
+        refreshToken()
+      },
+      expiresInMs - 10 * 1000
+    ) // Refresh 10 seconds before expiration
+
+    return () => {
+      if (refreshAccessTokenTimerId) {
+        clearTimeout(refreshAccessTokenTimerId)
+      }
+    }
+  }, [refreshToken])
 
   const onLoginSuccess = () => {
     setIsLoggedIn(true)

@@ -57,25 +57,33 @@ describe('EditUser Component', () => {
     })
   })
 
-  it.skip('updates form fields on user input', async () => {
+  it('updates form fields on user input', async () => {
     renderComponent()
 
-    await waitFor(() => {
-      fireEvent.change(screen.getByLabelText(/Etunimi:/i), {
-        target: { value: 'Updated' },
-      })
+    const firstNameInput = screen.getByLabelText(/Etunimi:/i)
+    fireEvent.change(firstNameInput, {
+      target: { value: 'Updated' },
     })
 
-    expect(screen.getByLabelText(/Etunimi/i)).toHaveValue('Updated')
+    await waitFor(() => {
+      expect(screen.getByLabelText(/Etunimi/i)).toHaveValue('Updated')
+    })
   })
 
-  it.skip('submits the form and calls updateUser', async () => {
+  it('submits the form and calls updateUser', async () => {
     renderComponent()
 
-    await waitFor(() => {
-      fireEvent.change(screen.getByLabelText(/Etunimi:/i), {
-        target: { value: 'Updated' },
-      })
+    const firstNameInput = screen.getByLabelText(/Etunimi:/i)
+    fireEvent.change(firstNameInput, {
+      target: { value: 'Updated' },
+    })
+    const lastNameInput = screen.getByLabelText(/Sukunimi:/i)
+    fireEvent.change(lastNameInput, {
+      target: { value: 'User' },
+    })
+    const role = screen.getByLabelText(/Rooli:/i)
+    fireEvent.change(role, {
+      target: { value: 'admin' },
     })
 
     const button = screen.getByRole('button', { name: /Tallenna/i })

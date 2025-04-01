@@ -19,7 +19,7 @@ describe('TagAdmin Component', () => {
   it('renders correctly', async () => {
     render(
       <Router>
-        <TagAdmin />
+        <TagAdmin showNotification={vi.fn()} />
       </Router>
     )
 
@@ -45,7 +45,7 @@ describe('TagAdmin Component', () => {
   it('filters tags based on input', async () => {
     render(
       <Router>
-        <TagAdmin />
+        <TagAdmin showNotification={vi.fn()} />
       </Router>
     )
 
@@ -67,7 +67,7 @@ describe('TagAdmin Component', () => {
   it('displays a link to create a new tag', () => {
     render(
       <Router>
-        <TagAdmin />
+        <TagAdmin showNotification={vi.fn()} />
       </Router>
     )
 
@@ -77,18 +77,26 @@ describe('TagAdmin Component', () => {
     )
   })
 
-  it('handles error if fetching tags fails', async () => {
-    // Simulate a failed fetch
+  it('handles error if fetching tags fails and shows notification', async () => {
+    const showNotification = vi.fn()
     tagService.getAll.mockRejectedValueOnce(new Error('Error fetching data'))
 
     render(
       <Router>
-        <TagAdmin />
+        <TagAdmin showNotification={showNotification} />
       </Router>
     )
 
-    // Wait for the tags to load or error to show
-    await waitFor(() => screen.queryByText('Tagit'))
-    expect(screen.queryByText('Tag1')).toBeNull()
+    // Wait for the component to try fetching and handle error
+    await waitFor(() => {
+      expect(tagService.getAll).toHaveBeenCalled()
+    })
+
+    // Verify that the notification function is called with the correct arguments
+    expect(showNotification).toHaveBeenCalledWith(
+      'Virhe haettaessa tageja.',
+      'error',
+      3000
+    )
   })
 })

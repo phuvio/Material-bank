@@ -44,48 +44,53 @@ const Main_page = ({ showNotification }) => {
   }, [])
 
   useEffect(() => {
-    favoriteService
-      .get(decodeToken().user_id)
-      .then((favorites) => {
+    const fetchFavorites = async () => {
+      try {
+        const decoded = await decodeToken()
+
+        if (!decoded?.user_id) {
+          throw new Error('User ID not found in token')
+        }
+
+        const favorites = await favoriteService.get(decoded.user_id)
         const sortedFavorites = Array.isArray(favorites)
           ? favorites.sort((a, b) => (a.name > b.name ? 1 : -1))
           : []
+
         setFavorites(sortedFavorites)
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log('Error fetching favorites:', error)
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
-      })
+      }
+    }
+
+    fetchFavorites()
   }, [])
 
-  const handleFavorites = (materialId) => {
-    const isAlreadyFavorite = isFavorite(materialId)
+  const handleFavorites = async (materialId) => {
+    try {
+      const decoded = await decodeToken()
+      if (!decoded?.user_id) {
+        throw new Error('User ID not found in token')
+      }
 
-    if (isAlreadyFavorite) {
-      favoriteService
-        .remove(decodeToken().user_id, materialId)
-        .then(() => {
-          const filteredFavorites = favorites.filter(
-            (fav) => fav.id !== materialId
-          )
-          setFavorites(filteredFavorites)
-        })
-        .catch((error) => {
-          console.log('Error removing favorite', error)
-          showNotification('Virhe poistettaessa suosikkia', 'error', 3000)
-        })
-    } else {
-      favoriteService
-        .create(decodeToken().user_id, materialId)
-        .then((newFavorite) => {
-          setFavorites((prevFavorites) => {
-            return [...prevFavorites, newFavorite]
-          })
-        })
-        .catch((error) => {
-          console.log('Error adding favorite', error)
-          showNotification('Virhe suosikin lisäämisessä', 'error', 3000)
-        })
+      const isAlreadyFavorite = isFavorite(materialId)
+
+      if (isAlreadyFavorite) {
+        await favoriteService.remove(decoded.user_id, materialId)
+        setFavorites((prevFavorites) =>
+          prevFavorites.filter((fav) => fav.id !== materialId)
+        )
+      } else {
+        const newFavorite = await favoriteService.create(
+          decoded.user_id,
+          materialId
+        )
+        setFavorites((prevFavorites) => [...prevFavorites, newFavorite])
+      }
+    } catch (error) {
+      console.log('Error handling favorites:', error)
+      showNotification('Virhe suosikin käsittelyssä', 'error', 3000)
     }
   }
 

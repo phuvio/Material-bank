@@ -1,20 +1,17 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import Header from './Header'
 import { vi, describe, it, expect } from 'vitest'
+import Header from './Header'
 import decodeToken from '../utils/decode'
 
-// Mock the decodeToken module
-vi.mock('../utils/decode', () => ({
-  default: vi.fn(() => ({
-    role: 'user', // Default role
-    user_id: '123',
-    fullname: 'John Doe',
-  })),
-}))
+vi.mock('../utils/decode')
 
 describe('Header', () => {
   const mockSetIsLoggedIn = vi.fn()
+
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
 
   it('renders the logo', () => {
     render(
@@ -39,36 +36,34 @@ describe('Header', () => {
     expect(materiaalitLink).toHaveAttribute('href', '/')
   })
 
-  it('renders admin links when user is admin', () => {
-    decodeToken.mockReturnValue({ role: 'admin' }) // Mock admin role
+  it('renders admin links when user is admin', async () => {
+    decodeToken.mockResolvedValue({ role: 'admin' }) // Simulate async response
+
     render(
       <MemoryRouter>
         <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 
-    const usersLink = screen.getByText('Käyttäjähallinta')
-    const tagAdminLink = screen.getByText('Tagien hallinta')
+    await waitFor(() => expect(screen.getByText('Käyttäjähallinta')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText('Tagien hallinta')).toBeInTheDocument())
 
-    expect(usersLink).toBeInTheDocument()
-    expect(usersLink).toHaveAttribute('href', '/kayttajat')
-
-    expect(tagAdminLink).toBeInTheDocument()
-    expect(tagAdminLink).toHaveAttribute('href', '/tagit')
+    expect(screen.getByText('Käyttäjähallinta')).toHaveAttribute('href', '/kayttajat')
+    expect(screen.getByText('Tagien hallinta')).toHaveAttribute('href', '/tagit')
   })
 
-  it('does not render admin links when user is not admin', () => {
-    decodeToken.mockReturnValue({ role: 'user' }) // Mock user role
+  it('does not render admin links when user is not admin', async () => {
+    decodeToken.mockResolvedValue({ role: 'user' }) // Simulate user role
+
     render(
       <MemoryRouter>
         <Header setIsLoggedIn={mockSetIsLoggedIn} />
       </MemoryRouter>
     )
 
-    const usersLink = screen.queryByText('Käyttäjähallinta')
-    const tagAdminLink = screen.queryByText('Tagien hallinta')
-
-    expect(usersLink).not.toBeInTheDocument()
-    expect(tagAdminLink).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByText('Käyttäjähallinta')).not.toBeInTheDocument()
+      expect(screen.queryByText('Tagien hallinta')).not.toBeInTheDocument()
+    })
   })
 })

@@ -1,88 +1,67 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import axios from 'axios'
+import { describe, it, expect, vi } from 'vitest'
+import api from './api'
 import tagService from './tags'
-import apiUrl from '../config/config'
 
-vi.mock('axios') // Mock the axios module
-vi.mock('../utils/getAuthHeaders', () => ({
-  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+// Mock the 'api' module
+vi.mock('./api', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
 }))
 
-describe('tagsService', () => {
-  afterEach(() => {
-    vi.clearAllMocks() // Clear mocks after each test
+describe('Tag Service API', () => {
+  it('fetches all tags', async () => {
+    const mockResponse = { data: [{ id: 1, name: 'tag1' }] }
+    api.get.mockResolvedValue(mockResponse)
+
+    const tags = await tagService.getAll()
+
+    expect(tags).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/tags')
   })
 
-  const mockTags = [
-    { id: 1, name: 'Tag1', color: '#ff0000' },
-    { id: 2, name: 'Tag2', color: '#00ff00' },
-  ]
-  const newTag = { name: 'Tag3', color: '#0000ff' }
+  it('fetches a single tag', async () => {
+    const mockResponse = { data: { id: 1, name: 'tag1' } }
+    api.get.mockResolvedValue(mockResponse)
 
-  it('should fetch all tags', async () => {
-    axios.get.mockResolvedValueOnce({ data: mockTags })
-    const result = await tagService.getAll()
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/tags`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual(mockTags)
+    const tag = await tagService.getSingle(1)
+
+    expect(tag).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/tags/1')
   })
 
-  it('should create a new tag', async () => {
-    axios.post.mockResolvedValueOnce({ data: { ...newTag, id: 3 } })
-    const result = await tagService.create(newTag)
-    expect(axios.post).toHaveBeenCalledWith(`${apiUrl}/api/tags`, newTag, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual({ ...newTag, id: 3 })
+  it('creates a new tag', async () => {
+    const newTag = { name: 'tag1' }
+    const mockResponse = { data: { id: 1, ...newTag } }
+    api.post.mockResolvedValue(mockResponse)
+
+    const createdTag = await tagService.create(newTag)
+
+    expect(createdTag).toEqual(mockResponse.data)
+    expect(api.post).toHaveBeenCalledWith('/api/tags', newTag)
   })
 
-  it('should fetch a single tag by ID', async () => {
-    const tagId = 1
-    axios.get.mockResolvedValueOnce({ data: mockTags[0] })
-    const result = await tagService.getSingle(tagId)
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/tags/${tagId}`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual(mockTags[0])
+  it('updates a tag', async () => {
+    const updatedTag = { name: 'tag1 updated' }
+    const mockResponse = { data: { id: 1, ...updatedTag } }
+    api.put.mockResolvedValue(mockResponse)
+
+    const tag = await tagService.update(1, updatedTag)
+
+    expect(tag).toEqual(mockResponse.data)
+    expect(api.put).toHaveBeenCalledWith('/api/tags/1', updatedTag)
   })
 
-  it('should update an existing tag', async () => {
-    const tagId = 1
-    const updatedTag = { ...mockTags[0], name: 'UpdatedTag1' }
-    axios.put.mockResolvedValueOnce({ data: updatedTag })
-    const result = await tagService.update(tagId, updatedTag)
-    expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrl}/api/tags/${tagId}`,
-      updatedTag,
-      {
-        headers: { Authorization: 'Bearer mockToken' },
-      }
-    )
-    expect(result).toEqual(updatedTag)
-  })
+  it('removes a tag', async () => {
+    const mockResponse = { data: { id: 1, name: 'tag1' } }
+    api.delete.mockResolvedValue(mockResponse)
 
-  it('should delete a tag', async () => {
-    const tagId = 1
-    axios.delete.mockResolvedValueOnce({ data: {} })
-    const result = await tagService.remove(tagId)
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/tags/${tagId}`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual({})
-  })
+    const removedTag = await tagService.remove(1)
 
-  it('should handle errors gracefully', async () => {
-    axios.get.mockRejectedValueOnce(new Error('Network error'))
-    await expect(tagService.getAll()).rejects.toThrow('Network error')
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/tags`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-
-    axios.delete.mockRejectedValueOnce(new Error('Network error'))
-    await expect(tagService.remove(1)).rejects.toThrow('Network error')
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/tags/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
+    expect(removedTag).toEqual(mockResponse.data)
+    expect(api.delete).toHaveBeenCalledWith('/api/tags/1')
   })
 })

@@ -1,4 +1,4 @@
-import validateTag from './tagValidations'
+import { validateTag } from './tagValidations'
 import tagService from '../services/tags'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 

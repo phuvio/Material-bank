@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
-import validateTag from '../utils/tagValidations'
+import { validateTagUpdate } from '../utils/tagValidations'
 import GoBackButton from '../components/GoBackButton'
 
 const EditTag = ({ showNotification }) => {
@@ -53,7 +53,7 @@ const EditTag = ({ showNotification }) => {
   const addTag = async (e) => {
     e.preventDefault()
 
-    const validationErrors = await validateTag(tag)
+    const validationErrors = await validateTagUpdate(tag)
     setErrors(validationErrors)
 
     if (Object.keys(validationErrors).length === 0) {

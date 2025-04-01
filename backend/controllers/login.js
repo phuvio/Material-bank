@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const router = require('express').Router()
 const { logAction } = require('../utils/logger')
 
-const { SECRET } = require('../config/database')
+const { SECRET, REFRESH_SECRET } = require('../config/database')
 const { User } = require('../models/index')
 const bcrypt = require('bcrypt')
 const CustomError = require('../utils/customError')
@@ -33,8 +33,17 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '1d' })
-    const refreshToken = jwt.sign(userForToken, SECRET, { expiresIn: '1d' })
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15min' })
+    const refreshToken = jwt.sign(userForToken, REFRESH_SECRET, {
+      expiresIn: '7day',
+    })
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+      path: '/',
+    })
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -56,8 +65,9 @@ router.post('/refresh', (req, res) => {
     return res.status(401).json({ error: 'Refresh token missing' })
   }
 
-  jwt.verify(refreshToken, SECRET, (err, user) => {
+  jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
     if (err) {
+      res.clearCookie('refreshToken')
       return res.status(403).json({ error: 'Invalid refresh token' })
     }
 
@@ -69,7 +79,7 @@ router.post('/refresh', (req, res) => {
         role: user.role,
       },
       SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '15min' }
     )
 
     res.status(200).json({ accessToken: newAccessToken })

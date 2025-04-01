@@ -4,8 +4,6 @@ import { vi, describe, test, expect } from 'vitest'
 import { BrowserRouter as Router } from 'react-router-dom'
 import userService from '../services/users'
 
-// Mock axios and userService
-vi.mock('axios')
 vi.mock('../services/users', () => ({
   default: {
     getAll: vi.fn(),
@@ -35,7 +33,7 @@ describe('Users Component', () => {
 
     render(
       <Router>
-        <Users />
+        <Users showNotification={vi.fn()} />
       </Router>
     )
 
@@ -58,9 +56,12 @@ describe('Users Component', () => {
     // Mock API error
     userService.getAll.mockRejectedValueOnce(new Error('Error fetching data'))
 
+    // Mock showNotification function
+    const mockShowNotification = vi.fn()
+
     render(
       <Router>
-        <Users />
+        <Users showNotification={mockShowNotification} />
       </Router>
     )
 
@@ -68,6 +69,13 @@ describe('Users Component', () => {
     await waitFor(() => {
       expect(userService.getAll).toHaveBeenCalled()
     })
+
+    // Assert that showNotification was called with the correct arguments
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Virhe haettaessa käyttäjiä.',
+      'error',
+      3000
+    )
 
     // Since the users list is empty, there should be no user data rendered
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument()

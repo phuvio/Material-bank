@@ -1,59 +1,102 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { vi, describe, beforeEach, it, expect } from 'vitest'
-import UserDropdown from './UserDropdown'
+import UserDropdown from '../components/UserDropdown'
+import decodeToken from '../utils/decode'
+
+vi.mock('../utils/decode')
 
 const mockNavigate = vi.fn()
-// Mock react-router-dom
-vi.mock('react-router-dom', async (importOriginal) => {
-  const actual = await importOriginal()
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
-    useNavigate: vi.fn(() => mockNavigate),
-    MemoryRouter: ({ children }) => <div>{children}</div>, // Mock MemoryRouter
+    useNavigate: () => mockNavigate,
   }
 })
 
-vi.mock('../utils/decode', () => ({
-  default: vi.fn(() => ({
-    user_id: '123',
-    fullname: 'John Doe',
-  })),
-}))
-
-describe('UserDropdown Component', () => {
-  const mockSetIsLoggedIn = vi.fn()
-
+describe('UserDropdown', () => {
   beforeEach(() => {
+    localStorage.clear()
+    vi.resetAllMocks()
+  })
+
+  it('renders the component with loading text initially', () => {
     render(
-      <div>
-        <UserDropdown setIsLoggedIn={mockSetIsLoggedIn} />
-      </div>
+      <MemoryRouter>
+        <UserDropdown setIsLoggedIn={vi.fn()} />
+      </MemoryRouter>
     )
+
+    expect(screen.getByText(/Ladataan.../)).toBeInTheDocument()
   })
 
-  it('should display the correct user name in the dropdown', () => {
-    const dropdown = screen.getByTitle('Kirjautuneena: John Doe')
-    expect(dropdown).toBeInTheDocument()
-  })
-
-  it('should navigate to change password page when "Vaihda salasana" is selected', async () => {
-    fireEvent.change(screen.getByTitle('Kirjautuneena: John Doe'), {
-      target: { value: 'changePassword' },
+  it('fetches and sets user data if token is valid', async () => {
+    decodeToken.mockResolvedValue({
+      user_id: 123,
+      fullname: 'Test User',
     })
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/vaihdasalasana/123')
-    })
+    render(
+      <MemoryRouter>
+        <UserDropdown setIsLoggedIn={vi.fn()} />
+      </MemoryRouter>
+    )
+
+    await waitFor(() =>
+      expect(screen.getByText('Test User')).toBeInTheDocument()
+    )
+    expect(localStorage.getItem('fullname')).toBe('Test User')
   })
 
-  it('should log out the user when "Kirjaudu ulos" is selected', async () => {
-    fireEvent.change(screen.getByTitle('Kirjautuneena: John Doe'), {
+  it('redirects to "/" if token is invalid', async () => {
+    decodeToken.mockResolvedValue(null)
+
+    render(
+      <MemoryRouter>
+        <UserDropdown setIsLoggedIn={vi.fn()} />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/'))
+  })
+
+  it('logs out correctly when "Kirjaudu ulos" is selected', async () => {
+    decodeToken.mockResolvedValue({ user_id: 123, fullname: 'Test User' })
+    const mockSetIsLoggedIn = vi.fn()
+
+    render(
+      <MemoryRouter>
+        <UserDropdown setIsLoggedIn={mockSetIsLoggedIn} />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => screen.getByText('Test User'))
+
+    fireEvent.change(screen.getByRole('combobox'), {
       target: { value: 'logout' },
     })
 
-    await waitFor(() => {
-      expect(mockSetIsLoggedIn).toHaveBeenCalledWith(false)
-      expect(mockNavigate).toHaveBeenCalledWith('/')
+    expect(localStorage.getItem('fullname')).toBeNull()
+    expect(mockSetIsLoggedIn).toHaveBeenCalledWith(false)
+    expect(mockNavigate).toHaveBeenCalledWith('/')
+  })
+
+  it('navigates to password change page when "Vaihda salasana" is selected', async () => {
+    decodeToken.mockResolvedValue({ user_id: 123, fullname: 'Test User' })
+
+    render(
+      <MemoryRouter>
+        <UserDropdown setIsLoggedIn={vi.fn()} />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => screen.getByText('Test User'))
+
+    fireEvent.change(screen.getByRole('combobox'), {
+      target: { value: 'changePassword' },
     })
+
+    expect(mockNavigate).toHaveBeenCalledWith('/vaihdasalasana/123')
   })
 })

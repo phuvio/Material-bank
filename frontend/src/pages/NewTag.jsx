@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import tagService from '../services/tags'
 import ColorPicker from '../components/ColorPicker'
-import validateTag from '../utils/tagValidations'
+import { validateTag } from '../utils/tagValidations'
 import GoBackButton from '../components/GoBackButton'
 
 const NewTag = ({ showNotification }) => {

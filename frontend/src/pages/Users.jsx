@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import userService from '../services/users'
 import Filter from '../components/Filter'
 
-const Users = () => {
+const Users = ({ showNotification }) => {
   const [users, setUsers] = useState([])
   const [filter, setFilter] = useState('')
 
@@ -15,6 +15,7 @@ const Users = () => {
       })
       .catch((error) => {
         console.log('Error fetching data:', error)
+        showNotification('Virhe haettaessa käyttäjiä.', 'error', 3000)
       })
   }, [])
 
@@ -55,7 +56,11 @@ const Users = () => {
                   </span>
                   <span>{user.username}</span>
                   <span>
-                    {user.role === 'admin' ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+                    {user.role === 'admin'
+                      ? 'pääkäyttäjä'
+                      : user.role === 'basic'
+                        ? 'peruskäyttäjä'
+                        : 'moderaattori'}
                   </span>
                 </div>
               </li>

@@ -1,99 +1,69 @@
-import { vi, describe, test, expect, beforeEach } from 'vitest'
-import decodeToken from './decode'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import { jwtDecode } from 'jwt-decode'
+import api from '../services/api'
+import decodeToken from '../utils/decode'
 
-// Mock the jwt-decode library
-vi.mock('jwt-decode')
+vi.mock('jwt-decode', () => ({
+  jwtDecode: vi.fn(),
+}))
+
+vi.mock('../services/api', () => ({
+  default: { post: vi.fn() },
+}))
 
 describe('decodeToken', () => {
   beforeEach(() => {
-    // Clear localStorage before each test
-    window.localStorage.clear()
+    localStorage.clear()
+    vi.resetAllMocks()
+    delete window.location
+    window.location = { assign: vi.fn() }
   })
 
-  test('should return decoded token for a valid token', () => {
-    const mockToken = 'valid_token'
-    const decodedPayload = {
-      exp: Math.floor(Date.now() / 1000) + 60,
-      fullname: 'Test User',
-      username: 'test_user',
-      role: 'admin',
-      user_id: 123,
-    }
-
-    // Mock jwtDecode to return a valid decoded token
-    jwtDecode.mockReturnValue(decodedPayload)
-
-    // Call decodeToken with a mock token
-    const result = decodeToken(mockToken)
-
-    // Assert that the decoded token is returned correctly
-    expect(result).toEqual(decodedPayload)
-  })
-
-  test('should return null for an expired token', () => {
-    const mockToken = 'expired_token'
-    const expiredPayload = {
-      exp: Math.floor(Date.now() / 1000) - 60,
-      fullname: 'Test User',
-      username: 'test_user',
-      role: 'admin',
-      user_id: 123,
-    }
-
-    // Mock jwtDecode to return an expired decoded token
-    jwtDecode.mockReturnValue(expiredPayload)
-
-    // Call decodeToken with the expired token
-    const result = decodeToken(mockToken)
-
-    // Assert that the result is null due to expiration
+  it('returns null if no token is in localStorage', async () => {
+    const result = await decodeToken()
     expect(result).toBeNull()
   })
 
-  test('should return null if an error occurs during decoding', () => {
-    const mockToken = 'invalid_token'
+  it('returns decoded token if it is not expired', async () => {
+    const mockToken = 'valid.token.here'
+    const mockDecoded = { exp: Date.now() / 1000 + 3600, user: 'testUser' }
+    localStorage.setItem('accessToken', mockToken)
+    jwtDecode.mockReturnValue(mockDecoded)
 
-    // Mock jwtDecode to throw an error
-    jwtDecode.mockImplementation(() => {
-      throw new Error('Invalid token')
-    })
-
-    // Call decodeToken with the invalid token
-    const result = decodeToken(mockToken)
-
-    // Assert that the result is null due to the decoding error
-    expect(result).toBeNull()
+    const result = await decodeToken()
+    expect(result).toEqual(mockDecoded)
+    expect(jwtDecode).toHaveBeenCalledWith(mockToken)
   })
 
-  test('should return null if no token is provided and localStorage is empty', () => {
-    // Call decodeToken without passing a token and with empty localStorage
-    const result = decodeToken()
+  it('attempts to refresh token if expired and succeeds', async () => {
+    const expiredToken = 'expired.token.here'
+    const newToken = 'new.token.here'
+    const expiredDecoded = { exp: Date.now() / 1000 - 10, user: 'testUser' }
+    const newDecoded = { exp: Date.now() / 1000 + 3600, user: 'testUser' }
+    localStorage.setItem('accessToken', expiredToken)
+    jwtDecode
+      .mockReturnValueOnce(expiredDecoded)
+      .mockReturnValueOnce(newDecoded)
+    api.post.mockResolvedValue({ data: { accessToken: newToken } })
 
-    // Assert that the result is null because no token is provided
-    expect(result).toBeNull()
+    const result = await decodeToken()
+    expect(api.post).toHaveBeenCalledWith('/refresh')
+    expect(localStorage.getItem('accessToken')).toBe(newToken)
+    expect(result).toEqual(newDecoded)
   })
 
-  test('should return decoded token from localStorage if no token is provided', () => {
-    const mockToken = 'valid_token_from_localStorage'
-    const decodedPayload = {
-      exp: Math.floor(Date.now() / 1000) + 60,
-      fullname: 'Test User',
-      username: 'test_user',
-      role: 'admin',
-      user_id: 123,
-    }
+  it('clears localStorage and redirects if refresh fails', async () => {
+    const expiredToken = 'expired.token.here'
+    const expiredDecoded = { exp: Date.now() / 1000 - 10, user: 'testUser' }
+    localStorage.setItem('accessToken', expiredToken)
+    jwtDecode.mockReturnValue(expiredDecoded)
+    api.post.mockRejectedValue(new Error('Refresh failed'))
 
-    // Mock jwtDecode to return a valid decoded token
-    jwtDecode.mockReturnValue(decodedPayload)
+    const result = await decodeToken()
 
-    // Set the token in localStorage
-    window.localStorage.setItem('accessToken', mockToken)
-
-    // Call decodeToken without passing a token
-    const result = decodeToken()
-
-    // Assert that the decoded token from localStorage is returned
-    expect(result).toEqual(decodedPayload)
+    expect(api.post).toHaveBeenCalledWith('/refresh')
+    expect(localStorage.getItem('accessToken')).toBeNull()
+    expect(window.location.assign).toHaveBeenCalledWith('/')
+    expect(result).toBeNull()
   })
 })

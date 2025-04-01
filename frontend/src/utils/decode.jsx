@@ -1,7 +1,8 @@
 import { jwtDecode } from 'jwt-decode'
+import api from '../services/api'
 
-const decodeToken = (token) => {
-  token = token || localStorage.getItem('accessToken')
+const decodeToken = async () => {
+  const token = localStorage.getItem('accessToken')
 
   if (!token) {
     return null
@@ -10,8 +11,25 @@ const decodeToken = (token) => {
   try {
     const decodedToken = jwtDecode(token)
     if (decodedToken.exp < Date.now() / 1000) {
-      return null
+      try {
+        const response = await api.post('/refresh')
+        const newAccessToken = response.data.accessToken
+
+        if (newAccessToken) {
+          localStorage.setItem('accessToken', newAccessToken)
+          const newDecodedToken = jwtDecode(newAccessToken)
+          return newDecodedToken
+        } else {
+          throw new Error('Failed to refresh token')
+        }
+      } catch (error) {
+        console.error('Error refreshing token:', error)
+        localStorage.clear()
+        window.location.assign('/')
+        return null
+      }
     }
+
     return decodedToken
   } catch (error) {
     console.log('Error decoding token', error)

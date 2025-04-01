@@ -7,13 +7,25 @@ const UserDropdown = ({ setIsLoggedIn }) => {
   const [user, setUser] = useState({ userId: null, fullname: '' })
 
   useEffect(() => {
-    const decodedToken = decodeToken()
-    if (decodedToken) {
-      localStorage.setItem('fullname', decodedToken.fullname)
-      setUser({ userId: decodedToken.user_id, fullname: decodedToken.fullname })
-    } else {
-      navigate('/')
+    const fetchUser = async () => {
+      try {
+        const decodedToken = await decodeToken()
+        if (decodedToken) {
+          localStorage.setItem('fullname', decodedToken.fullname)
+          setUser({
+            userId: decodedToken.user_id,
+            fullname: decodedToken.fullname,
+          })
+        } else {
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        navigate('/')
+      }
     }
+
+    fetchUser()
   }, [])
 
   useEffect(() => {
@@ -39,15 +51,13 @@ const UserDropdown = ({ setIsLoggedIn }) => {
         className="user-dropdown-select"
         name="userOptions"
         id="user-dropdown"
-        onChange={(e) => {
-          handleOptionChange(e.target.value)
-        }}
-        value={''}
+        onChange={(e) => handleOptionChange(e.target.value)}
+        value=""
         title={`Kirjautuneena: ${user.fullname}`}
         style={{ width: '150px' }}
       >
         <option value="" disabled hidden>
-          {user.fullname}
+          {user.fullname || 'Ladataan...'}
         </option>
         <option value="changePassword">Vaihda salasana</option>
         <option value="logout">Kirjaudu ulos</option>

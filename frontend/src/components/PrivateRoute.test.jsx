@@ -1,76 +1,75 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import PrivateRoute from './PrivateRoute'
-import decodeToken from '../utils/decode'
-import { vi, describe, afterEach, test, expect } from 'vitest'
+import { vi, describe, beforeEach, it, expect } from 'vitest'
+import PrivateRoute from '../components/PrivateRoute'
+import decode from '../utils/decode'
 
-// Mock decodeToken utility
 vi.mock('../utils/decode')
 
-// Mock components for rendering
-const MockComponent = () => <div>Private Content</div>
-
 describe('PrivateRoute', () => {
-  afterEach(() => {
-    vi.restoreAllMocks() // Reset mocks after each test
+  beforeEach(() => {
+    vi.resetAllMocks()
   })
 
-  test('renders the element when token is valid and role matches', () => {
-    // Mock decodeToken to return a valid token with the correct role
-    decodeToken.mockReturnValue({ role: 'admin' })
-
-    render(
-      <MemoryRouter>
-        <PrivateRoute element={<MockComponent />} requiredRoles={['admin']} />
-      </MemoryRouter>
-    )
-
-    // Ensure the Private Content is rendered
-    expect(screen.getByText('Private Content')).toBeInTheDocument()
-  })
-
-  test('navigates to home when there is no token', () => {
-    // Mock decodeToken to return null (no token)
-    decodeToken.mockReturnValue(null)
-
-    render(
-      <MemoryRouter initialEntries={['/private']}>
-        <PrivateRoute element={<MockComponent />} requiredRoles={['admin']} />
-      </MemoryRouter>
-    )
-
-    // Ensure that it navigates to the home page (this may vary depending on your router setup)
-    expect(screen.queryByText('Private Content')).not.toBeInTheDocument()
-  })
-
-  test('navigates to home when token role does not match required roles', () => {
-    // Mock decodeToken to return a token with a different role
-    decodeToken.mockReturnValue({ role: 'user' })
-
-    render(
-      <MemoryRouter initialEntries={['/private']}>
-        <PrivateRoute element={<MockComponent />} requiredRoles={['admin']} />
-      </MemoryRouter>
-    )
-
-    // Ensure that it navigates to the home page (this may vary depending on your router setup)
-    expect(screen.queryByText('Private Content')).not.toBeInTheDocument()
-  })
-
-  test('renders the element when token role matches required roles (multiple roles)', () => {
-    // Mock decodeToken to return a token with a valid role
-    decodeToken.mockReturnValue({ role: 'admin' })
-
+  it('renders loading state initially', () => {
     render(
       <MemoryRouter>
         <PrivateRoute
-          element={<MockComponent />}
-          requiredRoles={['admin', 'manager']}
+          element={<div>Protected Content</div>}
+          requiredRoles={['admin']}
         />
       </MemoryRouter>
     )
 
-    // Ensure the Private Content is rendered
-    expect(screen.getByText('Private Content')).toBeInTheDocument()
+    expect(screen.getByText('Loading...')).toBeInTheDocument()
+  })
+
+  it('renders the protected element if user has required role', async () => {
+    decode.mockResolvedValue({ role: 'admin' })
+
+    render(
+      <MemoryRouter>
+        <PrivateRoute
+          element={<div>Protected Content</div>}
+          requiredRoles={['admin']}
+        />
+      </MemoryRouter>
+    )
+
+    await waitFor(() => screen.getByText('Protected Content'))
+  })
+
+  it('redirects to "/" if no token is present', async () => {
+    decode.mockResolvedValue(null)
+
+    render(
+      <MemoryRouter>
+        <PrivateRoute
+          element={<div>Protected Content</div>}
+          requiredRoles={['admin']}
+        />
+      </MemoryRouter>
+    )
+
+    await waitFor(() =>
+      expect(screen.queryByText('Protected Content')).not.toBeInTheDocument()
+    )
+  })
+
+  it('redirects to "/" if user does not have the required role', async () => {
+    decode.mockResolvedValue({ role: 'user' })
+
+    render(
+      <MemoryRouter>
+        <PrivateRoute
+          element={<div>Protected Content</div>}
+          requiredRoles={['admin']}
+        />
+      </MemoryRouter>
+    )
+
+    await waitFor(() =>
+      expect(screen.queryByText('Protected Content')).not.toBeInTheDocument()
+    )
   })
 })

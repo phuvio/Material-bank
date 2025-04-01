@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { vi, describe, it, expect } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import Header from './Header'
 import decodeToken from '../utils/decode'
 
@@ -45,11 +45,21 @@ describe('Header', () => {
       </MemoryRouter>
     )
 
-    await waitFor(() => expect(screen.getByText('Käyttäjähallinta')).toBeInTheDocument())
-    await waitFor(() => expect(screen.getByText('Tagien hallinta')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(screen.getByText('Käyttäjähallinta')).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(screen.getByText('Tagien hallinta')).toBeInTheDocument()
+    )
 
-    expect(screen.getByText('Käyttäjähallinta')).toHaveAttribute('href', '/kayttajat')
-    expect(screen.getByText('Tagien hallinta')).toHaveAttribute('href', '/tagit')
+    expect(screen.getByText('Käyttäjähallinta')).toHaveAttribute(
+      'href',
+      '/kayttajat'
+    )
+    expect(screen.getByText('Tagien hallinta')).toHaveAttribute(
+      'href',
+      '/tagit'
+    )
   })
 
   it('does not render admin links when user is not admin', async () => {

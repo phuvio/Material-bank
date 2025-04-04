@@ -31,6 +31,7 @@ let allowedOrigins
 process.env.NODE_ENV === 'production'
   ? (allowedOrigins = [
     'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
+    'https://www.prone-materiaalipankki.fi',
   ])
   : (allowedOrigins = ['http://localhost:5173'])
 

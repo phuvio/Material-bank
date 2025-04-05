@@ -58,32 +58,40 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.post('/refresh', (req, res) => {
-  const refreshToken = req.cookies.refreshToken
+router.post('/refresh', async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken
 
-  if (!refreshToken) {
-    return res.status(401).json({ error: 'Refresh token missing' })
-  }
-
-  jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
-    if (err) {
-      res.clearCookie('refreshToken')
-      return res.status(403).json({ error: 'Invalid refresh token' })
+    if (!refreshToken) {
+      throw new CustomError('Refresh token missing', 401)
     }
 
-    const newAccessToken = jwt.sign(
-      {
-        fullname: user.fullname,
-        username: user.username,
-        user_id: user.user_id,
-        role: user.role,
-      },
-      SECRET,
-      { expiresIn: '15min' }
-    )
+    jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
+      if (err) {
+        res.clearCookie('refreshToken', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        })
+        return res.status(403).json({ error: 'Invalid refresh token' })
+      }
 
-    res.status(200).json({ accessToken: newAccessToken })
-  })
+      const newAccessToken = jwt.sign(
+        {
+          fullname: user.fullname,
+          username: user.username,
+          user_id: user.user_id,
+          role: user.role,
+        },
+        SECRET,
+        { expiresIn: '15min' }
+      )
+
+      res.status(200).json({ accessToken: newAccessToken })
+    })
+  } catch (error) {
+    next(error)
+  }
 })
 
 router.post('/logout', (req, res) => {

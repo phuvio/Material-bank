@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import materialService from '../services/materials'
 import { validateMaterial } from '../utils/materialValidations'
@@ -11,7 +11,7 @@ const NewMaterial = ({ showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    user_id: decodeToken().user_id,
+    user_id: '',
     visible: true,
     is_url: false,
     url: '',
@@ -19,10 +19,31 @@ const NewMaterial = ({ showNotification }) => {
     material_type: null,
   })
   const [errors, setErrors] = useState({})
+  const [user, setUser] = useState({ userId: null })
 
   const { tags, selectedTags, toggleTags } = selectTags()
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const decodedToken = await decodeToken()
+        if (decodedToken) {
+          setUser({
+            userId: decodedToken.user_id,
+          })
+        } else {
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        navigate('/')
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   const handleFormChange = (event) => {
     const { name, value, type, checked } = event.target
@@ -60,7 +81,7 @@ const NewMaterial = ({ showNotification }) => {
 
     formToSubmit.append('name', formData.name)
     formToSubmit.append('description', formData.description)
-    formToSubmit.append('user_id', decodeToken().user_id)
+    formToSubmit.append('user_id', user.userId)
     formToSubmit.append('visible', true)
     formToSubmit.append('is_url', formData.is_url)
 
@@ -79,7 +100,7 @@ const NewMaterial = ({ showNotification }) => {
       setFormData({
         name: '',
         description: '',
-        user_id: decodeToken().user_id,
+        user_id: user.userId,
         visible: true,
         is_url: false,
         url: '',

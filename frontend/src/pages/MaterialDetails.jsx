@@ -13,8 +13,30 @@ const MaterialDetails = ({ showNotification }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
+  const [user, setUser] = useState({ userId: null, role: '' })
 
   const { tags, selectedTags, setSelectedTags, toggleTags } = selectTags()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const decodedToken = await decodeToken()
+        if (decodedToken) {
+          setUser({
+            userId: decodedToken.user_id,
+            role: decodedToken.role,
+          })
+        } else {
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        navigate('/')
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     materialService
@@ -122,8 +144,7 @@ const MaterialDetails = ({ showNotification }) => {
         </div>
       </div>
       <div className="row">
-        {(decodeToken().role === 'admin' ||
-          decodeToken().user_id === material.user_id) && (
+        {(user.role === 'admin' || user.userId === material.user_id) && (
           <>
             <div className="row">
               <Link to={`/muokkaamateriaalia/${id}`}>Muokkaa materiaalia</Link>

@@ -1,8 +1,7 @@
 import React from 'react'
-import axios from 'axios'
-import apiUrl from '../config/config'
+import api from '../services/api'
 
-const getFileExtensionFromContentType = (contentType) => {
+export const getFileExtensionFromContentType = (contentType) => {
   switch (contentType) {
     // Word document
     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
@@ -36,12 +35,9 @@ const getFileExtensionFromContentType = (contentType) => {
 const LoadMaterialButton = ({ material }) => {
   const handleClick = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}/api/materials/${material.id}/material`,
-        {
-          responseType: 'blob',
-        }
-      )
+      const response = await api.get(`/api/materials/${material.id}/material`, {
+        responseType: 'blob',
+      })
 
       if (response.data && response.data.size > 0) {
         const contentType = response.headers['content-type'] || ''

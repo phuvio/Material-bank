@@ -148,7 +148,7 @@ const NewUser = ({ showNotification }) => {
               handleFormChange={handleFormChange}
             />
             <p>
-              Peruskäyttäjä voi luoda uusia materiaaleja, muokata materiaalien
+              Peruskäyttäjä voi luoda uusia materiaaleja, vaihtaa materiaalien
               tageja ja muokata tai poistaa itse luomiaan materiaaleja.
             </p>
             <p>Moderaattori voi myös luoda ja muokata tageja.</p>

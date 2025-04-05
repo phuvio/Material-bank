@@ -4,13 +4,14 @@ This is a repository for the University of Helsinki course Full Stack -project.
 
 This material bank is intended for remote therapy. More and more often, therapies are carried out remotely. For that there is a needs for a material bank, from which it is possible to quickly and easily search for various test and rehabilitation materials in connection with a video-mediated therapy session. The materials can be e.g. word or pdf files or links to other websites.
 
-[Material bank](https://material-bank-backend-449a0f56d7d0.herokuapp.com/)
+[Material bank](https://www.prone-materiaalipankki.fi/)
 
 ## Documentation
 
 - [Techstack](/Documentation/techstack.md)
 - [Database schema](/Documentation/database.md)
 - [Page layouts](/Documentation/pagelayouts.md)
+- [Code overview](/Documentation/codeoverview.md)
 - [Time log](/Documentation/timelog.md)
 
 ## Scorecards

@@ -18,6 +18,16 @@ const errorHandler = require('./middlewares/errorHandler')
 
 const app = express()
 
+// Force HTTPS in production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(301, 'https://' + req.headers.host + req.url)
+    }
+    next()
+  })
+}
+
 // Global rate limiter (e.g., 200 requests per 15 min for all routes)
 const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -26,14 +36,10 @@ const globalRateLimiter = rateLimit({
   headers: true,
 })
 
-let allowedOrigins
-
-process.env.NODE_ENV === 'production'
-  ? (allowedOrigins = [
-    'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
-    'https://www.prone-materiaalipankki.fi',
-  ])
-  : (allowedOrigins = ['http://localhost:5173'])
+const allowedOrigins = process.env.NODE_ENV === 'production' ? [
+  'https://www.prone-materiaalipankki.fi',
+  'https://material-bank-backend-449a0f56d7d0.herokuapp.com'
+] : ['http://localhost:3000', 'http://localhost:5173']
 
 app.use(cors({
   origin: allowedOrigins,

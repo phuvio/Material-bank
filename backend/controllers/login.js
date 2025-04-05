@@ -35,7 +35,7 @@ router.post('/', async (req, res, next) => {
 
     const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15min' })
     const refreshToken = jwt.sign(userForToken, REFRESH_SECRET, {
-      expiresIn: '7day',
+      expiresIn: '7d',
     })
 
     res.clearCookie('refreshToken', {

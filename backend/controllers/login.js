@@ -41,14 +41,14 @@ router.post('/', async (req, res, next) => {
     res.clearCookie('refreshToken', {
       httpOnly: true,
       secure: true,
-      sameSite: 'Strict',
+      sameSite: 'None',
       path: '/',
     })
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: 'strict',
+      sameSite: 'None',
     })
 
     logAction(user.id, 'Logged in')
@@ -90,7 +90,7 @@ router.post('/logout', (req, res) => {
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: true,
-    sameSite: 'Strict',
+    sameSite: 'None',
     path: '/',
   })
   res.status(200).json({ message: 'Logged out successfully' })

@@ -64,7 +64,7 @@
     "json-serve": "^0.1.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "vite": "^6.2.5",
+    "vite": "^6.3.4",
     "vitest": "^3.1.1"
   },
   "engines": {

@@ -32,7 +32,7 @@ const decodeToken = async () => {
 
     return decodedToken
   } catch (error) {
-    console.log('Error decoding token', error)
+    console.error('Error decoding token', error)
     return null
   }
 }

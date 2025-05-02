@@ -13,7 +13,7 @@ const Header = ({ setIsLoggedIn }) => {
         const decoded = await decodeToken()
         setRole(decoded?.role || '') // Ensure role is set correctly
       } catch (error) {
-        console.log('Error decoding token:', error)
+        console.error('Error decoding token:', error)
       }
     }
 

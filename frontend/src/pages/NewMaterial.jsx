@@ -110,7 +110,7 @@ const NewMaterial = ({ showNotification }) => {
       navigate('/')
     } catch (error) {
       showNotification('Materiaalin luonti epäonnistui', 'error', 3000)
-      console.log('Error uploading material', error)
+      console.error('Error uploading material', error)
     }
   }
 

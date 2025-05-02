@@ -50,7 +50,7 @@ const NewTag = ({ showNotification }) => {
           setErrors({})
         })
         .catch((error) => {
-          console.log('Error creating tag:', error)
+          console.error('Error creating tag:', error)
           showNotification('Tagin luonti epäonnistui', 'error', 3000)
         })
     } else {

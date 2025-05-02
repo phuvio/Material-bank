@@ -38,7 +38,7 @@ const Main_page = ({ showNotification }) => {
         setMaterials(sortedMaterials)
       })
       .catch((error) => {
-        console.log('Error fetching data:', error)
+        console.error('Error fetching data:', error)
         showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
       })
   }, [])
@@ -59,7 +59,7 @@ const Main_page = ({ showNotification }) => {
 
         setFavorites(sortedFavorites)
       } catch (error) {
-        console.log('Error fetching favorites:', error)
+        console.error('Error fetching favorites:', error)
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
       }
     }
@@ -89,7 +89,7 @@ const Main_page = ({ showNotification }) => {
         setFavorites((prevFavorites) => [...prevFavorites, newFavorite])
       }
     } catch (error) {
-      console.log('Error handling favorites:', error)
+      console.error('Error handling favorites:', error)
       showNotification('Virhe suosikin käsittelyssä', 'error', 3000)
     }
   }

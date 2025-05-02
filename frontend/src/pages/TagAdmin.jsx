@@ -20,7 +20,7 @@ const TagAdmin = ({ showNotification }) => {
       })
       .catch((error) => {
         if (isMounted) {
-          console.log('Error fetching data:', error)
+          console.error('Error fetching data:', error)
           showNotification('Virhe haettaessa tageja.', 'error', 3000)
         }
       })

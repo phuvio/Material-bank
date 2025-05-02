@@ -53,7 +53,7 @@ const MaterialDetails = ({ showNotification }) => {
         }
       })
       .catch((error) => {
-        console.log('Error fetching material:', error)
+        console.error('Error fetching material:', error)
       })
   }, [id, showNotification])
 
@@ -68,7 +68,7 @@ const MaterialDetails = ({ showNotification }) => {
         showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
         navigate('/materiaalit')
       } catch (error) {
-        console.log('Error deleting material:', error)
+        console.error('Error deleting material:', error)
         showNotification('Materiaalin poisto epäonnistui', 'error', 3000)
       }
     }
@@ -89,7 +89,7 @@ const MaterialDetails = ({ showNotification }) => {
       await materialService.update(id, formToSubmit)
       showNotification('Tagit päivitetty onnistuneesti', 'message', 2000)
     } catch (error) {
-      console.log('Error updating tags', error)
+      console.error('Error updating tags', error)
       showNotification('Tagien päivitys epäonnistui', 'error', 3000)
     }
   }

@@ -79,7 +79,7 @@ const ChangePassword = ({ showNotification }) => {
         setUser(returnedUsed)
       })
       .catch((error) => {
-        console.log('Error fetching user', error)
+        console.error('Error fetching user', error)
       })
   }, [])
 
@@ -123,7 +123,7 @@ const ChangePassword = ({ showNotification }) => {
         newPasswordAgain: 0,
       })
     } catch (error) {
-      console.log('Error updating password', error)
+      console.error('Error updating password', error)
       if (error.response && error.response.status === 400) {
         if (error.response.data.error === 'Incorrect old password') {
           showNotification('Nykyinen salasana ei täsmää', 'error', 3000)

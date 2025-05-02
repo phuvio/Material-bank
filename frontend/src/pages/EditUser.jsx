@@ -42,7 +42,7 @@ const EditUser = ({ showNotification }) => {
         setUser(returnedUser)
       })
       .catch((error) => {
-        console.log('Error fetching user:', error)
+        console.error('Error fetching user:', error)
       })
   }, [id, showNotification])
 
@@ -81,7 +81,7 @@ const EditUser = ({ showNotification }) => {
         navigate('/kayttajat')
       })
       .catch((error) => {
-        console.log('Error updating user', error)
+        console.error('Error updating user', error)
         showNotification(
           'Käyttäjän tietojen päivitys epäonnistui',
           'error',

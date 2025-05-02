@@ -18,7 +18,7 @@ const EditTag = ({ showNotification }) => {
         setTag(returnedTag)
       })
       .catch((error) => {
-        console.log('Error fetching tag:', error)
+        console.error('Error fetching tag:', error)
         setTag(null)
       })
   }, [id])
@@ -40,7 +40,7 @@ const EditTag = ({ showNotification }) => {
           navigate('/tagit')
         })
         .catch((error) => {
-          console.log('Error deleting tag:', error)
+          console.error('Error deleting tag:', error)
           showNotification('Tagin poisto epäonnistui', 'error', 3000)
         })
     }
@@ -64,7 +64,7 @@ const EditTag = ({ showNotification }) => {
           navigate('/tagit')
         })
         .catch((error) => {
-          console.log('Error updating tag:', error)
+          console.error('Error updating tag:', error)
           showNotification('Tagin päivitys epäonnistui', 'error', 3000)
         })
     } else {

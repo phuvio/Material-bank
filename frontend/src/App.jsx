@@ -36,7 +36,7 @@ const App = () => {
           logout()
         }
       } catch (error) {
-        console.log('Error refreshing token:', error)
+        console.error('Error refreshing token:', error)
         logout()
       }
     }

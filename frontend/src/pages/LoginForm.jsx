@@ -20,7 +20,7 @@ const Login = ({ onLoginSuccess, showNotification }) => {
         window.localStorage.setItem('accessToken', accessToken)
         onLoginSuccess(accessToken)
       } else {
-        console.log('Error logging in:', response)
+        console.error('Error logging in:', response)
         showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
         setUsername('')
         setPassword('')

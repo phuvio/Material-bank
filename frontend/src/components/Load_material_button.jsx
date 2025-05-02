@@ -61,10 +61,10 @@ const LoadMaterialButton = ({ material }) => {
         document.body.removeChild(link)
         window.URL.revokeObjectURL(blobUrl)
       } else {
-        console.log('No file data returned')
+        console.warn('No file data returned')
       }
     } catch (error) {
-      console.log('Error opening file', error)
+      console.error('Error opening file', error)
     }
   }
 

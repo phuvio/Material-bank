@@ -51,7 +51,7 @@ describe('LoadMaterialButton Component', () => {
     api.get.mockResolvedValue(mockEmptyResponse)
 
     // Spy on the console to check logs
-    const logSpy = vi.spyOn(console, 'log')
+    const logSpy = vi.spyOn(console, 'warn')
 
     // Render the component
     render(<LoadMaterialButton material={material} />)
@@ -70,7 +70,7 @@ describe('LoadMaterialButton Component', () => {
     api.get.mockRejectedValue(new Error('Network error'))
 
     // Spy on the console to check logs
-    const logSpy = vi.spyOn(console, 'log')
+    const logSpy = vi.spyOn(console, 'error')
 
     // Render the component
     render(<LoadMaterialButton material={material} />)

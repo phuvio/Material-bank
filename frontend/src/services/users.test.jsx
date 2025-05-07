@@ -14,6 +14,7 @@ vi.mock('./api', () => ({
 describe('User Service API', () => {
   it('fetches all users', async () => {
     const mockResponse = { data: [{ id: 1, name: 'John Doe' }] }
+    const mockResponse2 = { status: 200, data: [{ id: 1, name: 'John Doe' }] }
     api.get.mockResolvedValue(mockResponse)
 
     const users = await userService.getAll()
@@ -56,12 +57,13 @@ describe('User Service API', () => {
 
   it('updates a user password', async () => {
     const password = 'newpassword'
-    const mockResponse = { data: { id: 1, password } }
-    api.put.mockResolvedValue(mockResponse)
+    const mockResponse2 = { status: 200, data: { id: 1, password } }
+    api.put.mockResolvedValue(mockResponse2)
 
-    const updatedPassword = await userService.updatePassword(1, password)
+    const { status, data } = await userService.updatePassword(1, password)
 
-    expect(updatedPassword).toEqual(mockResponse.data)
+    expect(status).toBe(200)
+    expect(data).toEqual(mockResponse2.data)
     expect(api.put).toHaveBeenCalledWith(
       '/api/users/update-password/1',
       password

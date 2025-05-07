@@ -94,9 +94,9 @@ const ChangePassword = ({ showNotification }) => {
 
       if (response.status === 200) {
         showNotification('Salasana päivitetty onnistuneesti', 'message', 2000)
+        console.log('Password updated successfully')
         navigate('/materiaalit')
-      }
-      if (response.data?.error === 'Incorrect old password') {
+      } else if (response.data?.error === 'Incorrect old password') {
         showNotification('Nykyinen salasana ei täsmää', 'error', 3000)
       } else if (
         response.data?.error ===

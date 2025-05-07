@@ -14,6 +14,9 @@ const update = (id, newObject) => api.put(`/api/users/${id}`, newObject)
 
 const updatePassword = (id, password) =>
   api.put(`/api/users/update-password/${id}`, password)
-  .then((response) => response.data)
+  .then((response) => ({
+    status: response.status,
+    data: response.data
+  }))
 
 export default { getAll, getSingle, create, update, updatePassword }

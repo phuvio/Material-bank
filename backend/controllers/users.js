@@ -126,7 +126,7 @@ router.put(
         throw new CustomError('User was not found', 400)
       }
 
-      res.status(200)
+      res.status(200).json({ message: 'Password updated successfully' })
     } catch (error) {
       next(error)
     }

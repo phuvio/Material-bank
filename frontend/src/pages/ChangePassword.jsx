@@ -91,28 +91,9 @@ const ChangePassword = ({ showNotification }) => {
         old_password: formData.old_password,
         new_password: formData.new_password,
       })
-
       if (response.status === 200) {
         showNotification('Salasana päivitetty onnistuneesti', 'message', 2000)
-        console.log('Password updated successfully')
         navigate('/materiaalit')
-      } else if (response.data?.error === 'Incorrect old password') {
-        showNotification('Nykyinen salasana ei täsmää', 'error', 3000)
-      } else if (
-        response.data?.error ===
-        'New password cannot be the same as the old password'
-      ) {
-        showNotification(
-          'Uusi salasana ei voi olla nykyinen salasana',
-          'error',
-          3000
-        )
-      } else {
-        showNotification(
-          'Tuntematon virhe salasanan päivittämisessä',
-          'error',
-          3000
-        )
       }
       setFormData({
         old_password: '',

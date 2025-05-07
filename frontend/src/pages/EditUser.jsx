@@ -138,7 +138,7 @@ const EditUser = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="password"
-              type="password"
+              type="text"
               name="password"
               value={formData.password}
               onChange={handleFormChange}

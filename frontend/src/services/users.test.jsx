@@ -14,7 +14,6 @@ vi.mock('./api', () => ({
 describe('User Service API', () => {
   it('fetches all users', async () => {
     const mockResponse = { data: [{ id: 1, name: 'John Doe' }] }
-    const mockResponse2 = { status: 200, data: [{ id: 1, name: 'John Doe' }] }
     api.get.mockResolvedValue(mockResponse)
 
     const users = await userService.getAll()

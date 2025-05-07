@@ -4,7 +4,10 @@ import apiUrl from '../config/config'
 
 const login = async credentials => {
   try {
-    const response = await axios.post(`${apiUrl}/api/login`, credentials, { withCredentials: true })
+    const response = await axios.post(`${apiUrl}/api/login`, credentials, { 
+      withCredentials: true,
+      timeout: 10000
+    })
 
     if (!response || !response.data || !response.data.accessToken) {
       console.error('Login response missing expected data:', response)

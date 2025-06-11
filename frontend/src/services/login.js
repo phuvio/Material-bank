@@ -34,7 +34,7 @@ const refreshToken = async () => {
     if (response && response.status === 200 && response.data && response.data.accessToken) {
       const newAccessToken = response.data.accessToken
       localStorage.setItem('accessToken', newAccessToken)
-      return newAccessToken;
+      return newAccessToken
     } else {
       console.warn('Failed to refresh token')
       return null
@@ -42,7 +42,7 @@ const refreshToken = async () => {
   } catch (error) {
     console.error('Error refreshing token:', error)
     window.localStorage.clear()
-    return null;
+    return null
   }
 }
 

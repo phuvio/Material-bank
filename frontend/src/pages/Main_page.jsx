@@ -13,8 +13,6 @@ const Main_page = ({ showNotification }) => {
   const [filter, setFilter] = useState('')
   const [materials, setMaterials] = useState([])
   const [favorites, setFavorites] = useState([])
-  const [materialsLoading, setMaterialsLoading] = useState(false)
-  const [favoritesLoading, setFavoritesLoading] = useState(false)
 
   const { tags, selectedTags, toggleTags } = selectTags()
 
@@ -32,7 +30,6 @@ const Main_page = ({ showNotification }) => {
 
   useEffect(() => {
     const fetchMaterials = async () => {
-      setMaterialsLoading(true)
       try {
         const initialMaterials = await materialService.getAll()
         const sortedMaterials = initialMaterials.sort((a, b) =>
@@ -42,8 +39,6 @@ const Main_page = ({ showNotification }) => {
       } catch (error) {
         console.error('Error fetching data:', error)
         showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
-      } finally {
-        setMaterialsLoading(false)
       }
     }
     fetchMaterials()
@@ -51,7 +46,6 @@ const Main_page = ({ showNotification }) => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      setFavoritesLoading(true)
       try {
         const decoded = await decodeToken()
 
@@ -68,8 +62,6 @@ const Main_page = ({ showNotification }) => {
       } catch (error) {
         console.error('Error fetching favorites:', error)
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
-      } finally {
-        setFavoritesLoading(false)
       }
     }
 
@@ -126,9 +118,7 @@ const Main_page = ({ showNotification }) => {
         </p>
         <div className="favorites">
           <h2>Omat suosikit</h2>
-          {favoritesLoading ? (
-            <p>Ladataan suosikkeja...</p>
-          ) : favorites.length === 0 ? (
+          {favorites.length === 0 ? (
             <div>
               Voit lisätä omia suosikkeja klikkaamalla materiaalin vasemmalla
               puolella olevaa kuvaketta.
@@ -150,9 +140,7 @@ const Main_page = ({ showNotification }) => {
       </div>
       <div className="column right">
         <h1>Materiaalit</h1>
-        {materialsLoading ? (
-          <p>Ladataan materiaaleja...</p>
-        ) : (
+        {
           <ul>
             {materialsToShow.map(
               (material) =>
@@ -185,7 +173,7 @@ const Main_page = ({ showNotification }) => {
                 )
             )}
           </ul>
-        )}
+        }
       </div>
     </div>
   )

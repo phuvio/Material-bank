@@ -2,11 +2,13 @@
 import axios from 'axios'
 import apiUrl from '../config/config'
 
+const TIMEOUT = 10000
+
 const login = async credentials => {
   try {
     const response = await axios.post(`${apiUrl}/api/login`, credentials, { 
       withCredentials: true,
-      timeout: 10000
+      timeout: TIMEOUT
     })
 
     if (!response || !response.data || !response.data.accessToken) {
@@ -25,7 +27,10 @@ const login = async credentials => {
 
 const refreshToken = async () => {
   try {
-    const response = await axios.post(`${apiUrl}/api/login/refresh`, {}, { withCredentials: true })
+    const response = await axios.post(`${apiUrl}/api/login/refresh`, {}, {
+      withCredentials: true,
+      timeout: TIMEOUT
+    })
     if (response && response.status === 200 && response.data && response.data.accessToken) {
       const newAccessToken = response.data.accessToken
       localStorage.setItem('accessToken', newAccessToken)
@@ -43,7 +48,10 @@ const refreshToken = async () => {
 
 const logout = async() => {
   try {
-    await axios.post((`${apiUrl}/api/login/logout`, {}, { withCredentials: true }))
+    await axios.post((`${apiUrl}/api/login/logout`, {}, {
+      withCredentials: true,
+      timeout: TIMEOUT
+    }))
   } catch (error) {
     console.error('Erron logging out', error)
   }

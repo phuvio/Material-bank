@@ -6,6 +6,7 @@ import loginService from './login'
 const api = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
+  timeout: 10000
 })
 
 // Store token refresh state

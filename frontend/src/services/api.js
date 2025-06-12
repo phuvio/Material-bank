@@ -3,9 +3,12 @@ import axios from 'axios'
 import apiUrl from '../config/config'
 import loginService from './login'
 
+const TIMEOUT = 10000
+
 const api = axios.create({
   baseURL: apiUrl,
   withCredentials: true,
+  timeout: TIMEOUT
 })
 
 // Store token refresh state

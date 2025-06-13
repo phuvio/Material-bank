@@ -19,7 +19,9 @@
 | 27.1.-2.2.2025 | 19.30 | 193.45 |
 | 3.2.-9.2.2025 | 14.30 | 208.15 |
 | 10.2.-16.2.2025 | 4.15 | 212.30 |
-| 31.3.-6.4.2025 | 9.30 | 222.20 |
+| 31.3.-6.4.2025 | 9.30 | 222.30 |
+| 28.4.-4.5.2025 | 0.30 | 223.00 |
+| 5.5.-11.5.2025 | 2.00 | 225.00 |
 
 ## Detailed timesheets
 
@@ -52,3 +54,5 @@
 ![3.2.-9.2.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-04-05%20145005.png)
 ![10.2.-16.2.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-04-05%20145044.png)
 ![31.3.-6.4.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-05-02%20092434.png)
+![28.4.-4.5.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-06-13%20095528.png)
+![5.5.-11.5.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-06-13%20095612.png)

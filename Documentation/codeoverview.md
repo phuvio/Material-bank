@@ -16,4 +16,4 @@ The refresh token causes unauthorized error messages in the console. This happen
 
 ## Cloud service
 
-The application is located in a cloud service. The cloud service now only has one virtual machine in use, which goes into hibernation. This causes slowness when the virtual machine starts. Therefore, a timeout has been added to the services. ['api.js'](/frontend/src/services/api.js) handels timeout for all the other services except for ['login.js'](/frontend/src/services/login.js) which has its own timeout defined.
+The application is located in a cloud service. The cloud service now only has one virtual machine in use, which goes into hibernation. This causes slowness when the virtual machine starts. Therefore, a timeout has been added to the services. [`api.js`](/frontend/src/services/api.js) handels timeout for all the other services except for [`login.js`](/frontend/src/services/login.js) which has its own timeout defined.

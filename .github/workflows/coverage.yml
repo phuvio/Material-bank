@@ -17,13 +17,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with coverage
-        run: npm run test -- --coverage
+      - name: Run frontend tests with coverage
+        run: npm run coverage:frontend
 
-      - name: Convert LCOV Paths
+      - name: Run backend tests with coverage
+        run: npm run coverage:backend
+
+      - name: Merge frontend and backend coverage reports
         run: |
-          npx lcov-result-merger ./frontend/coverage/lcov.info > merged-lcov.info
-          mv merged-lcov.info ./frontend/coverage/lcov.info
+          npx lcov-result-merger frontend/coverage/lcov.info backend/coverage/lcov.info > merged-lcov.info
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2

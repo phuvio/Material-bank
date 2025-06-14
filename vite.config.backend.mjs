@@ -9,7 +9,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       reportsDirectory: './backend/coverage',
-      exclude: ['frontend/**', 'vite.*', 'eslint.*', 'testSetup.js', 'backend/**/*.test.{js,jsx,ts,tsx}']
+      exclude: ['frontend/**', 'vite.*', 'eslint.*', 'testSetup.js']
     },
   },
 })

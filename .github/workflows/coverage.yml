@@ -27,6 +27,15 @@ jobs:
         run: |
           npx lcov-result-merger frontend/coverage/lcov.info backend/coverage/lcov.info > merged-lcov.info
 
+      - name: Show frontend coverage summary
+        run: head frontend/coverage/lcov.info
+
+      - name: Show backend coverage summary
+        run: head backend/coverage/lcov.info
+
+      - name: Show merged coverage summary
+        run: head merged-lcov.info
+
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:

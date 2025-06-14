@@ -47,11 +47,39 @@ npm run dev
 
 Running tests:
 
+Frontend:
+
+```bash
+npm run test:frontend
+```
+
+Backend:
+
+```bash
+npm run test:backend
+```
+
+Both front- and backend:
+
 ```bash
 npm run test
 ```
 
 Running tests with coverage:
+
+Frontend:
+
+```bash
+npm run coverage:frontend
+```
+
+Backend:
+
+```bash
+npm run coverage:backend
+```
+
+Both front- and backend:
 
 ```bash
 npm run test:coverage

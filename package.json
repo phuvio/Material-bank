@@ -9,8 +9,12 @@
     "lint:frontend": "eslint frontend/**",
     "lint:backend": "eslint backend/**",
     "preview": "cd frontend && vite preview",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:frontend": "vitest run",
+    "test:backend": "vitest run --config vite.config.backend.mjs",
+    "test": "concurrently \"npm run test:frontend\" \"npm run test:backend\"",
+    "coverage:frontend": "vitest run --coverage",
+    "coverage:backend": "vitest run --config vite.config.backend.mjs --coverage",
+    "test:coverage": "concurrently \"npm run coverage:frontend\" \"npm run coverage:backend\"",
     "format": "prettier --write .",
     "start": "node backend/index.js",
     "postinstall": "npm run build"
@@ -64,6 +68,7 @@
     "json-serve": "^0.1.0",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
+    "supertest": "^7.1.1",
     "vite": "^6.3.4",
     "vitest": "^3.1.1"
   },

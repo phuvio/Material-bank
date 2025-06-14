@@ -20,14 +20,14 @@ jobs:
       - name: Run frontend tests with coverage
         run: npm run coverage:frontend
 
-      - name: Show frontend coverage summary
-        run: head frontend/coverage/lcov.info
-
       - name: Run backend tests with coverage
         run: npm run coverage:backend
 
-      - name: Show backend coverage summary
-        run: head backend/coverage/lcov.info
+      - name: List backend coverage directory
+        run: ls -l backend/coverage || echo "No backend coverage directory"
+
+      - name: Display backend coverage files
+        run: find backend/coverage || echo "No backend coverage files"
 
       - name: Merge frontend and backend coverage reports
         run: |

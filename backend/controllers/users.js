@@ -20,7 +20,7 @@ router.post('/', authenticateToken(['admin']), async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(password, 10)
 
   try {
-    const user = User.create({
+    const user = await User.create({
       username,
       first_name,
       last_name,
@@ -40,7 +40,7 @@ router.get('/:id', authenticateToken(['admin']), async (req, res, next) => {
     if (user) {
       res.json(user)
     } else {
-      throw new CustomError('Error saving user', 404)
+      throw new CustomError('User not found', 404)
     }
   } catch (error) {
     next(error)

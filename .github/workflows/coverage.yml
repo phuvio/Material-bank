@@ -31,7 +31,7 @@ jobs:
 
       - name: Merge frontend and backend coverage reports
         run: |
-          npx lcov-result-merger frontend/coverage/lcov.info backend/coverage/lcov.info > merged-lcov.info
+          npx lcov-result-merger frontend/coverage/lcov.info coverage/lcov.info > merged-lcov.info
 
       - name: Show first 20 lines of merged coverage file
         run: head -n 20 merged-lcov.info

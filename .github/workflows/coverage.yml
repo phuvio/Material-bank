@@ -23,18 +23,12 @@ jobs:
       - name: Run backend tests with coverage
         run: npm run coverage:backend
 
-      - name: List backend coverage directory
-        run: ls -l backend/coverage || echo "No backend coverage directory"
-
-      - name: Display backend coverage files
-        run: find backend/coverage || echo "No backend coverage files"
-
       - name: Merge frontend and backend coverage reports
         run: |
           npx lcov-result-merger frontend/coverage/lcov.info backend/coverage/lcov.info > merged-lcov.info
 
-      - name: Show merged coverage summary
-        run: head merged-lcov.info
+      - name: Show first 20 lines of merged coverage file
+        run: head -n 20 merged-lcov.info
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2

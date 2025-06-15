@@ -21,7 +21,6 @@ jobs:
         run: npm run coverage:frontend
 
       - name: Run backend tests with coverage
-        working-directory: backend
         run: npm run coverage:backend
 
       - name: List backend coverage directory

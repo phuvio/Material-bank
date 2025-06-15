@@ -23,6 +23,12 @@ jobs:
       - name: Run backend tests with coverage
         run: npm run coverage:backend
 
+      - name: Check frontend coverage file
+        run: head -n 20 frontend/coverage/lcov.info || echo "No frontend coverage file"
+
+      - name: Check backend coverage file
+        run: head -n 20 backend/coverage/lcov.info || echo "No backend coverage file"
+
       - name: Merge frontend and backend coverage reports
         run: |
           npx lcov-result-merger frontend/coverage/lcov.info backend/coverage/lcov.info > merged-lcov.info

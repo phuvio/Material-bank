@@ -1,9 +1,11 @@
 const { logError } = require('../utils/logger')
 class CustomError extends Error {
   constructor(message, statusCode) {
-    logError(message, 'Error')
     super(message)
     this.statusCode = statusCode
+    this.name = this.constructor.name
+    Error.captureStackTrace(this, this.constructor)
+    logError(message, 'Error')
   }
 }
 

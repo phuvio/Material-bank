@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import axios from 'axios'
 import apiUrl from '../config/config'
+import { getCookie } from '../utils/cookieHelper'
 
 const TIMEOUT = 10000
 

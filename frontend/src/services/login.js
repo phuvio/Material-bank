@@ -27,9 +27,14 @@ const login = async credentials => {
 
 const refreshToken = async () => {
   try {
+    const csrfToken = getCookie('csrfToken')
+
     const response = await axios.post(`${apiUrl}/api/login/refresh`, {}, {
       withCredentials: true,
-      timeout: TIMEOUT
+      timeout: TIMEOUT,
+      headers: {
+          'X-CSRF-Token': csrfToken, // Send the token as required by backend
+        }
     })
     if (response && response.status === 200 && response.data && response.data.accessToken) {
       const newAccessToken = response.data.accessToken

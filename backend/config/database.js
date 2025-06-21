@@ -1,8 +1,10 @@
-require('dotenv').config()
-const { Sequelize } = require('sequelize')
-const { logError } = require('../utils/logger')
+import dotenv from 'dotenv'
+dotenv.config()
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+import { Sequelize } from 'sequelize'
+import { logError } from '../utils/logger.js'
+
+export const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialectOptions: {
     ssl: {
       require: true,
@@ -20,8 +22,5 @@ sequelize
     logError('Unable to connect to the database:', err)
   })
 
-module.exports = {
-  sequelize,
-  SECRET: process.env.SECRET,
-  REFRESH_SECRET: process.env.REFRESH_SECRET,
-}
+export const SECRET = process.env.SECRET
+export const REFRESH_SECRET = process.env.REFRESH_SECRET

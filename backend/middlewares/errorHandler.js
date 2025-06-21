@@ -1,5 +1,5 @@
-const CustomError = require('../utils/customError')
-const { logError } = require('../utils/logger')
+import CustomError from '../utils/customError.js'
+import { logError } from '../utils/logger.js'
 
 const errorHandler = (error, req, res, next) => {
   if (error instanceof CustomError) {
@@ -10,4 +10,4 @@ const errorHandler = (error, req, res, next) => {
   }
 }
 
-module.exports = errorHandler
+export default errorHandler

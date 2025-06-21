@@ -9,6 +9,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       reportsDirectory: './coverage',
+      exclude: ['**/models/**', '**/config/**', '**/utils/logger.js', '**/index.js'],
     },
   },
 })

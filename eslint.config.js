@@ -1,15 +1,14 @@
-/* eslint-env node */
+import globals from 'globals'
+import pluginJs from '@eslint/js'
+import stylisticJs from '@stylistic/eslint-plugin-js'
+import babelParser from '@babel/eslint-parser'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
+import vitestGlobals from 'eslint-plugin-vitest-globals'
+import prettierPlugin from 'eslint-plugin-prettier'
 
-const globals = require('globals')
-const pluginJs = require('@eslint/js')
-const stylisticJs = require('@stylistic/eslint-plugin-js')
-const babelParser = require('@babel/eslint-parser')
-const reactPlugin = require('eslint-plugin-react')
-const reactHooksPlugin = require('eslint-plugin-react-hooks')
-const jsxA11yPlugin = require('eslint-plugin-jsx-a11y')
-const vitestGlobals = require('eslint-plugin-vitest-globals')
-
-module.exports = [
+export default [
   pluginJs.configs.recommended,
   {
     languageOptions: {
@@ -18,12 +17,12 @@ module.exports = [
         process: 'readonly', // Node.js global variable
       },
       ecmaVersion: 'latest',
-      sourceType: 'script', // Use 'script' for backend files
+      sourceType: 'module', // Use 'module' for backend ES modules
     },
     files: ['backend/**/*.js'],
     plugins: {
       '@stylistic/js': stylisticJs,
-      prettier: require('eslint-plugin-prettier'),
+      prettier: prettierPlugin,
     },
     rules: {
       'linebreak-style': ['error', 'unix'],
@@ -92,13 +91,13 @@ module.exports = [
         requireConfigFile: false, // Avoid requiring a Babel config file
       },
     },
-    files: ['frontend/**/*.jsx'],
+    files: ['frontend/**/*.jsx', 'backend/**/*.jsx', 'backend/**/*.js'],
     plugins: {
       '@stylistic/js': stylisticJs,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
-      prettier: require('eslint-plugin-prettier'),
+      prettier: prettierPlugin,
       vitest: vitestGlobals,
     },
     rules: {
@@ -130,7 +129,7 @@ module.exports = [
       '!node_modules/',
       'node_modules/*',
       'build/**/*',
-      'eslint.config.js',
+      'eslint.config.mjs',
       'testSetup.js',
     ],
   },

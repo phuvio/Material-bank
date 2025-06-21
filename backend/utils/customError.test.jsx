@@ -1,6 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
-// Mock the entire logger module BEFORE importing CustomError
 vi.mock('./logger', () => {
   return {
     logError: vi.fn(),
@@ -15,7 +14,7 @@ describe('CustomError', () => {
     vi.clearAllMocks()
   })
 
-  it.skip('calls logError with the message and "Error" level', () => {
+  it('calls logError with the message and "Error" level', () => {
     const message = 'Something went wrong'
     const statusCode = 400
     new CustomError(message, statusCode)

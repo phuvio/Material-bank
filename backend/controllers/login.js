@@ -5,10 +5,11 @@ import { SECRET, REFRESH_SECRET } from '../config/database.js'
 import { User } from '../models/index.js'
 import bcrypt from 'bcrypt'
 import CustomError from '../utils/customError.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
 const router = Router()
 
-router.post('/', async (req, res, next) => {
+router.post('/', routeLimiter, async (req, res, next) => {
   const body = req.body
   try {
     const users = await User.findAll()
@@ -57,7 +58,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.post('/refresh', async (req, res, next) => {
+router.post('/refresh', routeLimiter, async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken
 

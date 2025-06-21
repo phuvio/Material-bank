@@ -6,6 +6,7 @@ import { Material, User, Tag, TagsMaterial } from '../models/index.js'
 import CustomError from '../utils/customError.js'
 import authenticateToken from '../middlewares/authMiddleware.js'
 import { logError, logAction } from '../utils/logger.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
 const router = Router()
 const upload = multer()
@@ -13,6 +14,7 @@ const upload = multer()
 // get info from all materials, but no files
 router.get(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
@@ -32,6 +34,7 @@ router.get(
 // get single material info, but not file
 router.get(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
@@ -77,6 +80,7 @@ router.get(
 // get file of a single material
 router.get(
   '/:id/material',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
@@ -126,6 +130,7 @@ router.get(
 
 router.post(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   upload.single('material'),
   async (req, res, next) => {
@@ -180,6 +185,7 @@ router.post(
 
 router.put(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   upload.single('material'),
   async (req, res, next) => {
@@ -249,6 +255,7 @@ router.put(
 
 router.delete(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {

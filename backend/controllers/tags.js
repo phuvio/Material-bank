@@ -3,11 +3,13 @@ import { Tag } from '../models/index.js'
 import CustomError from '../utils/customError.js'
 import authenticateToken from '../middlewares/authMiddleware.js'
 import { logAction } from '../utils/logger.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
 const router = Router()
 
 router.get(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
@@ -21,6 +23,7 @@ router.get(
 
 router.get(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {
@@ -37,6 +40,7 @@ router.get(
 
 router.post(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {
@@ -59,6 +63,7 @@ router.post(
 
 router.put(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {
@@ -89,6 +94,7 @@ router.put(
 
 router.delete(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {

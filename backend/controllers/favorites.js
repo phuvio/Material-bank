@@ -2,11 +2,13 @@ import { Router } from 'express'
 import { Favorite, User, Material } from '../models/index.js'
 import CustomError from '../utils/customError.js'
 import authenticateToken from '../middlewares/authMiddleware.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
 const router = Router()
 
 router.post(
   '/:userId/:materialId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId, materialId } = req.params
@@ -45,6 +47,7 @@ router.post(
 
 router.delete(
   '/:userId/:materialId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId, materialId } = req.params
@@ -69,6 +72,7 @@ router.delete(
 
 router.get(
   '/:userId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId } = req.params

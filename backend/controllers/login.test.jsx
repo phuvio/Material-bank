@@ -24,6 +24,12 @@ vi.mock('jsonwebtoken', async (importOriginal) => {
   }
 })
 
+vi.mock('../config/database.js', () => ({
+  sequelize: { define: vi.fn(), authenticate: vi.fn() },
+  SECRET: 'test-access-secret',
+  REFRESH_SECRET: 'test-refresh-secret',
+}))
+
 vi.mock('../models/index.js', () => ({
   User: {
     findAll: vi.fn(),

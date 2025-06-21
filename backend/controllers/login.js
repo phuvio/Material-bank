@@ -73,7 +73,15 @@ router.post('/refresh', async (req, res, next) => {
           sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
           path: '/',
         })
-        return res.status(403).json({ error: 'Invalid refresh token' })
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ error: 'Refresh token expired' })
+        }
+
+        if (err.name === 'JsonWebTokenError') {
+          return res.status(403).json({ error: 'Invalid refresh token' })
+        }
+
+        return next(err)
       }
 
       const newAccessToken = jwt.sign(

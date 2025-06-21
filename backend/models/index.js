@@ -1,8 +1,8 @@
-const Material = require('./materials')
-const User = require('./users')
-const Tag = require('./tags')
-const TagsMaterial = require('./tagsmaterials')
-const Favorite = require('./favorites')
+import Material from './materials.js'
+import User from './users.js'
+import Tag from './tags.js'
+import TagsMaterial from './tagsmaterials.js'
+import Favorite from './favorites.js'
 
 User.hasMany(Material, { foreignKey: 'user_id' })
 Material.belongsTo(User, { foreignKey: 'user_id' })
@@ -19,15 +19,9 @@ User.belongsToMany(Material, { through: Favorite, foreignKey: 'user_id' })
 Favorite.belongsTo(Material, { foreignKey: 'material_id' })
 Material.hasMany(Favorite, { foreignKey: 'material_id' })
 
-Material.sync()
-User.sync()
-Tag.sync()
-Favorite.sync()
+await Material.sync()
+await User.sync()
+await Tag.sync()
+await Favorite.sync()
 
-module.exports = {
-  Material,
-  User,
-  Tag,
-  TagsMaterial,
-  Favorite,
-}
+export { Material, User, Tag, TagsMaterial, Favorite }

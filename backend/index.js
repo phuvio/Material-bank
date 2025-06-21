@@ -1,20 +1,25 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable indent */
 /* eslint-disable multiline-ternary */
 
-require('dotenv').config()
-const express = require('express')
-const cors = require('cors')
-const path = require('path')
-const cookieParser = require('cookie-parser')
-const { logAction } = require('./utils/logger')
-const rateLimit = require('express-rate-limit')
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import path from 'path'
+import cookieParser from 'cookie-parser'
+import rateLimit from 'express-rate-limit'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
-const materialsRouter = require('./controllers/materials')
-const usersRouter = require('./controllers/users')
-const loginRouter = require('./controllers/login')
-const tagRouter = require('./controllers/tags')
-const favoriteRouter = require('./controllers/favorites')
-const errorHandler = require('./middlewares/errorHandler')
+import { logAction } from './utils/logger.js'
+import materialsRouter from './controllers/materials.js'
+import usersRouter from './controllers/users.js'
+import loginRouter from './controllers/login.js'
+import tagRouter from './controllers/tags.js'
+import favoriteRouter from './controllers/favorites.js'
+import errorHandler from './middlewares/errorHandler.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const app = express()
 
@@ -28,30 +33,33 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-// Global rate limiter (e.g., 200 requests per 15 min for all routes)
+// Global rate limiter
 const globalRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // Limit each IP to 200 requests per window
+  windowMs: 15 * 60 * 1000,
+  max: 200,
   message: { error: 'Too many requests, slow down!' },
   headers: true,
 })
 
-const allowedOrigins = process.env.NODE_ENV === 'production' ? [
-  'https://www.prone-materiaalipankki.fi',
-  'https://material-bank-backend-449a0f56d7d0.herokuapp.com'
-] : ['http://localhost:3000', 'http://localhost:5173']
+const allowedOrigins =
+  process.env.NODE_ENV === 'production'
+    ? [
+        'https://www.prone-materiaalipankki.fi',
+        'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
+      ]
+    : ['http://localhost:3000', 'http://localhost:5173']
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}))
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+)
 
 app.use('/api', globalRateLimiter)
-
 app.use(express.json())
-
 app.use(cookieParser())
 
 app.use('/api/materials', materialsRouter)

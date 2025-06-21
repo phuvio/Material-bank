@@ -1,13 +1,16 @@
 import { describe, it, expect, beforeAll } from 'vitest'
+import { Buffer } from 'buffer'
 
 let encrypt
 let decrypt
 
 beforeAll(async () => {
-  process.env.ENCRYPTION_KEY = Buffer.from('12345678901234561234567890123456').toString('hex');
+  process.env.ENCRYPTION_KEY = Buffer.from(
+    '12345678901234561234567890123456'
+  ).toString('hex')
 
   // Import after setting env variable
-  ({ encrypt, decrypt } = await import('./encryptions.js')); 
+  ;({ encrypt, decrypt } = await import('./encryptions.js'))
 })
 
 describe('Encryption and Decryption', () => {
@@ -42,10 +45,13 @@ describe('Encryption and Decryption', () => {
     const originalKey = process.env.ENCRYPTION_KEY
 
     // Set a different key
-    process.env.ENCRYPTION_KEY = Buffer.from('00000000000000000000000000000000').toString('hex')
+    process.env.ENCRYPTION_KEY = Buffer.from(
+      '00000000000000000000000000000000'
+    ).toString('hex')
 
     // Import decrypt with the new key
-    return import("./encryptions.js").then((mod) => {
+    return import('./encryptions.js').then((mod) => {
+      // eslint-disable-next-line no-undef
       expect(() => mod.decrypt(encryptedData, iv)).toThrow()
       // Restore original afterwards
       process.env.ENCRYPTION_KEY = originalKey

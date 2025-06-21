@@ -1,9 +1,11 @@
-const router = require('express').Router()
-const { User } = require('../models/index')
-const bcrypt = require('bcrypt')
-const CustomError = require('../utils/customError')
-const authenticateToken = require('../middlewares/authMiddleware')
-const { logAction } = require('../utils/logger')
+import { Router } from 'express'
+import { User } from '../models/index.js'
+import bcrypt from 'bcrypt'
+import CustomError from '../utils/customError.js'
+import authenticateToken from '../middlewares/authMiddleware.js'
+import { logAction } from '../utils/logger.js'
+
+const router = Router()
 
 router.get('/', authenticateToken(['admin']), async (req, res, next) => {
   try {
@@ -76,7 +78,7 @@ router.put('/:id', authenticateToken(['admin']), async (req, res, next) => {
 
     const updatedUser = await User.findByPk(userId)
 
-    logAction(updatedUser.userId, 'User was updated')
+    logAction(updatedUser.id, 'User was updated')
     res.status(200).json(updatedUser)
   } catch (error) {
     next(error)
@@ -133,4 +135,4 @@ router.put(
   }
 )
 
-module.exports = router
+export default router

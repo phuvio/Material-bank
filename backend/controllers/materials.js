@@ -1,12 +1,13 @@
-const router = require('express').Router()
-const { sequelize } = require('../config/database')
-const multer = require('multer')
-const mime = require('mime-types')
-const { Material, User, Tag, TagsMaterial } = require('../models/index')
-const CustomError = require('../utils/customError')
-const authenticateToken = require('../middlewares/authMiddleware')
-const { logError, logAction } = require('../utils/logger')
+import { Router } from 'express'
+import { sequelize } from '../config/database.js'
+import multer from 'multer'
+import mime from 'mime-types'
+import { Material, User, Tag, TagsMaterial } from '../models/index.js'
+import CustomError from '../utils/customError.js'
+import authenticateToken from '../middlewares/authMiddleware.js'
+import { logError, logAction } from '../utils/logger.js'
 
+const router = Router()
 const upload = multer()
 
 // get info from all materials, but no files
@@ -83,8 +84,9 @@ router.get(
         attributes: ['id', 'name', 'material', 'material_type'],
       })
       if (!material || !material.material) {
-        throw CustomError('Material was not found', 401)
+        throw new CustomError('Material was not found', 404)
       }
+
       const mimeType =
         material.material_type?.trim() || 'application/octet-stream'
       const getFileExtension = (mimeType) => {
@@ -107,6 +109,7 @@ router.get(
         /%20/g,
         '_'
       )
+
       res.setHeader('Content-Type', mimeType)
       res.setHeader(
         'Content-Disposition',
@@ -134,7 +137,7 @@ router.post(
         user_id: req.body.user_id,
         visible: req.body.visible,
         is_url: req.body.is_url,
-        url: req.body.url ? req.body.url : null,
+        url: req.body.url || null,
         material: req.file ? req.file.buffer : null,
         material_type: req.file ? req.file.mimetype : null,
       }
@@ -166,7 +169,7 @@ router.post(
 
       logAction(material.user_id, 'User uploaded material')
       logAction(material.name, 'Material was uploaded')
-      res.status(200).json(materialWithTags)
+      res.status(201).json(materialWithTags)
     } catch (error) {
       logError(error)
       await transaction.rollback()
@@ -190,18 +193,24 @@ router.put(
 
       const { name, description, tagIds } = req.body
 
-      const [affectedRows] = await Material.update(
-        { name, description },
-        { where: { id: materialId }, transaction }
-      )
+      const updateData = { name, description }
+      if (req.file) {
+        updateData.material = req.file.buffer
+        updateData.material_type = req.file.mimetype
+      }
 
-      if (affectedRows === 0 && !tagIds) {
+      const [affectedRows] = await Material.update(updateData, {
+        where: { id: materialId },
+        transaction,
+      })
+
+      if (affectedRows === 0) {
         await transaction.rollback()
         throw new CustomError('Material not found', 404)
       }
 
       if (tagIds) {
-        const parseTagIds = JSON.parse(tagIds)
+        const parsedTagIds = JSON.parse(tagIds)
 
         await TagsMaterial.destroy({
           where: { material_id: materialId },
@@ -209,7 +218,7 @@ router.put(
         })
 
         await TagsMaterial.bulkCreate(
-          parseTagIds.map((tag_id) => ({
+          parsedTagIds.map((tag_id) => ({
             material_id: materialId,
             tag_id,
           })),
@@ -255,4 +264,4 @@ router.delete(
   }
 )
 
-module.exports = router
+export default router

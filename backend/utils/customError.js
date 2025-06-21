@@ -1,4 +1,5 @@
-const { logError } = require('../utils/logger')
+import { logError } from '../utils/logger.js'
+
 class CustomError extends Error {
   constructor(message, statusCode) {
     super(message)
@@ -9,4 +10,4 @@ class CustomError extends Error {
   }
 }
 
-module.exports = CustomError
+export default CustomError

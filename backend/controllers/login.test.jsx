@@ -1,50 +1,60 @@
 import request from 'supertest'
 import express from 'express'
-import { describe, vi, it, expect, beforeEach } from 'vitest'
-import errorHandler from '../middlewares/errorHandler'
+import cookieParser from 'cookie-parser'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import errorHandler from '../middlewares/errorHandler.js'
 
 // Mocks
-vi.mock('../models/index', () => ({
+vi.mock('bcrypt', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    __esModule: true,
+    ...actual,
+    compare: vi.fn(),
+  }
+})
+
+vi.mock('jsonwebtoken', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    __esModule: true,
+    ...actual,
+    sign: vi.fn(),
+    verify: vi.fn(),
+  }
+})
+
+vi.mock('../models/index.js', () => ({
   User: {
     findAll: vi.fn(),
   },
 }))
 
-vi.mock('bcrypt', () => ({
-  compare: vi.fn(),
-  }
-))
-
-vi.mock('jsonwebtoken', () => ({
-  sign: vi.fn(),
-  verify: vi.fn(),
-  }
-))
-
-vi.mock('../utils/logger', () => ({
+vi.mock('../utils/logger.js', () => ({
   logAction: vi.fn(),
+  logError: vi.fn(),
 }))
 
-import router from './login'
-import cookieParser from 'cookie-parser'
-import { User } from '../models/index'
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
-import { logAction } from '../utils/logger'
-
-const app = express()
-app.use(express.json())
-app.use(cookieParser())
-app.use('/', router)
-app.use(errorHandler)
+import { User } from '../models/index.js'
+import { logAction } from '../utils/logger.js'
+import router from './login.js'
 
 describe('Auth router', () => {
+  let app
+
   beforeEach(() => {
     vi.clearAllMocks()
+    app = express()
+    app.use(express.json())
+    app.use(cookieParser())
+    app.use('/', router)
+    app.use(errorHandler)
   })
 
   describe('POST /', () => {
-    it.skip('should login successfully and set refresh token cookie', async () => {
+    it.skip('logs in successfully and sets refresh token cookie', async () => {
       User.findAll.mockResolvedValue([
         {
           id: 1,
@@ -70,17 +80,18 @@ describe('Auth router', () => {
       expect(logAction).toHaveBeenCalledWith(1, 'Logged in')
     })
 
-    it('should fail if user not found', async () => {
+    it('fails login if user not found', async () => {
       User.findAll.mockResolvedValue([])
+
       const res = await request(app)
         .post('/')
         .send({ username: 'unknown', password: 'pass' })
 
       expect(res.status).toBe(401)
-      expect(res.body).toEqual({ error: 'invalid username or password' })
+      expect(res.body).toEqual({ error: 'Invalid username or password' })
     })
 
-    it('should fail if password is incorrect', async () => {
+    it('fails login if password incorrect', async () => {
       User.findAll.mockResolvedValue([
         {
           id: 1,
@@ -98,12 +109,12 @@ describe('Auth router', () => {
         .send({ username: 'johndoe', password: 'wrongpass' })
 
       expect(res.status).toBe(401)
-      expect(res.body).toEqual({ error: 'invalid username or password' })
+      expect(res.body).toEqual({ error: 'Invalid username or password' })
     })
   })
 
   describe('POST /refresh', () => {
-    it.skip('should refresh token successfully', async () => {
+    it.skip('successfully refreshes access token', async () => {
       jwt.verify.mockImplementation((token, secret, cb) => {
         cb(null, {
           fullname: 'John Doe',
@@ -122,14 +133,14 @@ describe('Auth router', () => {
       expect(res.body).toEqual({ accessToken: 'new-access-token' })
     })
 
-    it('should fail if refresh token is missing', async () => {
+    it('fails if refresh token missing', async () => {
       const res = await request(app).post('/refresh')
 
       expect(res.status).toBe(401)
       expect(res.body).toEqual({ error: 'Refresh token missing' })
     })
 
-    it('should fail if refresh token is invalid', async () => {
+    it('fails if refresh token invalid', async () => {
       jwt.verify.mockImplementation((token, secret, cb) => {
         cb(new Error('invalid token'), null)
       })
@@ -140,17 +151,17 @@ describe('Auth router', () => {
 
       expect(res.status).toBe(403)
       expect(res.body).toEqual({ error: 'Invalid refresh token' })
-      expect(res.headers['set-cookie']).toBeDefined() // cookie cleared
+      expect(res.headers['set-cookie']).toBeDefined()
     })
   })
 
   describe('POST /logout', () => {
-    it('should clear refresh token cookie and respond', async () => {
+    it('clears refresh token cookie and responds', async () => {
       const res = await request(app).post('/logout')
 
       expect(res.status).toBe(200)
       expect(res.body).toEqual({ message: 'Logged out successfully' })
-      expect(res.headers['set-cookie']).toBeDefined() // cookie cleared
+      expect(res.headers['set-cookie']).toBeDefined()
     })
   })
 })

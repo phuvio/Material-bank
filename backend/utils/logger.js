@@ -1,4 +1,4 @@
-const winston = require('winston')
+import winston from 'winston'
 
 const logger = winston.createLogger({
   level: 'debug',
@@ -11,21 +11,21 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console({ level: 'debug' })],
 })
 
-const logAction = (userId, action) => {
+export const logAction = (userId, action) => {
   const message = `User ${userId} performed action: ${action}`
   logger.info(message)
 }
 
-const logDebug = (message) => {
+export const logDebug = (message) => {
   logger.debug(message)
 }
 
-const logWarning = (message) => {
+export const logWarning = (message) => {
   logger.warn(message)
 }
 
-const logError = (message) => {
+export const logError = (message) => {
   logger.error(message)
 }
 
-module.exports = { logger, logAction, logDebug, logWarning, logError }
+export { logger }

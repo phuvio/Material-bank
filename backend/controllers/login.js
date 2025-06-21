@@ -6,6 +6,7 @@ import { User } from '../models/index.js'
 import bcrypt from 'bcrypt'
 import CustomError from '../utils/customError.js'
 import routeLimiter from '../utils/routeLimiter.js'
+import cryptoRandomString from 'crypto-random-string'
 
 const router = Router()
 
@@ -23,6 +24,15 @@ router.post('/', routeLimiter, async (req, res, next) => {
     if (!passwordCorrect) {
       throw new CustomError('Invalid username or password', 401)
     }
+
+    const csrfToken = cryptoRandomString({ length: 32 })
+
+    res.cookie('csrfToken', csrfToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      path: '/',
+    })
 
     const userForToken = {
       fullname: user.first_name + ' ' + user.last_name,
@@ -61,9 +71,15 @@ router.post('/', routeLimiter, async (req, res, next) => {
 router.post('/refresh', routeLimiter, async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken
+    const csrfCookie = req.cookies.csrfToken
+    const csrfHeader = req.get('X-CSRF-Token')
 
     if (!refreshToken) {
       throw new CustomError('Refresh token missing', 401)
+    }
+
+    if (!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader) {
+      return res.status(403).json({ error: 'Invalid CSRF token' })
     }
 
     jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {

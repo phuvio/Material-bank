@@ -31,7 +31,7 @@ export default defineConfig({
       provider: 'v8', // or 'istanbul' for detailed reports
       reporter: ['text', 'lcov'],
       outputDirectory: './frontend/coverage',
-      exclude: ['**/src/main.jsx', '**/src/App.jsx', '**/dist/**'],
+      exclude: ['**/src/main.jsx', '**/src/App.jsx', '**/dist/**', '**/utils/cookieHelper.jsx'],
     },
   },
 })

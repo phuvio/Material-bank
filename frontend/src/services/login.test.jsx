@@ -10,11 +10,17 @@ describe('loginService', () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
+
     vi.stubGlobal('localStorage', {
       setItem: vi.fn(),
       getItem: vi.fn(),
       clear: vi.fn(),
     })
+
+    vi.stubGlobal(
+      'getCookie',
+      vi.fn(() => 'test-csrf-token')
+    )
     vi.spyOn(console, 'error').mockImplementation(() => {})
     vi.spyOn(console, 'warn').mockImplementation(() => {})
   })

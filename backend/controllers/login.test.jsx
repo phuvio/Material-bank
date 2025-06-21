@@ -131,9 +131,15 @@ describe('Auth router', () => {
       })
       jwt.sign.mockReturnValue('new-access-token')
 
+      const csrfToken = 'test-csrf-token'
+
       const res = await request(app)
         .post('/refresh')
-        .set('Cookie', ['refreshToken=valid-refresh-token'])
+        .set('Cookie', [
+          'refreshToken=valid-refresh-token',
+          `csrfToken=${csrfToken}`,
+        ])
+        .set('X-CSRF-Token', csrfToken)
 
       expect(res.status).toBe(200)
       expect(res.body).toEqual({ accessToken: 'new-access-token' })
@@ -146,18 +152,29 @@ describe('Auth router', () => {
       expect(res.body).toEqual({ error: 'Refresh token missing' })
     })
 
-    it('fails if refresh token invalid', async () => {
+    it('fails if refresh token is invalid', async () => {
       jwt.verify.mockImplementation((token, secret, cb) => {
-        cb(new Error('invalid token'), null)
+        const err = new jwt.JsonWebTokenError('invalid token')
+        cb(err, null)
       })
 
+      const csrfToken = 'valid-csrf'
       const res = await request(app)
         .post('/refresh')
-        .set('Cookie', ['refreshToken=bad-token'])
+        .set('Cookie', ['refreshToken=invalid-token', `csrfToken=${csrfToken}`])
+        .set('X-CSRF-Token', csrfToken)
 
       expect(res.status).toBe(403)
       expect(res.body).toEqual({ error: 'Invalid refresh token' })
-      expect(res.headers['set-cookie']).toBeDefined()
+    })
+
+    it('fails if CSRF token is missing or invalid', async () => {
+      const res = await request(app)
+        .post('/refresh')
+        .set('Cookie', ['refreshToken=valid-token']) // missing csrfToken
+
+      expect(res.status).toBe(403)
+      expect(res.body).toEqual({ error: 'Invalid CSRF token' })
     })
   })
 

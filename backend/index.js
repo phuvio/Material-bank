@@ -6,6 +6,7 @@ import express from 'express'
 import cors from 'cors'
 import path from 'path'
 import cookieParser from 'cookie-parser'
+import lusca from 'lusca'
 import rateLimit from 'express-rate-limit'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -61,6 +62,7 @@ app.use(
 app.use('/api', globalRateLimiter)
 app.use(express.json())
 app.use(cookieParser())
+app.use(lusca.csrf())
 
 app.use('/api/materials', materialsRouter)
 app.use('/api/users', usersRouter)

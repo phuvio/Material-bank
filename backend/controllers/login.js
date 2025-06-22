@@ -30,7 +30,7 @@ router.post('/', routeLimiter, async (req, res, next) => {
     res.cookie('csrfToken', csrfToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      sameSite: 'Lax',
       path: '/',
     })
 

@@ -6,7 +6,6 @@ import { User } from '../models/index.js'
 import bcrypt from 'bcrypt'
 import CustomError from '../utils/customError.js'
 import routeLimiter from '../utils/routeLimiter.js'
-import cryptoRandomString from 'crypto-random-string'
 
 const router = Router()
 
@@ -24,16 +23,6 @@ router.post('/', routeLimiter, async (req, res, next) => {
     if (!passwordCorrect) {
       throw new CustomError('Invalid username or password', 401)
     }
-
-    const csrfToken = cryptoRandomString({ length: 32 })
-
-    res.cookie('csrfToken', csrfToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-      path: '/',
-      domain: '.prone-materiaalipankki.fi',
-    })
 
     const userForToken = {
       fullname: user.first_name + ' ' + user.last_name,
@@ -63,7 +52,7 @@ router.post('/', routeLimiter, async (req, res, next) => {
     })
 
     logAction(user.id, 'Logged in')
-    res.status(200).json({ accessToken, csrfToken })
+    res.status(200).json({ accessToken })
   } catch (error) {
     next(error)
   }
@@ -72,17 +61,9 @@ router.post('/', routeLimiter, async (req, res, next) => {
 router.post('/refresh', routeLimiter, async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken
-    const csrfCookie = req.cookies.csrfToken
-    const csrfHeader = req.get('X-CSRF-Token')
-    console.log('refresh cookies:', req.cookies)
-    console.log('refresh csrf header:', req.get('X-CSRF-Token'))
 
     if (!refreshToken) {
       throw new CustomError('Refresh token missing', 401)
-    }
-
-    if (!csrfCookie || !csrfHeader || csrfCookie !== csrfHeader) {
-      return res.status(403).json({ error: 'Invalid CSRF token' })
     }
 
     jwt.verify(refreshToken, REFRESH_SECRET, (err, user) => {
@@ -104,15 +85,6 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
         return next(err)
       }
 
-      const newCsrfToken = cryptoRandomString({ length: 32 })
-      res.cookie('csrfToken', newCsrfToken, {
-        httpOnly: false,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-        path: '/',
-        domain: '.prone-materiaalipankki.fi',
-      })
-
       const newAccessToken = jwt.sign(
         {
           fullname: user.fullname,
@@ -124,9 +96,7 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
         { expiresIn: '15m' }
       )
 
-      res
-        .status(200)
-        .json({ accessToken: newAccessToken, csrfToken: newCsrfToken })
+      res.status(200).json({ accessToken: newAccessToken })
     })
   } catch (error) {
     next(error)

@@ -135,11 +135,7 @@ describe('Auth router', () => {
 
       const res = await request(app)
         .post('/refresh')
-        .set('Cookie', [
-          'refreshToken=valid-refresh-token',
-          `csrfToken=${csrfToken}`,
-        ])
-        .set('X-CSRF-Token', csrfToken)
+        .set('Cookie', ['refreshToken=valid-refresh-token'])
 
       expect(res.status).toBe(200)
       expect(res.body).toEqual({ accessToken: 'new-access-token' })
@@ -158,23 +154,12 @@ describe('Auth router', () => {
         cb(err, null)
       })
 
-      const csrfToken = 'valid-csrf'
       const res = await request(app)
         .post('/refresh')
-        .set('Cookie', ['refreshToken=invalid-token', `csrfToken=${csrfToken}`])
-        .set('X-CSRF-Token', csrfToken)
+        .set('Cookie', ['refreshToken=invalid-token'])
 
       expect(res.status).toBe(403)
       expect(res.body).toEqual({ error: 'Invalid refresh token' })
-    })
-
-    it('fails if CSRF token is missing or invalid', async () => {
-      const res = await request(app)
-        .post('/refresh')
-        .set('Cookie', ['refreshToken=valid-token']) // missing csrfToken
-
-      expect(res.status).toBe(403)
-      expect(res.body).toEqual({ error: 'Invalid CSRF token' })
     })
   })
 

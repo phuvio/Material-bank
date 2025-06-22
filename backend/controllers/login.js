@@ -63,7 +63,7 @@ router.post('/', routeLimiter, async (req, res, next) => {
     })
 
     logAction(user.id, 'Logged in')
-    res.status(200).json({ accessToken })
+    res.status(200).json({ accessToken, csrfToken })
   } catch (error) {
     next(error)
   }
@@ -104,7 +104,8 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
         return next(err)
       }
 
-      res.cookie('csrfToken', cryptoRandomString({ length: 32 }), {
+      const newCsrfToken = cryptoRandomString({ length: 32 })
+      res.cookie('csrfToken', newCsrfToken, {
         httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
@@ -123,7 +124,9 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
         { expiresIn: '15m' }
       )
 
-      res.status(200).json({ accessToken: newAccessToken })
+      res
+        .status(200)
+        .json({ accessToken: newAccessToken, csrfToken: newCsrfToken })
     })
   } catch (error) {
     next(error)

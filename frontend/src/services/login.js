@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import axios from 'axios'
 import apiUrl from '../config/config'
-import { getCookie } from '../utils/cookieHelper'
 
 const TIMEOUT = 10000
 
@@ -17,8 +16,9 @@ const login = async credentials => {
       return null
     }
 
-    const { accessToken } = response.data
+    const { accessToken, csrfToken } = response.data
     localStorage.setItem('accessToken', accessToken)
+    if (csrfToken) localStorage.setItem('csrfToken', csrfToken)
     return response
   } catch (error) {
     console.error('Login error:', error)
@@ -28,17 +28,23 @@ const login = async credentials => {
 
 const refreshToken = async () => {
   try {
-    const csrfToken = typeof document !== 'undefined' ? getCookie('csrfToken') : null
-    console.log('csrfToken in frontend:', getCookie('csrfToken'))
+    const csrfToken = localStorage.getItem('csrfToken')
+    console.log('refreshToken() localStorage csrfToken:', csrfToken)
 
     const response = await axios.post(`${apiUrl}/api/login/refresh`, {}, {
       withCredentials: true,
       timeout: TIMEOUT,
       headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : {},
     })
+
+    const { csrfToken: newCsrf } = response.data || {}
+
     if (response && response.status === 200 && response.data && response.data.accessToken) {
       const newAccessToken = response.data.accessToken
       localStorage.setItem('accessToken', newAccessToken)
+      if (newCsrf) {
+        localStorage.setItem('csrfToken', newCsrf)
+      }
       return newAccessToken
     } else {
       console.warn('Failed to refresh token')

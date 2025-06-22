@@ -29,6 +29,7 @@ const login = async credentials => {
 const refreshToken = async () => {
   try {
     const csrfToken = typeof document !== 'undefined' ? getCookie('csrfToken') : null
+    console.log('csrfToken in frontend:', getCookie('csrfToken'))
 
     const response = await axios.post(`${apiUrl}/api/login/refresh`, {}, {
       withCredentials: true,

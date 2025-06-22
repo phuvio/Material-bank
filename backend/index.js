@@ -22,6 +22,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const app = express()
+app.set('trust proxy', 1)
 
 // Force HTTPS in production
 if (process.env.NODE_ENV === 'production') {

@@ -32,7 +32,6 @@ router.post('/', routeLimiter, async (req, res, next) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       path: '/',
-      domain: '.prone-materiaalipankki.fi',
     })
 
     const userForToken = {
@@ -103,6 +102,13 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
 
         return next(err)
       }
+
+      res.cookie('csrfToken', cryptoRandomString({ length: 32 }), {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        path: '/',
+      })
 
       const newAccessToken = jwt.sign(
         {

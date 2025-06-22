@@ -73,6 +73,8 @@ router.post('/refresh', routeLimiter, async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken
     const csrfCookie = req.cookies.csrfToken
     const csrfHeader = req.get('X-CSRF-Token')
+    console.log('refresh cookies:', req.cookies)
+    console.log('refresh csrf header:', req.get('X-CSRF-Token'))
 
     if (!refreshToken) {
       throw new CustomError('Refresh token missing', 401)

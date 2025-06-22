@@ -30,7 +30,6 @@
 - Mime
 - Cookie-parser
 - Winston
-- Crypto-random-string
 
 ## Project management
 

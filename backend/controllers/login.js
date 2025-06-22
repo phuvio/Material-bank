@@ -30,8 +30,9 @@ router.post('/', routeLimiter, async (req, res, next) => {
     res.cookie('csrfToken', csrfToken, {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Lax',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       path: '/',
+      domain: '.prone-materiaalipankki.fi',
     })
 
     const userForToken = {

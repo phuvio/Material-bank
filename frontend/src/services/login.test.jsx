@@ -48,7 +48,7 @@ describe('loginService', () => {
 
       const result = await loginService.login(credentials)
 
-      expect(result).toBeNull()
+      expect(result).toBeUndefined()
       expect(console.error).toHaveBeenCalled()
     })
 

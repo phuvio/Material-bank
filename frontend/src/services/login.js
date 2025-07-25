@@ -13,7 +13,7 @@ const login = async credentials => {
 
     if (!response || !response.data || !response.data.accessToken) {
       console.error('Login response missing expected data:', response)
-      return null
+      return
     }
 
     const { accessToken } = response.data

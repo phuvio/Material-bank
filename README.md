@@ -95,3 +95,7 @@ npm run lint
 
 This project is licensed for **non-commercial use only**.  
 See the [LICENSE](LICENSE) file for full details.
+
+## Security
+
+For information on reporting vulnerabilities, please see [SECURITY.md](./SECURITY.md).

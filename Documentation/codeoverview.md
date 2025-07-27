@@ -17,32 +17,30 @@ The refresh token causes unauthorized error messages *401 (Unauthorized)* in the
 ```mermaid
 sequenceDiagram
     participant Browser
-    participant Frontend (Axios)
+    participant Frontend
     participant Backend
-    participant DB
 
-    Browser->>Frontend (Axios): Make API request
-    Frontend (Axios)->>Backend: GET /resource with accessToken (Header)
-    Backend-->>Frontend (Axios): 401 Unauthorized (accessToken expired)
+    Browser->>Frontend: Make API request
+    Frontend->>Backend: GET /resource with accessToken (Header)
+    Backend-->>Frontend: 401 Unauthorized (accessToken expired)
 
     alt isRefreshing == false
-        Frontend (Axios)->>Backend: POST /refresh (refreshToken via Cookie)
-        Backend->>DB: Validate refreshToken
+        Frontend->>Backend: POST /refresh (refreshToken via Cookie)
+        Backend->>Backend: Validate refreshToken (JWT verify)
         alt Refresh token valid
-            DB-->>Backend: OK
-            Backend->>Frontend (Axios): new accessToken
-            Frontend (Axios)->>localStorage: Save new accessToken
-            Frontend (Axios)->>Backend: Retry original request
-            Backend-->>Frontend (Axios): 200 OK
+            Backend-->>Frontend: new accessToken
+            Frontend->>localStorage: Save new accessToken
+            Frontend->>Backend: Retry original request
+            Backend-->>Frontend: 200 OK
         else Refresh token expired/invalid
-            Backend-->>Frontend (Axios): 401 Unauthorized
-            Frontend (Axios)->>Browser: Clear localStorage, redirect to /
+            Backend-->>Frontend: 401 Unauthorized
+            Frontend->>Browser: Clear localStorage, redirect to /
         end
     else isRefreshing == true
-        Frontend (Axios)->>Queue: Add to failedQueue
-        Queue-->>Frontend (Axios): Wait for refresh to complete
-        Frontend (Axios)->>Backend: Retry original request with new accessToken
-        Backend-->>Frontend (Axios): 200 OK
+        Frontend->>Queue: Add to failedQueue
+        Queue-->>Frontend: Wait for refresh to complete
+        Frontend->>Backend: Retry original request with new accessToken
+        Backend-->>Frontend: 200 OK
     end
 ```
 

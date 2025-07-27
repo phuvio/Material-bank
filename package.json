@@ -13,6 +13,7 @@
     "test:frontend": "vitest run",
     "test:backend": "vitest run --config vite.config.backend.mjs",
     "test": "concurrently \"npm run test:frontend\" \"npm run test:backend\"",
+    "test:e2e": "NODE_ENV=test playwright test",
     "coverage:frontend": "vitest run --coverage",
     "coverage:backend": "vitest run --config vite.config.backend.mjs --coverage",
     "test:coverage": "concurrently \"npm run coverage:frontend\" \"npm run coverage:backend\"",

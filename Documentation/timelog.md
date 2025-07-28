@@ -24,6 +24,7 @@
 | 5.5.-11.5.2025 | 2.00 | 225.00 |
 | 9.6.-15.6.2025| 6.45 | 231.45 |
 | 16.6.-22.6.2025 | 11.45 | 243.30 |
+| 21.7.-27.7.2025 | 3.15 | 246.45 |
 
 ## Detailed timesheets
 
@@ -60,3 +61,4 @@
 ![5.5.-11.5.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-06-13%20095612.png)
 ![9.6.-15.6.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-25%20131239.png)
 ![16.6.-22.6.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-25%20131157.png)
+![21.7.-27.7.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-28%20092040.png)

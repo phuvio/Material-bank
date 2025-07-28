@@ -1,6 +1,6 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import Main_page from './Main_page'
 import favoriteService from '../services/favorites'
@@ -33,7 +33,7 @@ vi.mock('../components/Filter', () => ({
 }))
 
 vi.mock('../components/TagFilter', () => ({
-  default: ({ tags, selectedTags, toggleTags }) => (
+  default: ({ tags, toggleTags }) => (
     <div data-testid="tag-filter">
       {tags.map((tag) => (
         <button
@@ -143,40 +143,5 @@ describe('Main_page Component', () => {
     expect(screen.getAllByText('Material 1')).toHaveLength(2)
     expect(screen.getAllByText('Material 2')).toHaveLength(1)
     expect(screen.queryByText('Hidden Material')).not.toBeInTheDocument()
-  })
-
-  it.skip('adds and removes favorites correctly', async () => {
-    decodeToken.mockReturnValue({
-      user_id: 123,
-      role: 'user',
-    })
-
-    favoriteService.create.mockResolvedValue({ id: 2, name: 'Material 2' })
-    favoriteService.remove.mockResolvedValue({})
-
-    render(
-      <BrowserRouter>
-        <Main_page showNotification={vi.fn()} />
-      </BrowserRouter>
-    )
-
-    // Wait for favorites to load
-    await waitFor(() => screen.getByText('Material 1'))
-
-    const favoriteButton = screen.getAllByRole('button', {
-      name: /favorite/i,
-    })[1]
-
-    // Add to favorites
-    fireEvent.click(favoriteButton)
-    await waitFor(() =>
-      expect(favoriteService.create).toHaveBeenCalledWith(expect.anything(), 2)
-    )
-
-    // Remove from favorites
-    fireEvent.click(favoriteButton)
-    await waitFor(() =>
-      expect(favoriteService.remove).toHaveBeenCalledWith(expect.anything(), 2)
-    )
   })
 })

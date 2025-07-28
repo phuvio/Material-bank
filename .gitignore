@@ -31,3 +31,7 @@ Material-bank.code-workspace
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright test results
+test-results/
+playwright-report/

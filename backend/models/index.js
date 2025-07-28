@@ -19,9 +19,15 @@ User.belongsToMany(Material, { through: Favorite, foreignKey: 'user_id' })
 Favorite.belongsTo(Material, { foreignKey: 'material_id' })
 Material.hasMany(Favorite, { foreignKey: 'material_id' })
 
-await Material.sync()
-await User.sync()
-await Tag.sync()
-await Favorite.sync()
+export async function syncDatabase() {
+  const isTest = process.env.NODE_ENV === 'test'
+  const syncOptions = isTest ? { force: true } : {}
+
+  await User.sync(syncOptions)
+  await Material.sync(syncOptions)
+  await Tag.sync(syncOptions)
+  await TagsMaterial.sync(syncOptions)
+  await Favorite.sync(syncOptions)
+}
 
 export { Material, User, Tag, TagsMaterial, Favorite }

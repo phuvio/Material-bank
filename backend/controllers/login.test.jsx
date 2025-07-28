@@ -60,32 +60,6 @@ describe('Auth router', () => {
   })
 
   describe('POST /', () => {
-    it.skip('logs in successfully and sets refresh token cookie', async () => {
-      User.findAll.mockResolvedValue([
-        {
-          id: 1,
-          username: 'johndoe',
-          password: 'hashedPassword',
-          first_name: 'John',
-          last_name: 'Doe',
-          role: 'user',
-        },
-      ])
-      bcrypt.compare.mockResolvedValue(true)
-      jwt.sign
-        .mockReturnValueOnce('access-token')
-        .mockReturnValueOnce('refresh-token')
-
-      const res = await request(app)
-        .post('/')
-        .send({ username: 'johndoe', password: 'correctpassword' })
-
-      expect(res.status).toBe(200)
-      expect(res.body).toEqual({ accessToken: 'access-token' })
-      expect(res.headers['set-cookie']).toBeDefined()
-      expect(logAction).toHaveBeenCalledWith(1, 'Logged in')
-    })
-
     it('fails login if user not found', async () => {
       User.findAll.mockResolvedValue([])
 
@@ -120,27 +94,6 @@ describe('Auth router', () => {
   })
 
   describe('POST /refresh', () => {
-    it.skip('successfully refreshes access token', async () => {
-      jwt.verify.mockImplementation((token, secret, cb) => {
-        cb(null, {
-          fullname: 'John Doe',
-          username: 'johndoe',
-          user_id: 1,
-          role: 'user',
-        })
-      })
-      jwt.sign.mockReturnValue('new-access-token')
-
-      const csrfToken = 'test-csrf-token'
-
-      const res = await request(app)
-        .post('/refresh')
-        .set('Cookie', ['refreshToken=valid-refresh-token'])
-
-      expect(res.status).toBe(200)
-      expect(res.body).toEqual({ accessToken: 'new-access-token' })
-    })
-
     it('fails if refresh token missing', async () => {
       const res = await request(app).post('/refresh')
 

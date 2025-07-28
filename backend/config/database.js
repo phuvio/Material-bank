@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable multiline-ternary */
 import dotenv from 'dotenv'
 
 if (process.env.NODE_ENV === 'test') {
@@ -9,13 +11,17 @@ if (process.env.NODE_ENV === 'test') {
 import { Sequelize } from 'sequelize'
 import { logError } from '../utils/logger.js'
 
+const isTest = process.env.NODE_ENV === 'test'
+
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
+  dialectOptions: isTest
+    ? {}
+    : {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
-  },
 })
 
 sequelize

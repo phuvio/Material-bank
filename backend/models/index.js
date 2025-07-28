@@ -20,8 +20,14 @@ Favorite.belongsTo(Material, { foreignKey: 'material_id' })
 Material.hasMany(Favorite, { foreignKey: 'material_id' })
 
 export async function syncDatabase() {
-  const isTest = process.env.NODE_ENV === 'test'
-  const syncOptions = isTest ? { force: true } : {}
+  const env = process.env.NODE_ENV
+
+  if (env === 'production') {
+    console.warn('syncDatabase() skipped in production.')
+    return
+  }
+
+  const syncOptions = env === 'test' ? { force: true } : {}
 
   await User.sync(syncOptions)
   await Material.sync(syncOptions)

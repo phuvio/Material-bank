@@ -18,4 +18,5 @@ export default defineConfig({
     // eslint-disable-next-line no-undef
     reuseExistingServer: !process.env.CI,
   },
+  reporter: [['html', { open: 'never' }]],
 })

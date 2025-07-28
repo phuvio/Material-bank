@@ -1,20 +1,15 @@
 /* eslint-disable no-undef */
 import { test, expect } from '@playwright/test'
-import { syncDatabase } from '../backend/models/index.js'
-import { seedTestDatabase } from './seedTestData.js'
 
 test.describe('Material Bank E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
-    await syncDatabase()
-    await seedTestDatabase()
-
     page.on('response', (res) => {
         if (res.url().includes('/login')) console.log('Login response:', res.status())
     })
 
     page.on('console', (msg) => console.log('Browser log:', msg.text()))
 
-    await page.goto('http://localhost:5173')
+    await page.goto('/')
   })
 
   test('login page can be opened', async ({ page }) => {
@@ -34,4 +29,5 @@ test.describe('Material Bank E2E Tests', () => {
 
     await expect(page.getByText('Väärä käyttäjätunnus tai salasana')).toBeVisible()
   })
+
 })

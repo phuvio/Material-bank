@@ -5,6 +5,8 @@ export default defineConfig({
   timeout: 30_000,
   fullyParallel: false,
   retries: 1,
+  workers: 1,
+  globalSetup: './e2eTests/global-setup.js',
   use: {
     baseURL: 'http://localhost:5173',
     headless: true,

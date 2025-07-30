@@ -44,7 +44,6 @@ vi.mock('../utils/logger.js', () => ({
 import * as bcrypt from 'bcrypt'
 import * as jwt from 'jsonwebtoken'
 import { User } from '../models/index.js'
-import { logAction } from '../utils/logger.js'
 import router from './login.js'
 
 describe('Auth router', () => {

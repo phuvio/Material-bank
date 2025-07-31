@@ -1,5 +1,5 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable multiline-ternary */
+/* eslint-disable prettier/prettier */
 import dotenv from 'dotenv'
 
 if (process.env.NODE_ENV === 'test') {
@@ -13,7 +13,9 @@ import { logError } from '../utils/logger.js'
 
 const isTest = process.env.NODE_ENV === 'test'
 
-export const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const databaseUrl = isTest ? process.env.TEST_DATABASE_URL : process.env.DATABASE_URL
+
+export const sequelize = new Sequelize(databaseUrl, {
   dialectOptions: isTest
     ? {}
     : {

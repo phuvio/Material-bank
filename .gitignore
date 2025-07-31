@@ -34,4 +34,6 @@ Material-bank.code-workspace
 
 # Playwright test results
 test-results/
-playwright-report/
+.playwright-report/
+playwright-report*
+

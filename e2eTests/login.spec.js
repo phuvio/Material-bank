@@ -16,7 +16,7 @@ test.describe('Material Bank E2E Tests', () => {
     await expect(page).toHaveTitle(/Pronen materiaalipankki/)
 
     await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('test.admin@proneuron.fi')
-    await page.getByLabel('Salasana:').fill('SalasanaTest!123')
+    await page.getByRole('textbox', { name: 'Salasana:' }).fill('SalasanaTest!123')
     await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
 
     await expect(page.getByRole('heading', { name: 'Materiaalit' })).toBeVisible()
@@ -30,4 +30,26 @@ test.describe('Material Bank E2E Tests', () => {
     await expect(page.getByText('Väärä käyttäjätunnus tai salasana')).toBeVisible()
   })
 
+  test('login, change password, logout, and login again', async ({ page }) => {
+    await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('john.doe@proneuron.fi')
+    await page.getByLabel('Salasana:').fill('OldPassword!123')
+    await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
+
+    await page.selectOption('#user-dropdown', { label: 'Vaihda salasana' })
+
+    await expect(page.getByRole('heading', { name: 'Vaihda salasana'})).toBeVisible()
+
+    await page.getByLabel('Nykyinen salasana:').fill('OldaPassword!123')
+    await page.getByLabel('Uusi salasana:').fill('NewPassword!123')
+    await page.getByLabel('Uusi salasana uudelleen:').fill('NewPassword!123')
+    await page.getByRole('button', { name: 'Tallenna' }).click()
+
+    await page.selectOption('#user-dropdown', { label: 'Kirjaudu ulos' })
+
+    await expect(page.getByRole('heading', { name: 'Sisäänkirjautuminen' })).toBeVisible()
+
+    await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('john.doe@proneuron.fi')
+    await page.getByLabel('Salasana:').fill('NewPassword!123')
+    await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
+  })
 })

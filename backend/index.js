@@ -48,7 +48,11 @@ const allowedOrigins =
         'https://www.prone-materiaalipankki.fi',
         'https://material-bank-backend-449a0f56d7d0.herokuapp.com',
       ]
-    : ['http://localhost:3000', 'http://localhost:5173']
+    : [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:5173',
+      ]
 
 app.use(
   cors({

@@ -1,14 +1,7 @@
-/* eslint-disable no-undef */
 import { test, expect } from '@playwright/test'
 
 test.describe('Material Bank E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
-    page.on('response', (res) => {
-        if (res.url().includes('/login')) console.log('Login response:', res.status())
-    })
-
-    page.on('console', (msg) => console.log('Browser log:', msg.text()))
-
     await page.goto('/')
   })
 

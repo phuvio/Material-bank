@@ -53,4 +53,62 @@ export const seedTestDatabase = async () => {
       role: u.role
     })
   }
+
+  const tags = [
+    {
+      name: 'Yksi',
+      color: '#27AE60',
+    },
+    {
+      name: 'Kaksi',
+      color: '#7E5109',
+    },
+    {
+      name: 'Kolme',
+      color: '#F7DC6F',
+    }
+  ]
+
+  for (const t of tags) {
+    await Tag.create({
+      name: t.name,
+      color: t.color
+    })
+  }
+
+  const materials = [
+    {
+      name: 'Testimateriaali 1',
+      description: 'Tämä on testimateriaali 1',
+      user_id: 1,
+      visible: true,
+      is_url: true,
+      url: 'https://example.com/material1',
+      material: null,
+      material_type: null,
+    },
+    {
+      name: 'Testimateriaali 2',
+      description: 'Tämä on testimateriaali 2',
+      user_id: 2,
+      visible: true,
+      is_url: true,
+      url: 'https://example.com/material2',
+      material: null,
+      material_type: null,
+    },
+  ]
+
+  for (const m of materials) {
+    await Material.create({
+      name: m.name,
+      description: m.description,
+      user_id: m.user_id,
+      visible: m.visible,
+      is_url: m.is_url,
+      url: m.url,
+      material: m.material,
+      material_type: m.material_type
+    })
+  }
 }

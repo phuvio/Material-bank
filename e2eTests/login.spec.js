@@ -24,7 +24,7 @@ test.describe('Material Bank E2E Tests', () => {
 
   test('login fails with incorrect credentials', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('wrong.person@proneuron.fi')
-    await page.getByLabel('Salasana:').fill('WrongPassword!123')
+    await page.getByRole('textbox', { name: 'Salasana:' }).fill('WrongPassword!123')
     await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
 
     await expect(page.getByText('Väärä käyttäjätunnus tai salasana')).toBeVisible()
@@ -32,24 +32,30 @@ test.describe('Material Bank E2E Tests', () => {
 
   test('login, change password, logout, and login again', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('john.doe@proneuron.fi')
-    await page.getByLabel('Salasana:').fill('OldPassword!123')
+    await page.getByRole('textbox', { name: 'Salasana:' }).fill('OldPassword!123')
     await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
 
     await page.selectOption('#user-dropdown', { label: 'Vaihda salasana' })
 
     await expect(page.getByRole('heading', { name: 'Vaihda salasana'})).toBeVisible()
 
-    await page.getByLabel('Nykyinen salasana:').fill('OldaPassword!123')
+    await page.getByLabel('Nykyinen salasana:').fill('OldPassword!123')
     await page.getByLabel('Uusi salasana:').fill('NewPassword!123')
     await page.getByLabel('Uusi salasana uudelleen:').fill('NewPassword!123')
     await page.getByRole('button', { name: 'Tallenna' }).click()
+
+    await expect(page.getByText('Salasana päivitetty onnistuneesti')).toBeVisible()
 
     await page.selectOption('#user-dropdown', { label: 'Kirjaudu ulos' })
 
     await expect(page.getByRole('heading', { name: 'Sisäänkirjautuminen' })).toBeVisible()
 
     await page.getByRole('textbox', { name: 'Käyttäjätunnus:' }).fill('john.doe@proneuron.fi')
-    await page.getByLabel('Salasana:').fill('NewPassword!123')
+    await page.getByRole('textbox', { name: 'Salasana:' }).fill('NewPassword!123')
     await page.getByRole('button', { name: "Kirjaudu sisään" }).click()
+
+    await expect(page.getByRole('heading', { name: 'Materiaalit' })).toBeVisible()
+    await expect(page.getByText('Tagien hallinta')).not.toBeVisible()
+    await expect(page.getByText('Käyttäjähallinta')).not.toBeVisible()
   })
 })

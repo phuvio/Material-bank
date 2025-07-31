@@ -5,6 +5,11 @@ class Favorite extends Model {}
 
 Favorite.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     material_id: {
       type: DataTypes.INTEGER,
       references: {

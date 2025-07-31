@@ -50,7 +50,7 @@ router.post(
 router.get(
   '/:id',
   routeLimiter,
-  authenticateToken(['admin']),
+  authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
       const user = await User.findByPk(req.params.id)
@@ -109,7 +109,7 @@ router.put(
 router.put(
   '/update-password/:id',
   routeLimiter,
-  authenticateToken(['admin']),
+  authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
       const userId = req.params.id

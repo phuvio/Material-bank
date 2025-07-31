@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import { Router } from 'express'
 import { sequelize } from '../config/database.js'
 import multer from 'multer'
@@ -247,8 +248,15 @@ router.put(
       res.status(200).json(updatedMaterial)
     } catch (error) {
       logError(error)
-      await transaction.rollback()
-      next(new CustomError('Error saving material', 400))
+      if (!transaction.finished) {
+        await transaction.rollback()
+      }
+
+      next(
+        error instanceof CustomError
+          ? error
+          : new CustomError('Error saving material', 400)
+      )
     }
   }
 )

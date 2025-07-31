@@ -84,6 +84,8 @@ const MaterialDetails = ({ showNotification }) => {
     const formToSubmit = new FormData()
 
     formToSubmit.append('tagIds', JSON.stringify(selectedTags))
+    formToSubmit.append('name', material.name)
+    formToSubmit.append('description', material.description)
 
     try {
       await materialService.update(id, formToSubmit)

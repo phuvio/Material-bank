@@ -45,7 +45,7 @@ Running the program locally in development mode:
 npm run dev
 ```
 
-Running tests:
+Running unit tests:
 
 Frontend:
 
@@ -65,7 +65,7 @@ Both front- and backend:
 npm run test
 ```
 
-Running tests with coverage:
+Running unit tests with coverage:
 
 Frontend:
 
@@ -83,6 +83,26 @@ Both front- and backend:
 
 ```bash
 npm run test:coverage
+```
+
+Running e2e tests:
+
+First start front- and backend in test mode. This is important. otherwise there is a risk of messing up the production database.
+
+```bash
+npm run dev:test
+```
+
+Second start Postgres Docker container:
+
+```bash
+docker compose -f .\docker-compose.yml up -d  
+```
+
+Third run the e2e tests:
+
+```bash
+npm run test:e2e
 ```
 
 Running eslint:

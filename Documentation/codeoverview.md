@@ -49,3 +49,9 @@ sequenceDiagram
 The application is located in a cloud service. The cloud service now only has one virtual machine in use, which goes into hibernation. This causes slowness when the virtual machine starts. Therefore, a timeout has been added to the services. [`api.js`](/frontend/src/services/api.js) handels timeout for all the other services except for [`login.js`](/frontend/src/services/login.js) which has its own timeout defined.
 
 Some browser extensions such as F-secure cause an console error when logging in. A type error is shown in the console: *loginhandler.js:366 Uncaught TypeError: Cannot read properties of undefined (reading 'data')*. If the application is opened in an incognito mode the error is not shown.
+
+## Testing
+
+Unit tests are made with Vitest.
+
+E2e tests are made with Playwright. With e2e tests it is important to first start both front- and backends in test mode. Otherwise there is a risk of messing up with production database. E2e test database is a Postgres in Docker container. That has to be running before running e2e tests.

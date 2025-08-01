@@ -36,6 +36,13 @@ export const seedTestDatabase = async () => {
       role: 'basic',
     },
     {
+      username: 'old.person@proneuron.fi',
+      first_name: 'Old',
+      last_name: 'Person',
+      password: 'PoIuy?098',
+      role: 'basic',
+    },
+    {
       username: 'john.doe@proneuron.fi',
       first_name: 'John',
       last_name: 'Doe',

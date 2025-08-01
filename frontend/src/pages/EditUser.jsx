@@ -15,7 +15,7 @@ const EditUser = ({ showNotification }) => {
     password: '',
     role: '',
   })
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState()
 
   const handleFormChange = (event) => {
     const { name, value } = event.target

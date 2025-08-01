@@ -60,7 +60,7 @@ describe('EditUser Component', () => {
   it('updates form fields on user input', async () => {
     renderComponent()
 
-    const firstNameInput = screen.getByLabelText(/Etunimi:/i)
+    const firstNameInput = await screen.getByLabelText(/Etunimi:/i)
     fireEvent.change(firstNameInput, {
       target: { value: 'Updated' },
     })
@@ -73,7 +73,7 @@ describe('EditUser Component', () => {
   it('submits the form and calls updateUser', async () => {
     renderComponent()
 
-    const firstNameInput = screen.getByLabelText(/Etunimi:/i)
+    const firstNameInput = await screen.getByLabelText(/Etunimi:/i)
     fireEvent.change(firstNameInput, {
       target: { value: 'Updated' },
     })
@@ -108,7 +108,7 @@ describe('EditUser Component', () => {
     userService.update.mockRejectedValue(new Error('Update failed'))
     renderComponent()
 
-    const button = screen.getByRole('button', { name: /Tallenna/i })
+    const button = await screen.getByRole('button', { name: /Tallenna/i })
     fireEvent.click(button)
 
     await waitFor(() => {

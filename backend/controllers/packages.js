@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import { Router } from 'express'
 import { sequelize } from '../config/database.js'
 import { Package, Material } from '../models/index.js'
@@ -100,6 +99,74 @@ router.post(
       logError(error)
       await transaction.rollback()
       next(new CustomError('Failed to create package', 400))
+    }
+  }
+)
+
+router.put(
+  '/:id',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    const transaction = await sequelize.transaction()
+    try {
+      const packageId = req.params.id
+
+      if (!packageId) {
+        throw new CustomError('Package ID is required', 400)
+      }
+
+      const { name, description, materialIds } = req.body
+
+      if (!name) {
+        throw new CustomError('Name is required', 400)
+      }
+      if (!description) {
+        throw new CustomError('Description is required', 400)
+      }
+
+      const packageToUpdate = await Package.findByPk(packageId)
+      if (!packageToUpdate) {
+        throw new CustomError('Package not found', 404)
+      }
+
+      packageToUpdate.name = name
+      packageToUpdate.description = description
+
+      await packageToUpdate.save({ transaction })
+
+      await PackagesMaterial.destroy({
+        where: { package_id: packageToUpdate.id },
+        transaction,
+      })
+
+      if (materialIds.length > 0) {
+        await PackagesMaterial.bulkCreate(
+          materialIds.map((material_id) => ({
+            package_id: packageToUpdate.id,
+            material_id,
+          })),
+          { transaction }
+        )
+      }
+
+      await transaction.commit()
+
+      const updatedPackage = await Package.findByPk(packageToUpdate.id, {
+        include: [
+          {
+            model: Material,
+            attributes: ['id', 'name', 'visible', 'is_url', 'url'],
+          },
+        ],
+      })
+
+      logAction(packageToUpdate.id, 'Package updated')
+      res.json(updatedPackage)
+    } catch (error) {
+      logError(error)
+      await transaction.rollback()
+      next(new CustomError('Failed to update package', 400))
     }
   }
 )

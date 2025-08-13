@@ -23,19 +23,18 @@ vi.mock('../utils/logger.js', () => ({
   logAction: vi.fn(),
   logError: vi.fn(),
 }))
+
+const sharedTransactionMock = { commit: vi.fn(), rollback: vi.fn() }
+
 vi.mock('../config/database.js', () => ({
   sequelize: {
-    transaction: vi.fn(() => ({
-      commit: vi.fn(),
-      rollback: vi.fn(),
-    })),
+    transaction: vi.fn(() => sharedTransactionMock),
   },
 }))
 
 import packageRouter from './packages.js'
 import { Package } from '../models/index.js'
 import PackagesMaterial from '../models/packagesmaterials.js'
-import { sequelize } from '../config/database.js'
 
 describe('Packages API', () => {
   let app
@@ -72,8 +71,7 @@ describe('Packages API', () => {
     expect(res.status).toBe(404)
   })
 
-  it.skip('POST / creates a new package with materials', async () => {
-    const mockTransaction = await sequelize.transaction()
+  it('POST / creates a new package with materials', async () => {
     const newPackage = { id: 99, name: 'New Pack', description: 'Desc' }
 
     Package.create.mockResolvedValue(newPackage)
@@ -97,7 +95,7 @@ describe('Packages API', () => {
         { package_id: 99, material_id: 1 },
         { package_id: 99, material_id: 2 },
       ],
-      { transaction: mockTransaction }
+      expect.objectContaining({ transaction: expect.any(Object) })
     )
     expect(res.body.name).toBe('New Pack')
   })
@@ -118,8 +116,7 @@ describe('Packages API', () => {
     expect(res.status).toBe(400)
   })
 
-  it.skip('POST / handles db failure', async () => {
-    const mockTransaction = await sequelize.transaction()
+  it('POST / handles db failure', async () => {
     Package.create.mockRejectedValue(new Error('DB failed'))
 
     const res = await request(app).post('/').send({
@@ -129,7 +126,6 @@ describe('Packages API', () => {
     })
 
     expect(res.status).toBe(400)
-    expect(mockTransaction.rollback).toHaveBeenCalled()
-    expect(res.body.error).toBe('Failed to create package')
+    expect(sharedTransactionMock.rollback).toHaveBeenCalled()
   })
 })

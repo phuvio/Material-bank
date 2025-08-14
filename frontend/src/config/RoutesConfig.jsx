@@ -9,6 +9,7 @@ import EditTag from '../pages/EditTag'
 import EditMaterial from '../pages/EditMaterial'
 import EditUser from '../pages/EditUser'
 import ChangePassword from '../pages/ChangePassword'
+import Packages from '../pages/Packages'
 
 const routesConfig = [
   { path: '/', element: 'redirect', to: '/materiaalit' },
@@ -58,6 +59,11 @@ const routesConfig = [
     path: '/tagit/:id',
     element: EditTag,
     requiredRoles: ['admin', 'moderator'],
+  },
+  {
+    path: '/paketit',
+    element: Packages,
+    requiredRoles: ['admin', 'moderator', 'basic'],
   },
 ]
 

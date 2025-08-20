@@ -40,18 +40,18 @@ describe('Packages component', () => {
 
     render(<Packages showNotification={showNotification} />)
 
-    // Loading indicator
     expect(screen.getByText(/Ladataan paketteja/i)).toBeInTheDocument()
 
-    // Wait for list to appear
     await waitFor(() => {
       expect(screen.queryByText(/Ladataan paketteja/i)).not.toBeInTheDocument()
     })
 
-    // Sorted alphabetically
-    const items = screen.getAllByRole('link')
-    expect(items[0]).toHaveTextContent('Alpha')
-    expect(items[1]).toHaveTextContent('Beta')
+    const packageLinks = screen
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+
+    expect(packageLinks[0]).toHaveTextContent('Alpha')
+    expect(packageLinks[1]).toHaveTextContent('Beta')
   })
 
   it('filters packages based on input', async () => {
@@ -63,15 +63,22 @@ describe('Packages component', () => {
     render(<Packages showNotification={showNotification} />)
 
     await waitFor(() => {
-      expect(screen.getAllByRole('link')).toHaveLength(2)
+      const packageLinks = screen
+        .getAllByRole('link')
+        .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+      expect(packageLinks).toHaveLength(2)
     })
 
     fireEvent.change(screen.getByTestId('filter-input'), {
       target: { value: 'Al' },
     })
 
-    expect(screen.getAllByRole('link')).toHaveLength(1)
-    expect(screen.getByRole('link')).toHaveTextContent('Alpha')
+    const filteredLinks = screen
+      .getAllByRole('link')
+      .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+
+    expect(filteredLinks).toHaveLength(1)
+    expect(filteredLinks[0]).toHaveTextContent('Alpha')
   })
 
   it('calls showNotification on fetch error', async () => {

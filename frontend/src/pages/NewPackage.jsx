@@ -72,7 +72,7 @@ const NewPackage = ({ showNotification }) => {
         <h1>Uusi paketti</h1>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="name">Nimi:  </label>
+            <label htmlFor="name">Nimi:</label>
             <input
               type="text"
               id="name"

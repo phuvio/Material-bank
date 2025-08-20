@@ -101,6 +101,13 @@ li button {
   text-align: right;
 }
 
+.col-50 {
+  position: relative;
+  margin-top: 7px;
+  width: 50%;
+  float: left;
+}
+
 .col-75 {
   position: relative;
   margin-top: 7px;

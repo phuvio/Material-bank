@@ -43,6 +43,9 @@ const Packages = ({ showNotification }) => {
             value={filter}
             handleChange={({ target }) => setFilter(target.value)}
           />
+          <p>
+            <Link to={'/uusipaketti'}>Luo uusi paketti</Link>
+          </p>
         </div>
       </div>
       <div className="column right">

@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import packageService from '../services/packages'
 import { validatePackage } from '../utils/packageValidations'
 import materialService from '../services/materials'
+import { selectTags } from '../utils/selectTags'
 import GoBackButton from '../components/GoBackButton'
+import Filter from '../components/Filter'
+import TagFilter from '../components/TagFilter'
 
 const NewPackage = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -14,7 +17,21 @@ const NewPackage = ({ showNotification }) => {
   const [errors, setErrors] = useState({})
   const [materials, setMaterials] = useState([])
   const [materialsLoading, setMaterialsLoading] = useState(false)
+  const [filter, setFilter] = useState('')
+  const { tags, selectedTags, toggleTags } = selectTags()
   const navigate = useNavigate()
+
+  const materialsToShow = materials.filter((material) => {
+    const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
+    const matchesText =
+      filter.length === 0 ||
+      material.name.toLowerCase().includes(filter.toLocaleLowerCase())
+    const matchesTags =
+      selectedTags.length === 0 ||
+      (tagsIds && selectedTags.every((tagId) => tagsIds.includes(tagId)))
+
+    return matchesText && matchesTags
+  })
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -71,7 +88,7 @@ const NewPackage = ({ showNotification }) => {
       <div className="col-50">
         <h1>Uusi paketti</h1>
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="input-top-label">
             <label htmlFor="name">Nimi:</label>
             <input
               type="text"
@@ -82,7 +99,7 @@ const NewPackage = ({ showNotification }) => {
             />
             {errors.name && <p className="error">{errors.name}</p>}
           </div>
-          <div>
+          <div className="input-top-label">
             <label htmlFor="description">Kuvaus:</label>
             <textarea
               id="description"
@@ -103,32 +120,29 @@ const NewPackage = ({ showNotification }) => {
         </form>
       </div>
       <div className="col-50">
+        <h3>Etsi materiaaleista</h3>
+        <Filter
+          value={filter}
+          handleChange={({ target }) => setFilter(target.value)}
+        />
+        <TagFilter
+          tags={tags}
+          selectedTags={selectedTags}
+          toggleTags={toggleTags}
+        />
         <h3>Lisää materiaaleja pakettiin</h3>
         {materialsLoading ? (
           <p>Ladataan materiaaleja...</p>
         ) : (
           <ul>
-            {materials.map((material) => (
+            {materialsToShow.map((material) => (
               <li key={material.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={formData.materials.includes(material.id)}
-                    onChange={() => {
-                      setFormData((prevData) => {
-                        const newMaterials = prevData.materials.includes(
-                          material.id
-                        )
-                          ? prevData.materials.filter(
-                              (id) => id !== material.id
-                            )
-                          : [...prevData.materials, material.id]
-                        return { ...prevData, materials: newMaterials }
-                      })
-                    }}
-                  />
-                  {material.name}
-                </label>
+                <button
+                  className={`materialSelectButton ${
+                    formData.materials.includes(material.id) ? 'selected' : ''
+                  }`}
+                ></button>
+                <label>{material.name}</label>
               </li>
             ))}
           </ul>

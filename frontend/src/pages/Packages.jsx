@@ -21,7 +21,7 @@ const Packages = ({ showNotification }) => {
       try {
         const initialPackages = await packageService.getAll()
         const sortedPackages = initialPackages.sort((a, b) =>
-          a.name > b.name ? 1 : -1
+          a.name.toLowerCase > b.name.toLowerCase ? 1 : -1
         )
         setPackages(sortedPackages)
       } catch (error) {
@@ -56,7 +56,7 @@ const Packages = ({ showNotification }) => {
           <ul>
             {packagesToShow.map((pkg) => (
               <li key={pkg.id}>
-                <Link to={`/packages/${pkg.id}`}>{pkg.name}</Link>
+                <Link to={`/paketti/${pkg.id}`}>{pkg.name}</Link>
               </li>
             ))}
           </ul>

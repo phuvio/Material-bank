@@ -48,7 +48,7 @@ describe('Packages component', () => {
 
     const packageLinks = screen
       .getAllByRole('link')
-      .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+      .filter((link) => link.getAttribute('href')?.startsWith('/paketti/'))
 
     expect(packageLinks[0]).toHaveTextContent('Alpha')
     expect(packageLinks[1]).toHaveTextContent('Beta')
@@ -65,7 +65,7 @@ describe('Packages component', () => {
     await waitFor(() => {
       const packageLinks = screen
         .getAllByRole('link')
-        .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+        .filter((link) => link.getAttribute('href')?.startsWith('/paketti/'))
       expect(packageLinks).toHaveLength(2)
     })
 
@@ -75,7 +75,7 @@ describe('Packages component', () => {
 
     const filteredLinks = screen
       .getAllByRole('link')
-      .filter((link) => link.getAttribute('href')?.startsWith('/packages/'))
+      .filter((link) => link.getAttribute('href')?.startsWith('/paketti/'))
 
     expect(filteredLinks).toHaveLength(1)
     expect(filteredLinks[0]).toHaveTextContent('Alpha')

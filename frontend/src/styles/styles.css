@@ -334,3 +334,10 @@ div.col-75 ul.password {
   min-height: 100px; /* optional, makes it taller */
   resize: vertical;  /* allows vertical resizing but not horizontal */
 }
+
+.selected-materials-container {
+  width: 80%;
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
+}

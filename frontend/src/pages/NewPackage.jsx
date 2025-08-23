@@ -7,6 +7,7 @@ import { selectTags } from '../utils/selectTags'
 import GoBackButton from '../components/GoBackButton'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
+import SelectedMaterialsList from '../components/SelectMaterialsList'
 
 const NewPackage = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -59,6 +60,18 @@ const NewPackage = ({ showNotification }) => {
     }))
   }
 
+  const toggleMaterial = (id) => {
+    setFormData((prevData) => {
+      const alreadySelected = prevData.materials.includes(id)
+      return {
+        ...prevData,
+        materials: alreadySelected
+          ? prevData.materials.filter((mId) => mId !== id)
+          : [...prevData.materials, id],
+      }
+    })
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     const validationErrors = await validatePackage(formData)
@@ -97,7 +110,7 @@ const NewPackage = ({ showNotification }) => {
               value={formData.name}
               onChange={handleFormChange}
             />
-            {errors.name && <p className="error">{errors.name}</p>}
+            {errors.name && <span className="error">{errors.name}</span>}
           </div>
           <div className="input-top-label">
             <label htmlFor="description">Kuvaus:</label>
@@ -108,8 +121,21 @@ const NewPackage = ({ showNotification }) => {
               onChange={handleFormChange}
             />
             {errors.description && (
-              <p className="error">{errors.description}</p>
+              <span className="error">{errors.description}</span>
             )}
+          </div>
+          <div className="selected-materials-container">
+            <SelectedMaterialsList
+              selectedMaterials={materials.filter((m) =>
+                formData.materials.includes(m.id)
+              )}
+              setSelectedMaterials={(newOrder) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  materials: newOrder.map((m) => m.id),
+                }))
+              }
+            />
           </div>
           <div className="row">
             <div className="buttongroup">
@@ -141,6 +167,7 @@ const NewPackage = ({ showNotification }) => {
                   className={`materialSelectButton ${
                     formData.materials.includes(material.id) ? 'selected' : ''
                   }`}
+                  onClick={() => toggleMaterial(material.id)}
                 ></button>
                 <label>{material.name}</label>
               </li>

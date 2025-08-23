@@ -83,7 +83,16 @@ const NewPackage = ({ showNotification }) => {
     }
 
     try {
-      await packageService.create(formData)
+      const payload = {
+        name: formData.name,
+        description: formData.description,
+        materialIds: formData.materials.map((id, index) => ({
+          id,
+          position: index,
+        })),
+      }
+
+      await packageService.create(payload)
       showNotification('Paketti luotu onnistuneesti.', 'success', 3000)
       navigate('/paketit')
     } catch (error) {
@@ -126,9 +135,9 @@ const NewPackage = ({ showNotification }) => {
           </div>
           <div className="selected-materials-container">
             <SelectedMaterialsList
-              selectedMaterials={materials.filter((m) =>
-                formData.materials.includes(m.id)
-              )}
+              selectedMaterials={formData.materials
+                .map((id) => materials.find((m) => m.id === id))
+                .filter(Boolean)}
               setSelectedMaterials={(newOrder) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -167,6 +176,7 @@ const NewPackage = ({ showNotification }) => {
                   className={`materialSelectButton ${
                     formData.materials.includes(material.id) ? 'selected' : ''
                   }`}
+                  aria-label={`Select ${material.name}`}
                   onClick={() => toggleMaterial(material.id)}
                 ></button>
                 <label>{material.name}</label>

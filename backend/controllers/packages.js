@@ -36,8 +36,10 @@ router.get(
           {
             model: Material,
             attributes: ['id', 'name', 'visible', 'is_url', 'url'],
+            through: { attributes: ['position'] },
           },
         ],
+        order: [[Material, PackagesMaterial, 'position', 'ASC']],
       })
 
       if (!onePackage) {
@@ -74,9 +76,10 @@ router.post(
 
       if (materialIds.length > 0) {
         await PackagesMaterial.bulkCreate(
-          materialIds.map((material_id) => ({
+          materialIds.map((m) => ({
             package_id: newPackage.id,
-            material_id,
+            material_id: m.id,
+            position: m.position,
           })),
           { transaction }
         )
@@ -142,9 +145,10 @@ router.put(
 
       if (materialIds.length > 0) {
         await PackagesMaterial.bulkCreate(
-          materialIds.map((material_id) => ({
+          materialIds.map((m) => ({
             package_id: packageToUpdate.id,
-            material_id,
+            material_id: m.id,
+            position: m.position,
           })),
           { transaction }
         )

@@ -36,7 +36,7 @@ const Main_page = ({ showNotification }) => {
       try {
         const initialMaterials = await materialService.getAll()
         const sortedMaterials = initialMaterials.sort((a, b) =>
-          a.name.toLowerCase > b.name.toLowerCase ? 1 : -1
+          a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
         )
         setMaterials(sortedMaterials)
       } catch (error) {
@@ -62,7 +62,7 @@ const Main_page = ({ showNotification }) => {
         const favorites = await favoriteService.get(decoded.user_id)
         const sortedFavorites = Array.isArray(favorites)
           ? favorites.sort((a, b) =>
-              a.name.toLowerCase > b.name.toLowerCase ? 1 : -1
+              a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
             )
           : []
 

@@ -11,6 +11,8 @@ import EditUser from '../pages/EditUser'
 import ChangePassword from '../pages/ChangePassword'
 import Packages from '../pages/Packages'
 import NewPackage from '../pages/NewPackage'
+import PackageDetails from '../pages/PackageDetails'
+import EditPackage from '../pages/EditPackage'
 
 const routesConfig = [
   { path: '/', element: 'redirect', to: '/materiaalit' },
@@ -69,6 +71,16 @@ const routesConfig = [
   {
     path: '/uusipaketti',
     element: NewPackage,
+    requiredRoles: ['admin', 'moderator'],
+  },
+  {
+    path: '/paketti/:id',
+    element: PackageDetails,
+    requiredRoles: ['admin', 'moderator', 'basic'],
+  },
+  {
+    path: '/muokkaapakettia/:id',
+    element: EditPackage,
     requiredRoles: ['admin', 'moderator'],
   },
 ]

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import packageService from '../services/packages'
-import { validatePackage } from '../utils/packageValidations'
+import { validatePackageUpdate } from '../utils/packageValidations'
 import materialService from '../services/materials'
 import { selectTags } from '../utils/selectTags'
 import GoBackButton from '../components/GoBackButton'
@@ -9,12 +9,13 @@ import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import SelectedMaterialsList from '../components/SelectMaterialsList'
 
-const NewPackage = ({ showNotification }) => {
+const EditPackage = ({ showNotification }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     materials: [],
   })
+  const { id } = useParams()
   const [errors, setErrors] = useState({})
   const [materials, setMaterials] = useState([])
   const [materialsLoading, setMaterialsLoading] = useState(false)
@@ -33,6 +34,22 @@ const NewPackage = ({ showNotification }) => {
 
     return matchesText && matchesTags
   })
+
+  useEffect(() => {
+    packageService
+      .getSingle(id)
+      .then((returnedPackage) => {
+        setFormData({
+          name: returnedPackage.name,
+          description: returnedPackage.description,
+          materials: returnedPackage.Materials,
+        })
+      })
+      .catch((error) => {
+        console.error('Error fetching package:', error)
+        showNotification('Virhe haettaessa pakettia.', 'error', 3000)
+      })
+  }, [id, showNotification])
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -61,25 +78,34 @@ const NewPackage = ({ showNotification }) => {
     }))
   }
 
-  const toggleMaterial = (id) => {
+  const toggleMaterial = (material) => {
     setFormData((prevData) => {
-      const alreadySelected = prevData.materials.includes(id)
+      const alreadySelected = prevData.materials.some(
+        (m) => m.id === material.id
+      )
       return {
         ...prevData,
         materials: alreadySelected
-          ? prevData.materials.filter((mId) => mId !== id)
-          : [...prevData.materials, id],
+          ? prevData.materials.filter((m) => m.id !== material.id)
+          : [...prevData.materials, material],
       }
     })
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    const validationErrors = await validatePackage(formData)
+  const handleGoBack = () => {
+    navigate(-1)
+  }
+
+  const handleToggleMaterial = (material) => () => toggleMaterial(material)
+
+  const updatePackage = async (e) => {
+    e.preventDefault()
+
+    const validationErrors = await validatePackageUpdate(formData)
     setErrors(validationErrors)
 
     if (Object.keys(validationErrors).length > 0) {
-      showNotification('Paketin luonti epäonnistui.', 'error', 3000)
+      showNotification('Paketin päivitys epäonnistui', 'error', 3000)
       return
     }
 
@@ -87,34 +113,28 @@ const NewPackage = ({ showNotification }) => {
       const payload = {
         name: formData.name,
         description: formData.description,
-        materialIds: formData.materials.map((id, index) => ({
-          id,
+        materialIds: formData.materials.map((m, index) => ({
+          id: m.id,
           position: index,
         })),
       }
 
-      await packageService.create(payload)
-      showNotification('Paketti luotu onnistuneesti.', 'success', 3000)
-      navigate('/paketit')
+      await packageService.update(id, payload)
+      showNotification('Paketti päivitetty onnistuneesti', 'message', 2000)
+      navigate(`/paketti/${id}`)
     } catch (error) {
-      console.error('Error creating package:', error)
-      showNotification('Virhe paketin luomisessa.', 'error', 3000)
+      console.error('Error updating package:', error)
+      showNotification('Paketin päivitys epäonnistui', 'error', 3000)
     }
-  }
-
-  const handleToggleMaterial = (id) => () => toggleMaterial(id)
-
-  const handleGoBack = () => {
-    navigate(-1)
   }
 
   return (
     <div className="container">
       <div className="col-50">
-        <h1>Uusi paketti</h1>
-        <form onSubmit={handleSubmit}>
+        <h1>Muokkaa pakettia</h1>
+        <form onSubmit={updatePackage}>
           <div className="input-top-label">
-            <label htmlFor="name">Nimi:</label>
+            <label htmlFor="name">Nimi</label>
             <input
               type="text"
               id="name"
@@ -122,10 +142,10 @@ const NewPackage = ({ showNotification }) => {
               value={formData.name}
               onChange={handleFormChange}
             />
-            {errors.name && <span className="error">{errors.name}</span>}
+            {errors.name && <p className="error">{errors.name}</p>}
           </div>
           <div className="input-top-label">
-            <label htmlFor="description">Kuvaus:</label>
+            <label htmlFor="description">Kuvaus</label>
             <textarea
               id="description"
               name="description"
@@ -133,18 +153,16 @@ const NewPackage = ({ showNotification }) => {
               onChange={handleFormChange}
             />
             {errors.description && (
-              <span className="error">{errors.description}</span>
+              <p className="error">{errors.description}</p>
             )}
           </div>
           <div className="selected-materials-container">
             <SelectedMaterialsList
-              selectedMaterials={formData.materials
-                .map((id) => materials.find((m) => m.id === id))
-                .filter(Boolean)}
-              setSelectedMaterials={(newOrder) =>
+              selectedMaterials={formData.materials}
+              setSelectedMaterials={(newSelected) =>
                 setFormData((prev) => ({
                   ...prev,
-                  materials: newOrder.map((m) => m.id),
+                  materials: newSelected,
                 }))
               }
             />
@@ -157,7 +175,7 @@ const NewPackage = ({ showNotification }) => {
           </div>
         </form>
       </div>
-      <div className="col-50">
+      <div className="row">
         <h3>Etsi materiaaleista</h3>
         <Filter
           value={filter}
@@ -177,10 +195,12 @@ const NewPackage = ({ showNotification }) => {
               <li key={material.id}>
                 <button
                   className={`materialSelectButton ${
-                    formData.materials.includes(material.id) ? 'selected' : ''
+                    formData.materials.some((m) => m.id === material.id)
+                      ? 'selected'
+                      : ''
                   }`}
                   aria-label={`Select ${material.name}`}
-                  onClick={handleToggleMaterial(material.id)}
+                  onClick={handleToggleMaterial(material)}
                 ></button>
                 <label>{material.name}</label>
               </li>
@@ -192,4 +212,4 @@ const NewPackage = ({ showNotification }) => {
   )
 }
 
-export default NewPackage
+export default EditPackage

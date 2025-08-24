@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import packageService from '../services/packages'
-import { validatePackage } from './packageValidations'
+import { validatePackage, validatePackageUpdate } from './packageValidations'
 
 // Mock packageService
 vi.mock('../services/packages', () => ({
@@ -90,5 +90,69 @@ describe('validatePackage', () => {
     })
     // Should not throw, just skip duplicate check
     expect(errors.name).toBeUndefined()
+  })
+})
+
+describe('validatePackageUpdate', () => {
+  it('returns error if name is missing', async () => {
+    const errors = await validatePackageUpdate({
+      name: '',
+      description: 'desc',
+    })
+    expect(errors.name).toBe('Anna paketille nimi')
+  })
+
+  it('returns error if name has invalid characters', async () => {
+    const errors = await validatePackageUpdate({
+      name: 'Invalid@@',
+      description: 'desc',
+    })
+    expect(errors.name).toBe(
+      'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    )
+  })
+
+  it('returns error if name is too short', async () => {
+    const errors = await validatePackageUpdate({
+      name: 'aa',
+      description: 'desc',
+    })
+    expect(errors.name).toBe('Nimen pituuden tulee olla 3-50 merkkiä')
+  })
+
+  it('returns error if name is too long', async () => {
+    const longName = 'a'.repeat(51)
+    const errors = await validatePackageUpdate({
+      name: longName,
+      description: 'desc',
+    })
+    expect(errors.name).toBe('Nimen pituuden tulee olla 3-50 merkkiä')
+  })
+
+  it('returns error if description is missing', async () => {
+    const errors = await validatePackageUpdate({
+      name: 'Valid Name',
+      description: '',
+    })
+    expect(errors.description).toBe('Anna kuvaus')
+  })
+
+  it('returns error if description is too long', async () => {
+    const longDesc = 'a'.repeat(501)
+    const errors = await validatePackageUpdate({
+      name: 'Valid Name',
+      description: longDesc,
+    })
+    expect(errors.description).toBe(
+      'Kuvaus saa olla enintään 500 merkkiä pitkä'
+    )
+  })
+
+  it('returns empty object if all fields are valid', async () => {
+    const errors = await validatePackageUpdate({
+      name: 'Valid Name',
+      description: 'Valid description',
+    })
+    expect(errors).toEqual({})
   })
 })

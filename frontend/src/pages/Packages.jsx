@@ -21,7 +21,7 @@ const Packages = ({ showNotification }) => {
       try {
         const initialPackages = await packageService.getAll()
         const sortedPackages = initialPackages.sort((a, b) =>
-          a.name.toLowerCase > b.name.toLowerCase ? 1 : -1
+          a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
         )
         setPackages(sortedPackages)
       } catch (error) {

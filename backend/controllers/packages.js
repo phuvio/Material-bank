@@ -154,8 +154,6 @@ router.put(
         )
       }
 
-      await transaction.commit()
-
       const updatedPackage = await Package.findByPk(packageToUpdate.id, {
         include: [
           {
@@ -164,6 +162,8 @@ router.put(
           },
         ],
       })
+
+      await transaction.commit()
 
       logAction(packageToUpdate.id, 'Package updated')
       res.json(updatedPackage)

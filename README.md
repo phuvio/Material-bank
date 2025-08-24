@@ -45,7 +45,7 @@ Running the program locally in development mode:
 npm run dev
 ```
 
-Running unit tests:
+#### Running unit tests
 
 Frontend:
 
@@ -65,7 +65,7 @@ Both front- and backend:
 npm run test
 ```
 
-Running unit tests with coverage:
+#### Running unit tests with coverage
 
 Frontend:
 
@@ -85,7 +85,7 @@ Both front- and backend:
 npm run test:coverage
 ```
 
-Running e2e tests:
+#### Running e2e tests
 
 First start front- and backend in test mode. This is important. otherwise there is a risk of messing up the production database.
 
@@ -105,7 +105,7 @@ Third run the e2e tests:
 npm run test:e2e
 ```
 
-Running eslint:
+#### Running eslint
 
 ```bash
 npm run lint

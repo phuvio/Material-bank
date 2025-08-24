@@ -15,6 +15,7 @@
 - Axios
 - React Router
 - Jwt-decode
+- Dnd-kit
 
 ## Backend
 

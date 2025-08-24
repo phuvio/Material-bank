@@ -25,7 +25,10 @@
 | 9.6.-15.6.2025| 6.45 | 231.15 |
 | 16.6.-22.6.2025 | 11.45 | 243.00 |
 | 21.7.-27.7.2025 | 3.15 | 246.15 |
-| 28.7.-1.8.2025 | 20.00 | 266.15 |
+| 28.7.-3.8.2025 | 20.00 | 266.15 |
+| 4.8.-10.8.2025 | 2.15 | 268.30 |
+| 11.8.-17.8.2025 | 1.30 | 270 |
+| 18.8.-24.8.2025 | 10.15 | 280.15 |
 
 ## Detailed timesheets
 
@@ -63,5 +66,8 @@
 ![9.6.-15.6.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-25%20131239.png)
 ![16.6.-22.6.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-25%20131157.png)
 ![21.7.-27.7.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-07-28%20092040.png)
-![28.7-1.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-01%20162044.png)
-![28.7-1.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-01%20162116.png)
+![28.7-3.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-01%20162044.png)
+![28.7-3.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-01%20162116.png)
+![4.8.-10.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-24%20185908.png)
+![11.8.-17.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-24%20185817.png)
+![18.8-24.8.2025](/Documentation/Timelogs/pictures/Näyttökuva%202025-08-24%20185718.png)

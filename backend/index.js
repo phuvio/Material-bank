@@ -16,6 +16,7 @@ import usersRouter from './controllers/users.js'
 import loginRouter from './controllers/login.js'
 import tagRouter from './controllers/tags.js'
 import favoriteRouter from './controllers/favorites.js'
+import packageRouter from './controllers/packages.js'
 import errorHandler from './middlewares/errorHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -72,6 +73,8 @@ app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/tags', tagRouter)
 app.use('/api/favorites', favoriteRouter)
+app.use('/api/packages', packageRouter)
+
 app.use(errorHandler)
 
 app.use(express.static(path.join(__dirname, '../frontend/dist')))

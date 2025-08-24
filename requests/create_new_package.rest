@@ -1,0 +1,7 @@
+POST http://localhost:3001/api/packages
+Content-Type: application/json
+
+{
+  "name": "Package test",
+  "description": "This is a test package",
+}

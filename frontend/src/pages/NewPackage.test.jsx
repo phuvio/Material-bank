@@ -35,6 +35,11 @@ vi.mock('../components/SelectMaterialsList', () => ({
     </div>
   ),
 }))
+vi.mock('../services/tags', () => ({
+  default: {
+    getAll: vi.fn(() => Promise.resolve([])),
+  },
+}))
 
 describe('NewPackage Component', () => {
   const showNotification = vi.fn()

@@ -29,6 +29,12 @@ vi.mock('../utils/packageValidations', () => ({
   validatePackageUpdate: vi.fn(),
 }))
 
+vi.mock('../services/tags', () => ({
+  default: {
+    getAll: vi.fn(() => Promise.resolve([])),
+  },
+}))
+
 import packageService from '../services/packages'
 import materialService from '../services/materials'
 import { validatePackageUpdate } from '../utils/packageValidations'

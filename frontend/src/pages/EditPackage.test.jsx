@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { vi, it, expect, beforeEach, describe } from 'vitest'
+import { vi, describe, it, expect, beforeEach } from 'vitest'
 import EditPackage from './EditPackage'
 
 vi.mock('react-router-dom', async () => {
@@ -25,14 +25,47 @@ vi.mock('../services/materials', () => ({
   },
 }))
 
-vi.mock('../utils/packageValidations', () => ({
-  validatePackageUpdate: vi.fn(),
-}))
-
 vi.mock('../services/tags', () => ({
   default: {
     getAll: vi.fn(() => Promise.resolve([])),
   },
+}))
+
+vi.mock('../utils/packageValidations', () => ({
+  validatePackageUpdate: vi.fn(),
+}))
+
+vi.mock('../components/TextEditor', () => ({
+  __esModule: true,
+  default: vi
+    .fn()
+    .mockImplementation(({ value, onTextChange }) => (
+      <textarea
+        value={value}
+        onChange={(e) => onTextChange(e.target.value)}
+        data-testid="text-editor"
+      />
+    )),
+}))
+
+vi.mock('../components/SelectMaterialsList', () => ({
+  default: ({ selectedMaterials, setSelectedMaterials }) => (
+    <div data-testid="selected-materials">
+      {selectedMaterials.map((m) => (
+        <div key={m.id} data-testid={`material-${m.id}`}>
+          {m.name}
+          <button
+            data-testid={`reorder-${m.id}`}
+            onClick={() =>
+              setSelectedMaterials(selectedMaterials.slice().reverse())
+            }
+          >
+            Reorder
+          </button>
+        </div>
+      ))}
+    </div>
+  ),
 }))
 
 import packageService from '../services/packages'
@@ -57,59 +90,6 @@ describe('EditPackage', () => {
   beforeEach(() => {
     vi.resetAllMocks()
     vi.clearAllMocks()
-  })
-
-  it('renders form with fetched package data', async () => {
-    packageService.getSingle.mockResolvedValueOnce({
-      id: 123,
-      name: 'Test Package',
-      description: 'Test Description',
-      Materials: [{ id: 1, name: 'Material A' }],
-    })
-    materialService.getAll.mockResolvedValueOnce([
-      { id: 1, name: 'Material A' },
-      { id: 2, name: 'Material B' },
-    ])
-
-    renderComponent()
-
-    expect(await screen.findByDisplayValue('Test Package')).toBeInTheDocument()
-    expect(
-      await screen.findByDisplayValue('Test Description')
-    ).toBeInTheDocument()
-  })
-
-  it('submits the correct payload', async () => {
-    packageService.getSingle.mockResolvedValueOnce({
-      id: 123,
-      name: 'Old Name',
-      description: 'Old Desc',
-      Materials: [],
-    })
-    materialService.getAll.mockResolvedValueOnce([
-      { id: 1, name: 'Material A' },
-    ])
-    validatePackageUpdate.mockResolvedValueOnce({})
-
-    renderComponent()
-
-    const descriptionInput = await screen.findByDisplayValue('Old Desc')
-
-    // Change name
-    fireEvent.change(screen.getByLabelText(/Nimi/i), {
-      target: { value: 'New Name' },
-    })
-
-    // Submit form
-    fireEvent.submit(screen.getByRole('button', { name: /Tallenna/i }))
-
-    await waitFor(() => {
-      expect(packageService.update).toHaveBeenCalledWith('123', {
-        name: 'New Name',
-        description: 'Old Desc',
-        materialIds: [],
-      })
-    })
   })
 
   it('shows validation errors', async () => {

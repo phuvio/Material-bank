@@ -63,17 +63,6 @@ describe('validatePackage', () => {
     expect(errors.description).toBe('Anna kuvaus')
   })
 
-  it('returns error if description is too long', async () => {
-    const longDesc = 'a'.repeat(501)
-    const errors = await validatePackage({
-      name: 'Valid Name',
-      description: longDesc,
-    })
-    expect(errors.description).toBe(
-      'Kuvaus saa olla enintään 500 merkkiä pitkä'
-    )
-  })
-
   it('returns empty object if all fields are valid and name is unique', async () => {
     const errors = await validatePackage({
       name: 'Unique Name',
@@ -135,17 +124,6 @@ describe('validatePackageUpdate', () => {
       description: '',
     })
     expect(errors.description).toBe('Anna kuvaus')
-  })
-
-  it('returns error if description is too long', async () => {
-    const longDesc = 'a'.repeat(501)
-    const errors = await validatePackageUpdate({
-      name: 'Valid Name',
-      description: longDesc,
-    })
-    expect(errors.description).toBe(
-      'Kuvaus saa olla enintään 500 merkkiä pitkä'
-    )
   })
 
   it('returns empty object if all fields are valid', async () => {

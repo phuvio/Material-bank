@@ -33,8 +33,6 @@ export const validatePackage = async (data) => {
 
   if (!data.description) {
     errors.description = 'Anna kuvaus'
-  } else if (data.description.length > 500) {
-    errors.description = 'Kuvaus saa olla enintään 500 merkkiä pitkä'
   }
 
   return errors
@@ -53,8 +51,6 @@ export const validatePackageUpdate = async (data) => {
 
   if (!data.description) {
     errors.description = 'Anna kuvaus'
-  } else if (data.description.length > 500) {
-    errors.description = 'Kuvaus saa olla enintään 500 merkkiä pitkä'
   }
 
   return errors

@@ -5,6 +5,7 @@ import LoadLinkButton from '../components/Load_link_button'
 import LoadMaterialButton from '../components/Load_material_button'
 import decodeToken from '../utils/decode'
 import GoBackButton from '../components/GoBackButton'
+import DOMPurify from 'dompurify'
 
 const PackageDetails = ({ showNotification }) => {
   const { id } = useParams()
@@ -74,7 +75,12 @@ const PackageDetails = ({ showNotification }) => {
       <div className="row">
         <div className="col-50">
           <h1>{pkg.name}</h1>
-          <p>{pkg.description}</p>
+          <div
+            className="package-description"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(pkg.description),
+            }}
+          ></div>
         </div>
         <div className="col-50">
           <h2>Paketin materiaalit</h2>

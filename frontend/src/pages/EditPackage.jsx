@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import packageService from '../services/packages'
 import { validatePackageUpdate } from '../utils/packageValidations'
@@ -8,6 +8,8 @@ import GoBackButton from '../components/GoBackButton'
 import Filter from '../components/Filter'
 import TagFilter from '../components/TagFilter'
 import SelectedMaterialsList from '../components/SelectMaterialsList'
+import TextEditor from '../components/TextEditor'
+import DOMPurify from 'dompurify'
 
 const EditPackage = ({ showNotification }) => {
   const [formData, setFormData] = useState({
@@ -22,6 +24,8 @@ const EditPackage = ({ showNotification }) => {
   const [filter, setFilter] = useState('')
   const { tags, selectedTags, toggleTags } = selectTags()
   const navigate = useNavigate()
+
+  const quillRef = useRef(null)
 
   const materialsToShow = materials.filter((material) => {
     const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
@@ -101,6 +105,24 @@ const EditPackage = ({ showNotification }) => {
   const updatePackage = async (e) => {
     e.preventDefault()
 
+    const sanitizedDescription = DOMPurify.sanitize(formData.description, {
+      ALLOWED_TAGS: [
+        'b',
+        'i',
+        'u',
+        'strong',
+        'em',
+        'p',
+        'ul',
+        'ol',
+        'li',
+        'br',
+        'h1',
+        'h2',
+      ],
+      ALLOWED_ATTR: [],
+    })
+
     const validationErrors = await validatePackageUpdate(formData)
     setErrors(validationErrors)
 
@@ -112,7 +134,7 @@ const EditPackage = ({ showNotification }) => {
     try {
       const payload = {
         name: formData.name,
-        description: formData.description,
+        description: sanitizedDescription,
         materialIds: formData.materials.map((m, index) => ({
           id: m.id,
           position: index,
@@ -146,11 +168,14 @@ const EditPackage = ({ showNotification }) => {
           </div>
           <div className="input-top-label">
             <label htmlFor="description">Kuvaus</label>
-            <textarea
-              id="description"
-              name="description"
+            <TextEditor
+              ref={quillRef}
               value={formData.description}
-              onChange={handleFormChange}
+              onTextChange={(html) =>
+                setFormData((prev) => ({ ...prev, description: html }))
+              }
+              name="description"
+              id="description"
             />
             {errors.description && (
               <p className="error">{errors.description}</p>

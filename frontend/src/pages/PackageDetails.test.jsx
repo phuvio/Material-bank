@@ -51,14 +51,18 @@ describe('PackageDetails', () => {
     packageService.getSingle.mockResolvedValue({
       id: '123',
       name: 'Test Package',
-      description: 'Some description',
+      description: '<p>Some <strong>description</strong></p>',
       Materials: [],
     })
 
     renderComponent()
 
     expect(await screen.findByText('Test Package')).toBeInTheDocument()
-    expect(screen.getByText('Some description')).toBeInTheDocument()
+    // Verify sanitized HTML content
+    expect(screen.getByText('Some', { exact: false })).toBeInTheDocument()
+    expect(
+      screen.getByText('description', { exact: false })
+    ).toBeInTheDocument()
   })
 
   it('renders materials when they exist', async () => {

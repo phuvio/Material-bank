@@ -22,7 +22,8 @@ const Main_page = ({ showNotification }) => {
     const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
     const matchesText =
       filter.length === 0 ||
-      material.name.toLowerCase().includes(filter.toLocaleLowerCase())
+      material.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+      material.description.toLowerCase().includes(filter.toLocaleLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
       (tagsIds && selectedTags.every((tagId) => tagsIds.includes(tagId)))

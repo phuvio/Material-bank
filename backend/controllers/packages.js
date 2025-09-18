@@ -74,7 +74,11 @@ router.post(
 
       const materialIds = req.body.materialIds
 
-      if (materialIds.length > 0) {
+      if (
+        Array.isArray(materialIds) &&
+        materialIds.length > 0 &&
+        typeof materialIds[0] === 'object'
+      ) {
         await PackagesMaterial.bulkCreate(
           materialIds.map((m) => ({
             package_id: newPackage.id,
@@ -143,7 +147,11 @@ router.put(
         transaction,
       })
 
-      if (materialIds.length > 0) {
+      if (
+        Array.isArray(materialIds) &&
+        materialIds.length > 0 &&
+        typeof materialIds[0] === 'object'
+      ) {
         await PackagesMaterial.bulkCreate(
           materialIds.map((m) => ({
             package_id: packageToUpdate.id,

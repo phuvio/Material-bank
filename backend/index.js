@@ -79,7 +79,7 @@ app.use(errorHandler)
 
 app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
-app.get('/*', globalRateLimiter, (req, res) => {
+app.get('/:path(*)', globalRateLimiter, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'))
 })
 

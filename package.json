@@ -79,7 +79,7 @@
     "json-serve": "^0.1.0",
     "lcov-result-merger": "^5.0.1",
     "nodemon": "^3.1.10",
-    "playwright": "^1.54.1",
+    "playwright": "^1.56.0",
     "prettier": "^3.3.3",
     "supertest": "^7.1.1",
     "vite": "^7.1.6",

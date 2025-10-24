@@ -52,6 +52,7 @@ const SelectedMaterialsList = ({ selectedMaterials, setSelectedMaterials }) => {
   return (
     <div className="mt-6">
       <h3 className="font-medium mb-2">Valitut materiaalit</h3>
+      <h5>(järjestystä voi muokata raahaamalla)</h5>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}

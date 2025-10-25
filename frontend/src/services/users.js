@@ -19,4 +19,7 @@ const updatePassword = (id, password) =>
     data: response.data
   }))
 
-export default { getAll, getSingle, create, update, updatePassword }
+const remove = (id) => api.delete(`/api/users/${id}`)
+  .then((response) => response.data)
+
+export default { getAll, getSingle, create, update, updatePassword, remove }

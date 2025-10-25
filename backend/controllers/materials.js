@@ -71,7 +71,18 @@ router.get(
         throw new CustomError('Material was not found', 404)
       }
 
-      res.json(result)
+      // Convert to plain object so we can safely modify the returned shape
+      const material = result.get({ plain: true })
+
+      // If the creating user was removed, return a harmless placeholder
+      if (!material.User) {
+        material.User = {
+          first_name: 'poistettu',
+          last_name: 'käyttäjä',
+        }
+      }
+
+      res.json(material)
     } catch (error) {
       next(error)
     }

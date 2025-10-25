@@ -61,10 +61,29 @@ describe('Materials API', () => {
   })
 
   it('GET /:id returns material details', async () => {
-    Material.findOne.mockResolvedValue({ name: 'Test material' })
+    // mock a Sequelize instance with get({ plain: true })
+    Material.findOne.mockResolvedValue({
+      get: () => ({
+        name: 'Test material',
+        User: { first_name: 'John', last_name: 'Doe' },
+      }),
+    })
     const res = await request(app).get('/123')
     expect(res.status).toBe(200)
     expect(res.body.name).toBe('Test material')
+    expect(res.body.User.first_name).toBe('John')
+  })
+
+  it('GET /:id returns placeholder user when creator deleted', async () => {
+    Material.findOne.mockResolvedValue({
+      get: () => ({ name: 'Orphan material', User: null }),
+    })
+    const res = await request(app).get('/999')
+    expect(res.status).toBe(200)
+    expect(res.body.name).toBe('Orphan material')
+    expect(res.body.User).toBeDefined()
+    expect(res.body.User.first_name).toBe('poistettu')
+    expect(res.body.User.last_name).toBe('käyttäjä')
   })
 
   it('GET /:id/material returns a file', async () => {

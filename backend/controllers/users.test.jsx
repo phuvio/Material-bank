@@ -10,6 +10,7 @@ vi.mock('../models/index.js', () => ({
     create: vi.fn(),
     findByPk: vi.fn(),
     update: vi.fn(),
+    destroy: vi.fn(),
   },
 }))
 
@@ -262,6 +263,37 @@ describe('Users API', () => {
 
       expect(res.status).toBe(400)
       expect(res.body.error).toBe('User was not found')
+    })
+  })
+
+  describe('DELETE /users/:id', () => {
+    it('should delete user', async () => {
+      User.destroy.mockResolvedValue(1)
+
+      const res = await request(app).delete('/users/1')
+
+      expect(res.status).toBe(200)
+      expect(res.body.message).toBe('User deleted successfully')
+      expect(User.destroy).toHaveBeenCalledWith({ where: { id: '1' } })
+      expect(logAction).toHaveBeenCalledWith('1', 'User deleted')
+    })
+
+    it('should return 404 if user not found', async () => {
+      User.destroy.mockResolvedValue(0)
+
+      const res = await request(app).delete('/users/999')
+
+      expect(res.status).toBe(404)
+      expect(res.body.error).toBe('User not found')
+    })
+
+    it('should handle errors', async () => {
+      User.destroy.mockRejectedValue(new Error('fail'))
+
+      const res = await request(app).delete('/users/1')
+
+      expect(res.status).toBe(500)
+      expect(res.body.error).toBeDefined()
     })
   })
 })

@@ -8,6 +8,7 @@ vi.mock('../services/users', () => ({
   default: {
     getSingle: vi.fn(),
     update: vi.fn(),
+    remove: vi.fn(),
   },
 }))
 
@@ -34,6 +35,7 @@ describe('EditUser Component', () => {
     vi.clearAllMocks()
     userService.getSingle.mockResolvedValue(mockUser)
     userService.update.mockResolvedValue()
+    userService.remove.mockResolvedValue()
   })
 
   const renderComponent = () =>
@@ -118,5 +120,71 @@ describe('EditUser Component', () => {
         3000
       )
     })
+  })
+
+  it('deletes user when confirmed and navigates back', async () => {
+    renderComponent()
+
+    // mock confirm to return true
+    vi.spyOn(window, 'confirm').mockImplementation(() => true)
+
+    const deleteButton = await screen.getByRole('button', {
+      name: /Poista tagi/i,
+    })
+    fireEvent.click(deleteButton)
+
+    await waitFor(() => {
+      expect(userService.remove).toHaveBeenCalledWith('123')
+      expect(showNotification).toHaveBeenCalledWith(
+        'Käyttäjä poistettu onnistuneesti',
+        'message',
+        2000
+      )
+      expect(mockNavigate).toHaveBeenCalledWith('/kayttajat')
+    })
+
+    // restore confirm
+    window.confirm.mockRestore()
+  })
+
+  it('does not delete user when confirmation is cancelled', async () => {
+    renderComponent()
+
+    // mock confirm to return false
+    vi.spyOn(window, 'confirm').mockImplementation(() => false)
+
+    const deleteButton = await screen.getByRole('button', {
+      name: /Poista tagi/i,
+    })
+    fireEvent.click(deleteButton)
+
+    await waitFor(() => {
+      expect(userService.remove).not.toHaveBeenCalled()
+      expect(mockNavigate).not.toHaveBeenCalledWith('/kayttajat')
+    })
+
+    window.confirm.mockRestore()
+  })
+
+  it('shows error notification when delete fails', async () => {
+    userService.remove.mockRejectedValue(new Error('Delete failed'))
+    renderComponent()
+
+    vi.spyOn(window, 'confirm').mockImplementation(() => true)
+
+    const deleteButton = await screen.getByRole('button', {
+      name: /Poista tagi/i,
+    })
+    fireEvent.click(deleteButton)
+
+    await waitFor(() => {
+      expect(showNotification).toHaveBeenCalledWith(
+        'Käyttäjän poisto epäonnistui',
+        'error',
+        3000
+      )
+    })
+
+    window.confirm.mockRestore()
   })
 })

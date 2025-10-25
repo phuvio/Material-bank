@@ -157,4 +157,22 @@ router.put(
   }
 )
 
+router.delete(
+  '/:id',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    try {
+      const result = await User.destroy({ where: { id: req.params.id } })
+      if (result === 0) {
+        throw new CustomError('User not found', 404)
+      }
+      logAction(req.params.id, 'User deleted')
+      res.json({ message: 'User deleted successfully' })
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
 export default router

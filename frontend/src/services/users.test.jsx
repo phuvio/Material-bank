@@ -8,6 +8,7 @@ vi.mock('./api', () => ({
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
+    delete: vi.fn(),
   },
 }))
 
@@ -67,5 +68,15 @@ describe('User Service API', () => {
       '/api/users/update-password/1',
       password
     )
+  })
+
+  it('removes a user', async () => {
+    const mockResponse = { data: { message: 'User deleted successfully' } }
+    api.delete.mockResolvedValue(mockResponse)
+
+    const res = await userService.remove(1)
+
+    expect(res).toEqual(mockResponse.data)
+    expect(api.delete).toHaveBeenCalledWith('/api/users/1')
   })
 })

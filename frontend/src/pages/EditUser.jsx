@@ -90,7 +90,7 @@ const EditUser = ({ showNotification }) => {
       })
   }
 
-  const handleDeleteTag = (id) => {
+  const handleDeleteUser = (id) => {
     if (window.confirm('Haluatko varmasti poistaa tämän käyttäjän?')) {
       userService
         .remove(id)
@@ -191,8 +191,8 @@ const EditUser = ({ showNotification }) => {
         </div>
       </form>
       <div className="row">
-        <button className="deleteButton" onClick={() => handleDeleteTag(id)}>
-          Poista tagi
+        <button className="deleteButton" onClick={() => handleDeleteUser(id)}>
+          Poista käyttäjä
         </button>
       </div>
     </div>

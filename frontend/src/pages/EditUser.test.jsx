@@ -129,7 +129,7 @@ describe('EditUser Component', () => {
     vi.spyOn(window, 'confirm').mockImplementation(() => true)
 
     const deleteButton = await screen.getByRole('button', {
-      name: /Poista tagi/i,
+      name: /Poista käyttäjä/i,
     })
     fireEvent.click(deleteButton)
 
@@ -154,7 +154,7 @@ describe('EditUser Component', () => {
     vi.spyOn(window, 'confirm').mockImplementation(() => false)
 
     const deleteButton = await screen.getByRole('button', {
-      name: /Poista tagi/i,
+      name: /Poista käyttäjä/i,
     })
     fireEvent.click(deleteButton)
 
@@ -173,7 +173,7 @@ describe('EditUser Component', () => {
     vi.spyOn(window, 'confirm').mockImplementation(() => true)
 
     const deleteButton = await screen.getByRole('button', {
-      name: /Poista tagi/i,
+      name: /Poista käyttäjä/i,
     })
     fireEvent.click(deleteButton)
 

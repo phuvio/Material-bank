@@ -9,6 +9,10 @@ import EditTag from '../pages/EditTag'
 import EditMaterial from '../pages/EditMaterial'
 import EditUser from '../pages/EditUser'
 import ChangePassword from '../pages/ChangePassword'
+import Packages from '../pages/Packages'
+import NewPackage from '../pages/NewPackage'
+import PackageDetails from '../pages/PackageDetails'
+import EditPackage from '../pages/EditPackage'
 
 const routesConfig = [
   { path: '/', element: 'redirect', to: '/materiaalit' },
@@ -57,6 +61,26 @@ const routesConfig = [
   {
     path: '/tagit/:id',
     element: EditTag,
+    requiredRoles: ['admin', 'moderator'],
+  },
+  {
+    path: '/paketit',
+    element: Packages,
+    requiredRoles: ['admin', 'moderator', 'basic'],
+  },
+  {
+    path: '/uusipaketti',
+    element: NewPackage,
+    requiredRoles: ['admin', 'moderator'],
+  },
+  {
+    path: '/paketti/:id',
+    element: PackageDetails,
+    requiredRoles: ['admin', 'moderator', 'basic'],
+  },
+  {
+    path: '/muokkaapakettia/:id',
+    element: EditPackage,
     requiredRoles: ['admin', 'moderator'],
   },
 ]

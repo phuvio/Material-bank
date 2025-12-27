@@ -26,6 +26,7 @@ const Header = ({ setIsLoggedIn }) => {
         <img src={logo} alt="Logo" />
         <nav>
           <Link to={'/'}>Materiaalit</Link>
+          <Link to={'/paketit'}>Paketit</Link>
           {(role === 'admin' || role === 'moderator') && (
             <Link to={'/tagit'}>Tagien hallinta</Link>
           )}

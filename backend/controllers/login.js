@@ -1,29 +1,27 @@
-const jwt = require('jsonwebtoken')
-const router = require('express').Router()
-const { logAction } = require('../utils/logger')
+import jwt from 'jsonwebtoken'
+import { Router } from 'express'
+import { logAction } from '../utils/logger.js'
+import { SECRET, REFRESH_SECRET } from '../config/database.js'
+import { User } from '../models/index.js'
+import bcrypt from 'bcrypt'
+import CustomError from '../utils/customError.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
-const { SECRET, REFRESH_SECRET } = require('../config/database')
-const { User } = require('../models/index')
-const bcrypt = require('bcrypt')
-const CustomError = require('../utils/customError')
+const router = Router()
 
-router.post('/', async (req, res, next) => {
+router.post('/', routeLimiter, async (req, res, next) => {
   const body = req.body
-
   try {
     const users = await User.findAll()
-    const user = users.find((u) => {
-      return u.username === body.username
-    })
+    const user = users.find((u) => u.username === body.username)
 
     if (!user) {
-      throw new CustomError('invalid username or password', 401)
+      throw new CustomError('Invalid username or password', 401)
     }
 
     const passwordCorrect = await bcrypt.compare(body.password, user.password)
-
     if (!passwordCorrect) {
-      throw new CustomError('invalid username or password', 401)
+      throw new CustomError('Invalid username or password', 401)
     }
 
     const userForToken = {
@@ -33,32 +31,34 @@ router.post('/', async (req, res, next) => {
       role: user.role,
     }
 
-    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15min' })
+    const accessToken = jwt.sign(userForToken, SECRET, { expiresIn: '15m' })
     const refreshToken = jwt.sign(userForToken, REFRESH_SECRET, {
       expiresIn: '7d',
     })
 
+    // Clear old cookie and set new one
     res.clearCookie('refreshToken', {
       httpOnly: true,
-      secure: true,
-      sameSite: 'None',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       path: '/',
     })
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'None',
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      path: '/',
     })
 
     logAction(user.id, 'Logged in')
-    res.status(200).send({ accessToken })
+    res.status(200).json({ accessToken })
   } catch (error) {
     next(error)
   }
 })
 
-router.post('/refresh', async (req, res, next) => {
+router.post('/refresh', routeLimiter, async (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken
 
@@ -72,8 +72,17 @@ router.post('/refresh', async (req, res, next) => {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+          path: '/',
         })
-        return res.status(403).json({ error: 'Invalid refresh token' })
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({ error: 'Refresh token expired' })
+        }
+
+        if (err.name === 'JsonWebTokenError') {
+          return res.status(403).json({ error: 'Invalid refresh token' })
+        }
+
+        return next(err)
       }
 
       const newAccessToken = jwt.sign(
@@ -84,7 +93,7 @@ router.post('/refresh', async (req, res, next) => {
           role: user.role,
         },
         SECRET,
-        { expiresIn: '15min' }
+        { expiresIn: '15m' }
       )
 
       res.status(200).json({ accessToken: newAccessToken })
@@ -97,11 +106,11 @@ router.post('/refresh', async (req, res, next) => {
 router.post('/logout', (req, res) => {
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    secure: true,
-    sameSite: 'None',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
     path: '/',
   })
   res.status(200).json({ message: 'Logged out successfully' })
 })
 
-module.exports = router
+export default router

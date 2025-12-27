@@ -22,7 +22,8 @@ const Main_page = ({ showNotification }) => {
     const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
     const matchesText =
       filter.length === 0 ||
-      material.name.toLowerCase().includes(filter.toLocaleLowerCase())
+      material.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+      material.description.toLowerCase().includes(filter.toLocaleLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
       (tagsIds && selectedTags.every((tagId) => tagsIds.includes(tagId)))
@@ -36,7 +37,7 @@ const Main_page = ({ showNotification }) => {
       try {
         const initialMaterials = await materialService.getAll()
         const sortedMaterials = initialMaterials.sort((a, b) =>
-          a.name > b.name ? 1 : -1
+          a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
         )
         setMaterials(sortedMaterials)
       } catch (error) {
@@ -61,7 +62,9 @@ const Main_page = ({ showNotification }) => {
 
         const favorites = await favoriteService.get(decoded.user_id)
         const sortedFavorites = Array.isArray(favorites)
-          ? favorites.sort((a, b) => (a.name > b.name ? 1 : -1))
+          ? favorites.sort((a, b) =>
+              a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            )
           : []
 
         setFavorites(sortedFavorites)

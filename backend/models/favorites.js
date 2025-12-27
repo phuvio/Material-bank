@@ -1,10 +1,15 @@
-const { Model, DataTypes } = require('sequelize')
-const { sequelize } = require('../config/database')
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../config/database.js'
 
 class Favorite extends Model {}
 
 Favorite.init(
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     material_id: {
       type: DataTypes.INTEGER,
       references: {
@@ -29,4 +34,4 @@ Favorite.init(
   }
 )
 
-module.exports = Favorite
+export default Favorite

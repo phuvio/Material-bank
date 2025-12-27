@@ -1,7 +1,7 @@
-const { Model, DataTypes } = require('sequelize')
-const { sequelize } = require('../config/database')
-const bcrypt = require('bcrypt')
-const { encrypt, decrypt } = require('../utils/encryptions')
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../config/database.js'
+import bcrypt from 'bcrypt'
+import { encrypt, decrypt } from '../utils/encryptions.js'
 
 class User extends Model {}
 
@@ -105,4 +105,4 @@ User.init(
   }
 )
 
-module.exports = User
+export default User

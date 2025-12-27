@@ -41,7 +41,8 @@ export const validateMaterial = async (data) => {
   if (!data.name) {
     errors.name = 'Anna materiaalille nimi'
   } else if (!regexName.test(data.name)) {
-    errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    errors.name =
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä tai merkkejä / + -'
   } else if (data.name.length < 3 || data.name.length > 50) {
     errors.name = 'Nimen pituuden tulee olla 3-50 merkkiä'
   }
@@ -83,7 +84,8 @@ export const validateMaterialUpdate = async (data) => {
   if (!data.name) {
     errors.name = 'Anna materiaalille nimi'
   } else if (!regexName.test(data.name)) {
-    errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    errors.name =
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä tai merkkejä / + -'
   } else if (data.name.length < 3 || data.name.length > 50) {
     errors.name = 'Nimen pituuden tulee olla 3-50 merkkiä'
   }

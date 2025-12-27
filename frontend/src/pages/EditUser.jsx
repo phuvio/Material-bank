@@ -90,6 +90,21 @@ const EditUser = ({ showNotification }) => {
       })
   }
 
+  const handleDeleteUser = (id) => {
+    if (window.confirm('Haluatko varmasti poistaa tämän käyttäjän?')) {
+      userService
+        .remove(id)
+        .then(() => {
+          showNotification('Käyttäjä poistettu onnistuneesti', 'message', 2000)
+          navigate('/kayttajat')
+        })
+        .catch((error) => {
+          console.error('Error deleting user:', error)
+          showNotification('Käyttäjän poisto epäonnistui', 'error', 3000)
+        })
+    }
+  }
+
   if (user === null) {
     return <div>Ladataan...</div>
   }
@@ -175,6 +190,11 @@ const EditUser = ({ showNotification }) => {
           </div>
         </div>
       </form>
+      <div className="row">
+        <button className="deleteButton" onClick={() => handleDeleteUser(id)}>
+          Poista käyttäjä
+        </button>
+      </div>
     </div>
   )
 }

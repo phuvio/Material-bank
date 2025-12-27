@@ -2,13 +2,13 @@ import { jwtDecode } from 'jwt-decode'
 import api from '../services/api'
 
 const decodeToken = async () => {
-  const token = localStorage.getItem('accessToken')
-
-  if (!token) {
-    return null
-  }
-
   try {
+    const token = localStorage.getItem('accessToken')
+
+    if (!token) {
+      return null
+    }
+
     const decodedToken = jwtDecode(token)
     if (decodedToken.exp < Date.now() / 1000) {
       try {

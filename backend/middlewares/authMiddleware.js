@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const { logAction } = require('../utils/logger')
+import jwt from 'jsonwebtoken'
+import { logAction } from '../utils/logger.js'
 
 const authenticateToken = (allowedRoles) => (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1]
@@ -27,4 +27,4 @@ const authenticateToken = (allowedRoles) => (req, res, next) => {
   }
 }
 
-module.exports = authenticateToken
+export default authenticateToken

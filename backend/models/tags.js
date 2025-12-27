@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require('sequelize')
-const { sequelize } = require('../config/database')
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../config/database.js'
 
 class Tag extends Model {}
 
@@ -29,4 +29,4 @@ Tag.init(
   }
 )
 
-module.exports = Tag
+export default Tag

@@ -62,7 +62,7 @@ const MaterialDetails = ({ showNotification }) => {
   }
 
   const handleDeleteMaterail = async (id) => {
-    if (window.confirm('Haluatko varmati poistaa tämän materiaalin?')) {
+    if (window.confirm('Haluatko varmasti poistaa tämän materiaalin?')) {
       try {
         await materialService.remove(id)
         showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
@@ -84,6 +84,8 @@ const MaterialDetails = ({ showNotification }) => {
     const formToSubmit = new FormData()
 
     formToSubmit.append('tagIds', JSON.stringify(selectedTags))
+    formToSubmit.append('name', material.name)
+    formToSubmit.append('description', material.description)
 
     try {
       await materialService.update(id, formToSubmit)

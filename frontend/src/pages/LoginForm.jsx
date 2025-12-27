@@ -25,7 +25,7 @@ const Login = ({ onLoginSuccess, showNotification }) => {
         console.error('Error logging in:', response)
         showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
       }
-    } catch (error) {
+    } catch {
       showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
     } finally {
       setLoading(false)

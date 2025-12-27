@@ -1,11 +1,15 @@
-const router = require('express').Router()
-const { Tag } = require('../models/index')
-const CustomError = require('../utils/customError')
-const authenticateToken = require('../middlewares/authMiddleware')
-const { logAction } = require('../utils/logger')
+import { Router } from 'express'
+import { Tag } from '../models/index.js'
+import CustomError from '../utils/customError.js'
+import authenticateToken from '../middlewares/authMiddleware.js'
+import { logAction } from '../utils/logger.js'
+import routeLimiter from '../utils/routeLimiter.js'
+
+const router = Router()
 
 router.get(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
@@ -19,6 +23,7 @@ router.get(
 
 router.get(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {
@@ -35,16 +40,18 @@ router.get(
 
 router.post(
   '/',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
-    const { name, color } = req.body
-    if (!name) {
-      throw new CustomError('Name is required', 400)
-    } else if (!color) {
-      throw new CustomError('Color is required', 400)
-    }
-
     try {
+      const { name, color } = req.body
+      if (!name) {
+        throw new CustomError('Name is required', 400)
+      }
+      if (!color) {
+        throw new CustomError('Color is required', 400)
+      }
+
       const result = await Tag.create({ name, color })
       logAction(result.id, 'New tag created')
       res.status(201).json(result)
@@ -56,22 +63,29 @@ router.post(
 
 router.put(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
-    const { name, color } = req.body
-    if (!name) {
-      throw new CustomError('Name is required', 400)
-    } else if (!color) {
-      throw new CustomError('Color is required', 400)
-    }
-
     try {
-      const result = await Tag.update(
+      const { name, color } = req.body
+      if (!name) {
+        throw new CustomError('Name is required', 400)
+      }
+      if (!color) {
+        throw new CustomError('Color is required', 400)
+      }
+
+      const [affectedRows] = await Tag.update(
         { name, color },
         { where: { id: req.params.id } }
       )
-      logAction(result.id, 'Tag updated')
-      res.json(result)
+      if (affectedRows === 0) {
+        throw new CustomError('Tag not found', 404)
+      }
+
+      const updatedTag = await Tag.findByPk(req.params.id)
+      logAction(updatedTag.id, 'Tag updated')
+      res.json(updatedTag)
     } catch (error) {
       next(error)
     }
@@ -80,6 +94,7 @@ router.put(
 
 router.delete(
   '/:id',
+  routeLimiter,
   authenticateToken(['admin', 'moderator']),
   async (req, res, next) => {
     try {
@@ -95,4 +110,4 @@ router.delete(
   }
 )
 
-module.exports = router
+export default router

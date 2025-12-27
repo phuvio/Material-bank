@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser'
 import rateLimit from 'express-rate-limit'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import { csrf } from 'lusca'
 
 import { logAction } from './utils/logger.js'
 import materialsRouter from './controllers/materials.js'
@@ -67,6 +68,7 @@ app.use(
 app.use('/api', globalRateLimiter)
 app.use(express.json())
 app.use(cookieParser())
+app.use(csrf())
 
 app.use('/api/materials', materialsRouter)
 app.use('/api/users', usersRouter)

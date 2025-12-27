@@ -3,6 +3,7 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import errorHandler from '../middlewares/errorHandler.js'
+import { csrf } from 'lusca'
 
 // Mocks
 vi.mock('bcrypt', async (importOriginal) => {
@@ -54,6 +55,7 @@ describe('Auth router', () => {
     app = express()
     app.use(express.json())
     app.use(cookieParser())
+    app.use(csrf())
     app.use('/', router)
     app.use(errorHandler)
   })

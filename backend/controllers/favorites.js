@@ -1,10 +1,14 @@
-const router = require('express').Router()
-const { Favorite, User, Material } = require('../models/index')
-const CustomError = require('../utils/customError')
-const authenticateToken = require('../middlewares/authMiddleware')
+import { Router } from 'express'
+import { Favorite, User, Material } from '../models/index.js'
+import CustomError from '../utils/customError.js'
+import authenticateToken from '../middlewares/authMiddleware.js'
+import routeLimiter from '../utils/routeLimiter.js'
+
+const router = Router()
 
 router.post(
   '/:userId/:materialId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId, materialId } = req.params
@@ -17,18 +21,15 @@ router.post(
         throw new CustomError('User or material not found', 404)
       }
 
-      const existingFavorites = await Favorite.findOne({
+      const existingFavorite = await Favorite.findOne({
         where: { user_id: userId, material_id: materialId },
       })
 
-      if (existingFavorites) {
+      if (existingFavorite) {
         throw new CustomError('Material is already in favorites', 400)
       }
 
-      await Favorite.create({
-        user_id: userId,
-        material_id: materialId,
-      })
+      await Favorite.create({ user_id: userId, material_id: materialId })
 
       const materialDetails = {
         id: material.id,
@@ -46,6 +47,7 @@ router.post(
 
 router.delete(
   '/:userId/:materialId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId, materialId } = req.params
@@ -56,7 +58,7 @@ router.delete(
       })
 
       if (!favorite) {
-        throw new CustomError('Favorite not found', 400)
+        throw new CustomError('Favorite not found', 404)
       }
 
       await favorite.destroy()
@@ -70,6 +72,7 @@ router.delete(
 
 router.get(
   '/:userId',
+  routeLimiter,
   authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     const { userId } = req.params
@@ -92,11 +95,11 @@ router.get(
         ],
       })
 
-      const materialDetails = favorites.map((favorite) => ({
-        id: favorite.Material.id,
-        name: favorite.Material.name,
-        is_url: favorite.Material.is_url,
-        url: favorite.Material.url,
+      const materialDetails = favorites.map((fav) => ({
+        id: fav.Material.id,
+        name: fav.Material.name,
+        is_url: fav.Material.is_url,
+        url: fav.Material.url,
       }))
 
       return res.status(200).json(materialDetails)
@@ -106,4 +109,4 @@ router.get(
   }
 )
 
-module.exports = router
+export default router

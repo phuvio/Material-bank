@@ -7,46 +7,61 @@ import Header from './pages/Header'
 import useNotification from './utils/useNotification'
 import LoginForm from './pages/LoginForm'
 import loginService from './services/login'
+import NotFoundPage from './pages/NotFoundPage'
+import decodeToken from './utils/decode'
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('accessToken') !== null
   })
+  const [decodedToken, setDecodedToken] = useState({})
 
   const { message, type, showNotification } = useNotification()
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken')
-    if (token) {
+    const refreshToken = async () => {
+      try {
+        const newAccessToken = await loginService.refreshToken()
+
+        if (newAccessToken) {
+          localStorage.setItem('accessToken', newAccessToken)
+
+          setIsLoggedIn(true)
+          const tokenData = decodeToken(newAccessToken)
+
+          setDecodedToken(tokenData)
+        } else {
+          logout()
+        }
+      } catch (error) {
+        console.error('Error refreshing token:', error)
+        logout()
+      }
+    }
+
+    const storedToken = localStorage.getItem('accessToken')
+    if (storedToken) {
+      setIsLoggedIn(true)
+      setDecodedToken(decodeToken(storedToken))
       refreshToken()
     }
   }, [])
 
-  const refreshToken = async () => {
-    try {
-      const newAccessToken = await loginService.refreshToken()
-      if (newAccessToken) {
-        localStorage.setItem('accessToken', newAccessToken)
-      } else {
-        logout()
-      }
-    } catch (error) {
-      console.log('Error refreshing token:', error)
-      logout()
-    }
-  }
-
-  const onLoginSuccess = (accessToken) => {
-    localStorage.setItem('accessToken', accessToken)
+  const onLoginSuccess = (newAccessToken) => {
+    localStorage.setItem('accessToken', newAccessToken)
     setIsLoggedIn(true)
-    navigate('/')
+
+    const tokenData = decodeToken(newAccessToken)
+    setDecodedToken(tokenData)
+
+    navigate('/materiaalit')
   }
 
   const logout = () => {
     localStorage.clear()
-    setIsLoggedIn(false)
+    if (isLoggedIn) setIsLoggedIn(false)
     navigate('/')
   }
 
@@ -72,6 +87,7 @@ const App = () => {
                     path={path}
                     element={
                       <PrivateRoute
+                        token={decodedToken}
                         element={
                           <Element showNotification={showNotification} />
                         }
@@ -87,6 +103,7 @@ const App = () => {
                   />
                 )
             )}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>
       ) : (

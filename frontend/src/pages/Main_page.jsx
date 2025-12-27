@@ -13,6 +13,8 @@ const Main_page = ({ showNotification }) => {
   const [filter, setFilter] = useState('')
   const [materials, setMaterials] = useState([])
   const [favorites, setFavorites] = useState([])
+  const [materialsLoading, setMaterialsLoading] = useState(false)
+  const [favoritesLoading, setFavoritesLoading] = useState(false)
 
   const { tags, selectedTags, toggleTags } = selectTags()
 
@@ -20,7 +22,8 @@ const Main_page = ({ showNotification }) => {
     const tagsIds = material.Tags ? material.Tags.map((tag) => tag.id) : []
     const matchesText =
       filter.length === 0 ||
-      material.name.toLowerCase().includes(filter.toLocaleLowerCase())
+      material.name.toLowerCase().includes(filter.toLocaleLowerCase()) ||
+      material.description.toLowerCase().includes(filter.toLocaleLowerCase())
     const matchesTags =
       selectedTags.length === 0 ||
       (tagsIds && selectedTags.every((tagId) => tagsIds.includes(tagId)))
@@ -29,63 +32,77 @@ const Main_page = ({ showNotification }) => {
   })
 
   useEffect(() => {
-    materialService
-      .getAll()
-      .then((initialMaterials) => {
+    const fetchMaterials = async () => {
+      setMaterialsLoading(true)
+      try {
+        const initialMaterials = await materialService.getAll()
         const sortedMaterials = initialMaterials.sort((a, b) =>
-          a.name > b.name ? 1 : -1
+          a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
         )
         setMaterials(sortedMaterials)
-      })
-      .catch((error) => {
-        console.log('Error fetching data:', error)
+      } catch (error) {
+        console.error('Error fetching data:', error)
         showNotification('Virhe haettaessa materiaaleja.', 'error', 3000)
-      })
+      } finally {
+        setMaterialsLoading(false)
+      }
+    }
+    fetchMaterials()
   }, [])
 
   useEffect(() => {
-    favoriteService
-      .get(decodeToken().user_id)
-      .then((favorites) => {
+    const fetchFavorites = async () => {
+      setFavoritesLoading(true)
+      try {
+        const decoded = await decodeToken()
+
+        if (!decoded?.user_id) {
+          throw new Error('User ID not found in token')
+        }
+
+        const favorites = await favoriteService.get(decoded.user_id)
         const sortedFavorites = Array.isArray(favorites)
-          ? favorites.sort((a, b) => (a.name > b.name ? 1 : -1))
+          ? favorites.sort((a, b) =>
+              a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            )
           : []
+
         setFavorites(sortedFavorites)
-      })
-      .catch((error) => {
-        console.log('Error fetching favorites:', error)
+      } catch (error) {
+        console.error('Error fetching favorites:', error)
         showNotification('Virhe haettaessa suosikkeja', 'error', 3000)
-      })
+      } finally {
+        setFavoritesLoading(false)
+      }
+    }
+
+    fetchFavorites()
   }, [])
 
-  const handleFavorites = (materialId) => {
-    const isAlreadyFavorite = isFavorite(materialId)
+  const handleFavorites = async (materialId) => {
+    try {
+      const decoded = await decodeToken()
+      if (!decoded?.user_id) {
+        throw new Error('User ID not found in token')
+      }
 
-    if (isAlreadyFavorite) {
-      favoriteService
-        .remove(decodeToken().user_id, materialId)
-        .then(() => {
-          const filteredFavorites = favorites.filter(
-            (fav) => fav.id !== materialId
-          )
-          setFavorites(filteredFavorites)
-        })
-        .catch((error) => {
-          console.log('Error removing favorite', error)
-          showNotification('Virhe poistettaessa suosikkia', 'error', 3000)
-        })
-    } else {
-      favoriteService
-        .create(decodeToken().user_id, materialId)
-        .then((newFavorite) => {
-          setFavorites((prevFavorites) => {
-            return [...prevFavorites, newFavorite]
-          })
-        })
-        .catch((error) => {
-          console.log('Error adding favorite', error)
-          showNotification('Virhe suosikin lisäämisessä', 'error', 3000)
-        })
+      const isAlreadyFavorite = isFavorite(materialId)
+
+      if (isAlreadyFavorite) {
+        await favoriteService.remove(decoded.user_id, materialId)
+        setFavorites((prevFavorites) =>
+          prevFavorites.filter((fav) => fav.id !== materialId)
+        )
+      } else {
+        const newFavorite = await favoriteService.create(
+          decoded.user_id,
+          materialId
+        )
+        setFavorites((prevFavorites) => [...prevFavorites, newFavorite])
+      }
+    } catch (error) {
+      console.error('Error handling favorites:', error)
+      showNotification('Virhe suosikin käsittelyssä', 'error', 3000)
     }
   }
 
@@ -112,13 +129,14 @@ const Main_page = ({ showNotification }) => {
         </p>
         <div className="favorites">
           <h2>Omat suosikit</h2>
-          {favorites.length === 0 && (
+          {favoritesLoading ? (
+            <p>Ladataan suosikkeja...</p>
+          ) : favorites.length === 0 ? (
             <div>
               Voit lisätä omia suosikkeja klikkaamalla materiaalin vasemmalla
               puolella olevaa kuvaketta.
             </div>
-          )}
-          {favorites.length > 0 &&
+          ) : (
             favorites.map((favorite) => (
               <li key={favorite.name}>
                 <button
@@ -129,43 +147,48 @@ const Main_page = ({ showNotification }) => {
                 {!favorite.is_url && <LoadMaterialButton material={favorite} />}
                 {favorite.name}
               </li>
-            ))}
+            ))
+          )}
         </div>
       </div>
       <div className="column right">
         <h1>Materiaalit</h1>
-        <ul>
-          {materialsToShow.map(
-            (material) =>
-              material.visible && (
-                <li key={material.id}>
-                  <button
-                    className={`favoriteButton ${isFavorite(material.id) ? 'selected' : ''}`}
-                    onClick={() => handleFavorites(material.id)}
-                  ></button>
-                  {material.is_url && <LoadLinkButton url={material.url} />}
-                  {!material.is_url && (
-                    <LoadMaterialButton material={material} />
-                  )}
-                  <Link to={`/materiaalit/${material.id}`}>
-                    {material.name}
-                  </Link>
-                  {material.Tags &&
-                    material.Tags.slice()
-                      .sort((a, b) => (a.name > b.name ? 1 : -1))
-                      .map((tag) => (
-                        <span
-                          key={tag.id}
-                          className="tag"
-                          style={{ backgroundColor: tag.color }}
-                        >
-                          {tag.name}
-                        </span>
-                      ))}
-                </li>
-              )
-          )}
-        </ul>
+        {materialsLoading ? (
+          <p>Ladataan materiaaleja...</p>
+        ) : (
+          <ul>
+            {materialsToShow.map(
+              (material) =>
+                material.visible && (
+                  <li key={material.id}>
+                    <button
+                      className={`favoriteButton ${isFavorite(material.id) ? 'selected' : ''}`}
+                      onClick={() => handleFavorites(material.id)}
+                    ></button>
+                    {material.is_url && <LoadLinkButton url={material.url} />}
+                    {!material.is_url && (
+                      <LoadMaterialButton material={material} />
+                    )}
+                    <Link to={`/materiaalit/${material.id}`}>
+                      {material.name}
+                    </Link>
+                    {material.Tags &&
+                      material.Tags.slice()
+                        .sort((a, b) => (a.name > b.name ? 1 : -1))
+                        .map((tag) => (
+                          <span
+                            key={tag.id}
+                            className="tag"
+                            style={{ backgroundColor: tag.color }}
+                          >
+                            {tag.name}
+                          </span>
+                        ))}
+                  </li>
+                )
+            )}
+          </ul>
+        )}
       </div>
     </div>
   )

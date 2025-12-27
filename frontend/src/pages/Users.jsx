@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import userService from '../services/users'
 import Filter from '../components/Filter'
+import userRoles from '../config/userRoles'
 
-const Users = () => {
+const Users = ({ showNotification }) => {
   const [users, setUsers] = useState([])
   const [filter, setFilter] = useState('')
+  const [selectedRole, setSelectedRole] = useState(null)
+  const roles = userRoles.slice(1, 4)
 
   useEffect(() => {
     userService
@@ -14,18 +17,27 @@ const Users = () => {
         setUsers(returnedUsers)
       })
       .catch((error) => {
-        console.log('Error fetching data:', error)
+        console.error('Error fetching data:', error)
+        showNotification('Virhe haettaessa käyttäjiä.', 'error', 3000)
       })
   }, [])
 
-  const usersToShow =
-    filter.length === 0
-      ? users
-      : users.filter((u) =>
-          (u.first_name + u.last_name)
-            .toLowerCase()
-            .includes(filter.toLocaleLowerCase())
-        )
+  const usersToShow = users.filter((user) => {
+    const matchesRole = selectedRole ? user.role === selectedRole : true
+    const matchesfilter =
+      filter.length === 0
+        ? users
+        : users.filter((u) =>
+            (u.first_name + u.last_name)
+              .toLowerCase()
+              .includes(filter.toLocaleLowerCase())
+          )
+    return matchesRole && matchesfilter.includes(user)
+  })
+
+  const toggleRole = useCallback((role) => {
+    setSelectedRole(role[0])
+  }, [])
 
   return (
     <div className="container">
@@ -35,6 +47,34 @@ const Users = () => {
           value={filter}
           handleChange={({ target }) => setFilter(target.value)}
         />
+        <div>
+          {roles.map((role) => (
+            <div key={role[0]} className="role-info">
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  id={role[0]}
+                  checked={selectedRole === role[0]}
+                  onChange={() => toggleRole(role)}
+                />
+                <span className="role-tag" style={{ fontSize: '14px' }}>
+                  {role[1]}
+                </span>
+              </label>
+            </div>
+          ))}
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              setSelectedRole(null)
+              setFilter('')
+            }}
+          >
+            Tyhjennä valinnat
+          </button>
+        </div>
         <p>
           <Link to={'/uusikayttaja'}>Luo uusi käyttäjä</Link>
         </p>
@@ -55,7 +95,11 @@ const Users = () => {
                   </span>
                   <span>{user.username}</span>
                   <span>
-                    {user.role === 'admin' ? 'pääkäyttäjä' : 'peruskäyttäjä'}
+                    {user.role === 'admin'
+                      ? 'pääkäyttäjä'
+                      : user.role === 'basic'
+                        ? 'peruskäyttäjä'
+                        : 'moderaattori'}
                   </span>
                 </div>
               </li>

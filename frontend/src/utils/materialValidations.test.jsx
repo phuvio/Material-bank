@@ -29,7 +29,7 @@ describe('validateMaterial', () => {
     }
     const result = await validateMaterial(data)
     expect(result.name).toBe(
-      'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä tai merkkejä / + -'
     )
   })
 
@@ -132,7 +132,7 @@ describe('validateMaterialUpdate', () => {
     const data = { name: 'Invalid@Name!', description: 'Test description' }
     const result = await validateMaterialUpdate(data)
     expect(result.name).toBe(
-      'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä tai merkkejä / + -'
     )
   })
 

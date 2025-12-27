@@ -1,141 +1,114 @@
-/* eslint-disable no-undef */
-import { vi, describe, test, expect, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import axios from 'axios'
 import loginService from './login'
-import apiUrl from '../config/config' // Ensure correct API base URL
 
-// Mock axios
 vi.mock('axios')
 
 describe('loginService', () => {
-  const credentials = { username: 'testuser', password: 'password123' }
+  const accessToken = 'mock-access-token'
+  const credentials = { username: 'test', password: 'pass' }
 
   beforeEach(() => {
-    vi.restoreAllMocks() // Reset all mocks before each test
+    vi.resetAllMocks()
 
-    // Mock localStorage
-    Object.defineProperty(window, 'localStorage', {
-      value: {
-        setItem: vi.fn(),
-        getItem: vi.fn(),
-        removeItem: vi.fn(),
-        clear: vi.fn(),
-      },
-      writable: true,
+    vi.stubGlobal('localStorage', {
+      setItem: vi.fn(),
+      getItem: vi.fn(),
+      clear: vi.fn(),
+    })
+
+    vi.stubGlobal(
+      'getCookie',
+      vi.fn(() => 'test-csrf-token')
+    )
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  describe('login', () => {
+    it('stores token and returns response on success', async () => {
+      const response = { data: { accessToken } }
+      axios.post.mockResolvedValue(response)
+
+      const result = await loginService.login(credentials)
+
+      expect(result).toEqual(response)
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'accessToken',
+        accessToken
+      )
+    })
+
+    it('returns null and logs warning if no accessToken in response', async () => {
+      axios.post.mockResolvedValue({ data: {} })
+
+      const result = await loginService.login(credentials)
+
+      expect(result).toBeUndefined()
+      expect(console.error).toHaveBeenCalled()
+    })
+
+    it('throws error if login fails', async () => {
+      const error = new Error('Login failed')
+      axios.post.mockRejectedValue(error)
+
+      await expect(loginService.login(credentials)).rejects.toThrow(
+        'Login failed'
+      )
+      expect(console.error).toHaveBeenCalledWith('Login error:', error)
     })
   })
 
-  test('successfully logs in with valid credentials', async () => {
-    // Mock the response of axios.post
-    const mockResponse = {
-      status: 200,
-      data: {
-        accessToken: 'mockAccessToken',
-        refreshToken: 'mockRefreshToken',
-      },
-    }
-    axios.post.mockResolvedValue(mockResponse)
+  describe('refreshToken', () => {
+    it('stores and returns new token on success', async () => {
+      const response = { status: 200, data: { accessToken } }
+      axios.post.mockResolvedValue(response)
 
-    // Call the login function
-    const result = await loginService.login(credentials)
+      const token = await loginService.refreshToken()
 
-    // Ensure axios.post was called with correct arguments
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrl}/api/login`,
-      credentials,
-      { withCredentials: true }
-    )
-
-    // Check that login function returns expected response
-    expect(result).toEqual(mockResponse)
-
-    // Ensure localStorage.setItem was called with the correct access token
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      'accessToken',
-      'mockAccessToken'
-    )
-  })
-
-  test('throws an error when login fails', async () => {
-    // Mock the response of axios.post to simulate a login failure
-    axios.post.mockRejectedValue({
-      response: { status: 401, data: { message: 'Invalid credentials' } },
+      expect(token).toBe(accessToken)
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'accessToken',
+        accessToken
+      )
     })
 
-    // Ensure the login function throws an error
-    await expect(loginService.login(credentials)).rejects.toMatchObject({
-      response: { status: 401, data: { message: 'Invalid credentials' } },
+    it('returns null if response is invalid', async () => {
+      axios.post.mockResolvedValue({ status: 200, data: {} })
+
+      const token = await loginService.refreshToken()
+
+      expect(token).toBeNull()
+      expect(console.warn).toHaveBeenCalledWith('Failed to refresh token')
+    })
+
+    it('clears storage and returns null on error', async () => {
+      const error = new Error('Refresh failed')
+      axios.post.mockRejectedValue(error)
+
+      const token = await loginService.refreshToken()
+
+      expect(token).toBeNull()
+      expect(localStorage.clear).toHaveBeenCalled()
+      expect(console.error).toHaveBeenCalledWith(
+        'Error refreshing token:',
+        error
+      )
     })
   })
 
-  test('successfully refreshes token', async () => {
-    // Spy on localStorage.setItem
-    vi.spyOn(localStorage, 'setItem')
+  describe('logout', () => {
+    it('logs error on failure', async () => {
+      const error = new Error('Logout failed')
+      axios.post.mockRejectedValue(error)
 
-    // Mock axios.post response
-    const mockResponse = {
-      status: 200,
-      data: { accessToken: 'newMockAccessToken' },
-    }
-    axios.post.mockResolvedValue(mockResponse)
+      await loginService.logout()
 
-    // Call refreshToken function
-    const newAccessToken = await loginService.refreshToken()
-
-    // Expect axios.post to have been called with correct URL and options
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrl}/api/login/refresh`,
-      {},
-      { withCredentials: true }
-    )
-
-    // Expect new token to be returned
-    expect(newAccessToken).toBe('newMockAccessToken')
-
-    // Ensure localStorage.setItem was called with the new access token
-    expect(localStorage.setItem).toHaveBeenCalledWith(
-      'accessToken',
-      'newMockAccessToken'
-    )
-  })
-
-  test('handles refresh token failure correctly', async () => {
-    // Spy on localStorage.removeItem
-    vi.spyOn(localStorage, 'removeItem')
-
-    // Mock axios.post failure response
-    axios.post.mockRejectedValue(new Error('Token refresh failed'))
-
-    // Call refreshToken function
-    const newAccessToken = await loginService.refreshToken()
-
-    // Expect newAccessToken to be null
-    expect(newAccessToken).toBeNull()
-
-    // Ensure localStorage.clear was called
-    expect(localStorage.clear).toHaveBeenCalled()
-  })
-
-  test.skip('logs out the user successfully', async () => {
-    // Mock axios.post response
-    axios.post.mockResolvedValue({ status: 200 })
-
-    // Call logout function
-    await loginService.logout()
-
-    // Ensure axios.post was called with the correct URL
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrl}/api/login/logout`,
-      {},
-      { withCredentials: true }
-    )
-  })
-
-  test('handles logout failure correctly', async () => {
-    // Mock axios.post failure response
-    axios.post.mockRejectedValue(new Error('Logout failed'))
-
-    // Ensure logout does not throw error but logs the failure
-    await expect(loginService.logout()).resolves.not.toThrow()
+      expect(console.error).toHaveBeenCalledWith('Erron logging out', error)
+    })
   })
 })

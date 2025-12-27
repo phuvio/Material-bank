@@ -1,27 +1,14 @@
-import axios from 'axios'
-import apiUrl from '../config/config'
-import getAuthHeaders from '../utils/getAuthHeaders'
+import api from './api'
 
-const get = id => {
-  const request = axios.get(`${apiUrl}/api/favorites/${id}`,
-    { headers: getAuthHeaders() }
-  )
-  return request.then(response => response.data)
-}
+const get = id => api.get(`/api/favorites/${id}`)
+  .then(response => response.data)
 
-const create = (userId, materialId) => {
-  const request = axios.post(`${apiUrl}/api/favorites/${userId}/${materialId}`,
-    {},
-    { headers: getAuthHeaders() }
+const create = (userId, materialId) => api.post(`/api/favorites/${userId}/${materialId}`,
+    {}
   )
-  return request.then(response => response.data)
-}
+  .then(response => response.data)
 
-const remove = (userId, materialId) => {
-  const request = axios.delete(`${apiUrl}/api/favorites/${userId}/${materialId}`,
-    { headers: getAuthHeaders() }
-  )
-  return request.then(response => response.data)
-}
+const remove = (userId, materialId) => api.delete(`/api/favorites/${userId}/${materialId}`)
+  .then(response => response.data)
 
 export default { get, create, remove }

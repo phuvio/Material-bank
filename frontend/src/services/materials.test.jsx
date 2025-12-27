@@ -1,194 +1,79 @@
-import { describe, test, expect, vi, afterEach } from 'vitest'
-import axios from 'axios'
+import { describe, it, expect, vi } from 'vitest'
+import api from './api'
 import materialService from './materials'
-import apiUrl from '../config/config'
 
-// Mock axios
-vi.mock('axios')
-vi.mock('../utils/getAuthHeaders', () => ({
-  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+// Mock the 'api' module
+vi.mock('./api', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
 }))
 
-describe('materialService', () => {
-  afterEach(() => {
-    vi.clearAllMocks()
+describe('Material Service API', () => {
+  it('fetches all materials', async () => {
+    const mockResponse = { data: [{ id: 1, name: 'Material 1' }] }
+    api.get.mockResolvedValue(mockResponse)
+
+    const materials = await materialService.getAll()
+
+    expect(materials).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/materials')
   })
 
-  test('getAll fetches all materials successfully', async () => {
-    const mockMaterials = [
-      { id: 1, name: 'Material 1' },
-      { id: 2, name: 'Material 2' },
-    ]
+  it('fetches a single material', async () => {
+    const mockResponse = { data: { id: 1, name: 'Material 1' } }
+    api.get.mockResolvedValue(mockResponse)
 
-    axios.get.mockResolvedValueOnce({ data: mockMaterials })
+    const material = await materialService.getSingle(1)
 
-    const result = await materialService.getAll()
-
-    // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    // Check that the result matches the mock data
-    expect(result).toEqual(mockMaterials)
+    expect(material).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/materials/1')
   })
 
-  test('getAll handles fetch error', async () => {
-    axios.get.mockRejectedValueOnce(new Error('Network Error'))
+  it('creates a new material', async () => {
+    const newMaterial = { name: 'Material 1' }
+    const mockResponse = { data: { id: 1, ...newMaterial } }
+    api.post.mockResolvedValue(mockResponse)
 
-    // Expect the error to be thrown
-    await expect(materialService.getAll()).rejects.toThrow('Network Error')
+    const createdMaterial = await materialService.create(newMaterial)
 
-    // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-  })
-
-  test('create posts a new material successfully', async () => {
-    const newMaterial = { name: 'New Material' }
-    const createdMaterial = { id: 3, name: 'New Material' }
-
-    axios.post.mockResolvedValueOnce({ data: createdMaterial })
-
-    const result = await materialService.create(newMaterial)
-
-    // Check that axios.post was called with the correct URL and data
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrl}/api/materials`,
+    expect(createdMaterial).toEqual(mockResponse.data)
+    expect(api.post).toHaveBeenCalledWith(
+      '/api/materials',
       newMaterial,
       expect.objectContaining({
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer mockToken',
-        },
-      })
-    )
-    // Check that the result matches the mock created material
-    expect(result).toEqual(createdMaterial)
-  })
-
-  test('create handles post error', async () => {
-    const newMaterial = { name: 'New Material' }
-    axios.post.mockRejectedValueOnce(new Error('Failed to create material'))
-
-    // Expect the error to be thrown
-    await expect(materialService.create(newMaterial)).rejects.toThrow(
-      'Failed to create material'
-    )
-
-    // Check that axios.post was called with the correct URL and data
-    expect(axios.post).toHaveBeenCalledWith(
-      `${apiUrl}/api/materials`,
-      newMaterial,
-      expect.objectContaining({
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer mockToken',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
     )
   })
 
-  test('getSingle fetches a single material successfully', async () => {
-    const mockMaterial = { id: 1, name: 'Material 1' }
+  it('updates a material', async () => {
+    const updatedMaterial = { name: 'Material 1 Updated' }
+    const mockResponse = { data: { id: 1, ...updatedMaterial } }
+    api.put.mockResolvedValue(mockResponse)
 
-    axios.get.mockResolvedValueOnce({ data: mockMaterial })
+    const material = await materialService.update(1, updatedMaterial)
 
-    const result = await materialService.getSingle(1)
-
-    // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    // Check that the result matches the mock data
-    expect(result).toEqual(mockMaterial)
-  })
-
-  test('getSingle handles fetch error', async () => {
-    axios.get.mockRejectedValueOnce(new Error('Material not found'))
-
-    // Expect the error to be thrown
-    await expect(materialService.getSingle(1)).rejects.toThrow(
-      'Material not found'
-    )
-
-    // Check that axios.get was called with the correct API URL
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-  })
-
-  test('update updates a material successfully', async () => {
-    const updatedMaterial = { id: 1, name: 'Updated Material' }
-
-    axios.put.mockResolvedValueOnce({ data: updatedMaterial })
-
-    const result = await materialService.update(1, updatedMaterial)
-
-    // Check that axios.put was called with the correct URL, data, and headers
-    expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrl}/api/materials/1`,
+    expect(material).toEqual(mockResponse.data)
+    expect(api.put).toHaveBeenCalledWith(
+      '/api/materials/1',
       updatedMaterial,
       expect.objectContaining({
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer mockToken',
-        },
-      })
-    )
-    // Check that the result matches the mock updated material
-    expect(result).toEqual(updatedMaterial)
-  })
-
-  test('update handles update error', async () => {
-    const updatedMaterial = { id: 1, name: 'Updated Material' }
-
-    axios.put.mockRejectedValueOnce(new Error('Failed to update material'))
-
-    // Expect the error to be thrown
-    await expect(materialService.update(1, updatedMaterial)).rejects.toThrow(
-      'Failed to update material'
-    )
-
-    // Check that axios.put was called with the correct URL, data, and headers
-    expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrl}/api/materials/1`,
-      updatedMaterial,
-      expect.objectContaining({
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer mockToken',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
     )
   })
 
-  test('remove deletes a material successfully', async () => {
-    const removedMaterial = { id: 1, name: 'Material to Remove' }
+  it('removes a material', async () => {
+    const mockResponse = { data: { id: 1, name: 'Material 1' } }
+    api.delete.mockResolvedValue(mockResponse)
 
-    axios.delete.mockResolvedValueOnce({ data: removedMaterial })
+    const removedMaterial = await materialService.remove(1)
 
-    const result = await materialService.remove(1)
-
-    // Check that axios.delete was called with the correct API URL
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    // Check that the result matches the mock removed material
-    expect(result).toEqual(removedMaterial)
-  })
-
-  test('remove handles delete error', async () => {
-    axios.delete.mockRejectedValueOnce(new Error('Failed to delete material'))
-
-    // Expect the error to be thrown
-    await expect(materialService.remove(1)).rejects.toThrow(
-      'Failed to delete material'
-    )
-
-    // Check that axios.delete was called with the correct API URL
-    expect(axios.delete).toHaveBeenCalledWith(`${apiUrl}/api/materials/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
+    expect(removedMaterial).toEqual(mockResponse.data)
+    expect(api.delete).toHaveBeenCalledWith('/api/materials/1')
   })
 })

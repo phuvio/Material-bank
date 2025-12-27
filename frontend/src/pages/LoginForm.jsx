@@ -4,9 +4,11 @@ import loginService from '../services/login'
 const Login = ({ onLoginSuccess, showNotification }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = async (event) => {
     event.preventDefault()
+    setLoading(true)
 
     try {
       const response = await loginService.login({
@@ -14,24 +16,19 @@ const Login = ({ onLoginSuccess, showNotification }) => {
         password,
       })
 
-      if (response.status === 200) {
+      if (response && response.status === 200 && response.data?.accessToken) {
         const { accessToken } = response.data
 
         window.localStorage.setItem('accessToken', accessToken)
         onLoginSuccess(accessToken)
       } else {
-        console.log('Error logging in:', response)
+        console.error('Error logging in:', response)
         showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
-        setUsername('')
-        setPassword('')
       }
-    } catch (exception) {
-      if (exception.response && exception.response.status === 401) {
-        showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
-      } else {
-        showNotification('Virhe kirjautumisessa', 'error', 3000)
-      }
-
+    } catch {
+      showNotification('Väärä käyttäjätunnus tai salasana', 'error', 3000)
+    } finally {
+      setLoading(false)
       setUsername('')
       setPassword('')
     }
@@ -40,6 +37,9 @@ const Login = ({ onLoginSuccess, showNotification }) => {
   return (
     <div className="container">
       <h1>Sisäänkirjautuminen:</h1>
+
+      {loading && <p>Yhdistetään palvelimeen...</p>}
+
       <form onSubmit={handleLogin}>
         <div className="row">
           <div className="col-25">

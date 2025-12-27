@@ -1,11 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import Users from './Users'
 import { vi, describe, test, expect } from 'vitest'
 import { BrowserRouter as Router } from 'react-router-dom'
 import userService from '../services/users'
 
-// Mock axios and userService
-vi.mock('axios')
 vi.mock('../services/users', () => ({
   default: {
     getAll: vi.fn(),
@@ -14,7 +12,6 @@ vi.mock('../services/users', () => ({
 
 describe('Users Component', () => {
   test('renders users list when data is fetched successfully', async () => {
-    // Mock API response
     const mockUsers = [
       {
         id: 1,
@@ -35,16 +32,14 @@ describe('Users Component', () => {
 
     render(
       <Router>
-        <Users />
+        <Users showNotification={vi.fn()} />
       </Router>
     )
 
-    // Wait for the component to update after the API call
     await waitFor(() => {
       expect(userService.getAll).toHaveBeenCalled()
     })
 
-    // Check if the user data is rendered
     expect(screen.getByText(/John Doe/)).toBeInTheDocument()
     expect(screen.getByText(/johndoe/)).toBeInTheDocument()
     expect(screen.getByText(/pääkäyttäjä/)).toBeInTheDocument()
@@ -55,22 +50,103 @@ describe('Users Component', () => {
   })
 
   test('displays error message when API request fails', async () => {
-    // Mock API error
     userService.getAll.mockRejectedValueOnce(new Error('Error fetching data'))
+    const mockShowNotification = vi.fn()
 
     render(
       <Router>
-        <Users />
+        <Users showNotification={mockShowNotification} />
       </Router>
     )
 
-    // Wait for the component to attempt the API call
     await waitFor(() => {
       expect(userService.getAll).toHaveBeenCalled()
     })
 
-    // Since the users list is empty, there should be no user data rendered
+    expect(mockShowNotification).toHaveBeenCalledWith(
+      'Virhe haettaessa käyttäjiä.',
+      'error',
+      3000
+    )
+
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument()
     expect(screen.queryByText('Jane Doe')).not.toBeInTheDocument()
+  })
+
+  test('filters users by selected role (radio button)', async () => {
+    const mockUsers = [
+      {
+        id: 1,
+        first_name: 'John',
+        last_name: 'Doe',
+        username: 'johndoe',
+        role: 'admin',
+      },
+      {
+        id: 2,
+        first_name: 'Jane',
+        last_name: 'Doe',
+        username: 'janedoe',
+        role: 'basic',
+      },
+    ]
+    userService.getAll.mockResolvedValueOnce(mockUsers)
+
+    render(
+      <Router>
+        <Users showNotification={vi.fn()} />
+      </Router>
+    )
+
+    await waitFor(() => screen.getByText(/John Doe/))
+
+    // Click "peruskäyttäjä" radio button
+    const basicRadio = screen.getByLabelText(/peruskäyttäjä/i)
+    fireEvent.click(basicRadio)
+
+    expect(screen.queryByText(/John Doe/)).not.toBeInTheDocument()
+    expect(screen.getByText(/Jane Doe/)).toBeInTheDocument()
+  })
+
+  test('clears filters and role selection when "Tyhjennä valinnat" button is clicked', async () => {
+    const mockUsers = [
+      {
+        id: 1,
+        first_name: 'John',
+        last_name: 'Doe',
+        username: 'johndoe',
+        role: 'admin',
+      },
+      {
+        id: 2,
+        first_name: 'Jane',
+        last_name: 'Doe',
+        username: 'janedoe',
+        role: 'basic',
+      },
+    ]
+    userService.getAll.mockResolvedValueOnce(mockUsers)
+
+    render(
+      <Router>
+        <Users showNotification={vi.fn()} />
+      </Router>
+    )
+
+    await waitFor(() => screen.getByText(/John Doe/))
+
+    // Apply a role filter
+    const adminRadio = screen.getByLabelText(/pääkäyttäjä/i)
+    fireEvent.click(adminRadio)
+
+    expect(screen.getByText(/John Doe/)).toBeInTheDocument()
+    expect(screen.queryByText(/Jane Doe/)).not.toBeInTheDocument()
+
+    // Clear selections
+    fireEvent.click(screen.getByText(/Tyhjennä valinnat/i))
+
+    // Both users should reappear
+    expect(screen.getByText(/John Doe/)).toBeInTheDocument()
+    expect(screen.getByText(/Jane Doe/)).toBeInTheDocument()
   })
 })

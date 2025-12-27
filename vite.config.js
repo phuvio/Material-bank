@@ -27,5 +27,11 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './testSetup.js',
+    coverage: {
+      provider: 'v8', // or 'istanbul' for detailed reports
+      reporter: ['text', 'lcov'],
+      outputDirectory: './frontend/coverage',
+      exclude: ['**/src/main.jsx', '**/src/App.jsx', '**/dist/**', '**/utils/cookieHelper.jsx'],
+    },
   },
 })

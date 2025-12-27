@@ -79,7 +79,7 @@ const ChangePassword = ({ showNotification }) => {
         setUser(returnedUsed)
       })
       .catch((error) => {
-        console.log('Error fetching user', error)
+        console.error('Error fetching user', error)
       })
   }, [])
 
@@ -91,27 +91,9 @@ const ChangePassword = ({ showNotification }) => {
         old_password: formData.old_password,
         new_password: formData.new_password,
       })
-
       if (response.status === 200) {
         showNotification('Salasana päivitetty onnistuneesti', 'message', 2000)
-      }
-      if (response.data?.error === 'Incorrect old password') {
-        showNotification('Nykyinen salasana ei täsmää', 'error', 3000)
-      } else if (
-        response.data?.error ===
-        'New password cannot be the same as the old password'
-      ) {
-        showNotification(
-          'Uusi salasana ei voi olla nykyinen salasana',
-          'error',
-          3000
-        )
-      } else {
-        showNotification(
-          'Tuntematon virhe salasanan päivittämisessä',
-          'error',
-          3000
-        )
+        navigate('/materiaalit')
       }
       setFormData({
         old_password: '',
@@ -123,7 +105,7 @@ const ChangePassword = ({ showNotification }) => {
         newPasswordAgain: 0,
       })
     } catch (error) {
-      console.log('Error updating password', error)
+      console.error('Error updating password', error)
       if (error.response && error.response.status === 400) {
         if (error.response.data.error === 'Incorrect old password') {
           showNotification('Nykyinen salasana ei täsmää', 'error', 3000)

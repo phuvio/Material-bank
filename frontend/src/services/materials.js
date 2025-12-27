@@ -1,45 +1,26 @@
-import axios from 'axios'
-import apiUrl from '../config/config'
-import getAuthHeaders from '../utils/getAuthHeaders'
+import api from './api'
 
-const getAll = () => {
-  const request = axios.get(`${apiUrl}/api/materials`,
-    { headers: getAuthHeaders() })
-  return request.then(response => response.data)
-}
+const getAll = () => api.get('/api/materials')
+  .then(response => response.data)
 
-const create = (data) => {
-  const request = axios.post(`${apiUrl}/api/materials`, data, {
+const create = (data) => api.post('/api/materials', data, {
     headers: { 
       'Content-Type': 'multipart/form-data',
-      ...getAuthHeaders(),
     }
   })
-  return request.then(response => response.data)
-}
+  .then(response => response.data)
 
-const getSingle = id => {
-  const request = axios.get(`${apiUrl}/api/materials/${id}`,
-    { headers: getAuthHeaders() }
-  )
-  return request.then(response => response.data)
-}
+const getSingle = id => api.get(`/api/materials/${id}`)
+  .then(response => response.data)
 
-const update = (id, data) => {
-  const request = axios.put(`${apiUrl}/api/materials/${id}`, data, {
+const update = (id, data) => api.put(`/api/materials/${id}`, data, {
     headers: { 
       'Content-Type': 'multipart/form-data',
-      ...getAuthHeaders(),
     }
   })
-  return request.then(response => response.data)
-}
+  .then(response => response.data)
 
-const remove = id => {
-  const request = axios.delete(`${apiUrl}/api/materials/${id}`,
-    { headers: getAuthHeaders() }
-  )
-  return request.then(response => response.data)
-}
+const remove = id => api.delete(`/api/materials/${id}`)
+  .then(response => response.data)
 
 export default { getAll, create, getSingle, update, remove }

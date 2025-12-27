@@ -15,6 +15,7 @@
 - Axios
 - React Router
 - Jwt-decode
+- Dnd-kit
 
 ## Backend
 
@@ -43,3 +44,5 @@
 - Jsdom
 - React testing library
 - Jest-dom
+- SuperTest
+- PlayWright

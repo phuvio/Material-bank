@@ -49,7 +49,7 @@ const NewUser = ({ showNotification }) => {
           setErrors({})
         })
         .catch((error) => {
-          console.log('Error creating user:', error)
+          console.error('Error creating user:', error)
           showNotification('Käyttäjän luonti epäonnistui', 'error', 3000)
         })
     } else {
@@ -120,7 +120,7 @@ const NewUser = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="password"
-              type="password"
+              type="text"
               name="password"
               value={formData.password}
               onChange={handleFormChange}
@@ -148,7 +148,7 @@ const NewUser = ({ showNotification }) => {
               handleFormChange={handleFormChange}
             />
             <p>
-              Peruskäyttäjä voi luoda uusia materiaaleja, muokata materiaalien
+              Peruskäyttäjä voi luoda uusia materiaaleja, vaihtaa materiaalien
               tageja ja muokata tai poistaa itse luomiaan materiaaleja.
             </p>
             <p>Moderaattori voi myös luoda ja muokata tageja.</p>

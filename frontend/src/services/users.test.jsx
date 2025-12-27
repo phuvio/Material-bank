@@ -1,79 +1,82 @@
-import { describe, test, expect, vi, afterEach } from 'vitest'
-import axios from 'axios'
+import { describe, it, expect, vi } from 'vitest'
+import api from './api'
 import userService from './users'
-import apiUrl from '../config/config'
 
-vi.mock('axios')
-vi.mock('../utils/getAuthHeaders', () => ({
-  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+// Mock the 'api' module
+vi.mock('./api', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
 }))
 
-describe('usersService', () => {
-  afterEach(() => {
-    vi.clearAllMocks() // Clear mocks after each test
+describe('User Service API', () => {
+  it('fetches all users', async () => {
+    const mockResponse = { data: [{ id: 1, name: 'John Doe' }] }
+    api.get.mockResolvedValue(mockResponse)
+
+    const users = await userService.getAll()
+
+    expect(users).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/users')
   })
 
-  test('getAll fetches all users successfully', async () => {
-    const mockUsers = [
-      { id: 1, name: 'John Doe' },
-      { id: 2, name: 'Jane Doe' },
-    ]
+  it('fetches a single user', async () => {
+    const mockResponse = { data: { id: 1, name: 'John Doe' } }
+    api.get.mockResolvedValue(mockResponse)
 
-    axios.get.mockResolvedValueOnce({ data: mockUsers })
-    const result = await userService.getAll()
+    const user = await userService.getSingle(1)
 
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual(mockUsers)
+    expect(user).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/users/1')
   })
 
-  test('getAll handles fetch error', async () => {
-    const errorMessage = 'Network Error'
-    axios.get.mockRejectedValueOnce(new Error(errorMessage))
+  it('creates a new user', async () => {
+    const newUser = { name: 'John Doe' }
+    const mockResponse = { data: { id: 1, ...newUser } }
+    api.post.mockResolvedValue(mockResponse)
 
-    await expect(userService.getAll()).rejects.toThrow(errorMessage)
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
+    const createdUser = await userService.create(newUser)
+
+    expect(createdUser).toEqual(mockResponse.data)
+    expect(api.post).toHaveBeenCalledWith('/api/users', newUser)
   })
 
-  test('getSingle fetches a single user successfully', async () => {
-    const mockUser = { id: 1, name: 'John Doe' }
+  it('updates a user', async () => {
+    const updatedUser = { name: 'John Doe Updated' }
+    const mockResponse = { data: { id: 1, ...updatedUser } }
+    api.put.mockResolvedValue(mockResponse)
 
-    axios.get.mockResolvedValueOnce({ data: mockUser })
-    const result = await userService.getSingle(1)
+    const user = await userService.update(1, updatedUser)
 
-    expect(axios.get).toHaveBeenCalledWith(`${apiUrl}/api/users/1`, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual(mockUser)
+    expect(user).toEqual(mockResponse.data)
+    expect(api.put).toHaveBeenCalledWith('/api/users/1', updatedUser)
   })
 
-  test('create posts a new user successfully', async () => {
-    const newUser = { name: 'New User' }
-    const createdUser = { id: 3, name: 'New User' }
+  it('updates a user password', async () => {
+    const password = 'newpassword'
+    const mockResponse2 = { status: 200, data: { id: 1, password } }
+    api.put.mockResolvedValue(mockResponse2)
 
-    axios.post.mockResolvedValueOnce({ data: createdUser })
-    const result = await userService.create(newUser)
+    const { status, data } = await userService.updatePassword(1, password)
 
-    expect(axios.post).toHaveBeenCalledWith(`${apiUrl}/api/users`, newUser, {
-      headers: { Authorization: 'Bearer mockToken' },
-    })
-    expect(result).toEqual(createdUser)
-  })
-
-  test('update puts updated user successfully', async () => {
-    const updatedUser = { id: 1, name: 'Updated User' }
-
-    axios.put.mockResolvedValueOnce({ data: updatedUser })
-    const result = await userService.update(1, updatedUser)
-
-    expect(axios.put).toHaveBeenCalledWith(
-      `${apiUrl}/api/users/1`,
-      updatedUser,
-      { headers: { Authorization: 'Bearer mockToken' } }
+    expect(status).toBe(200)
+    expect(data).toEqual(mockResponse2.data)
+    expect(api.put).toHaveBeenCalledWith(
+      '/api/users/update-password/1',
+      password
     )
-    expect(result).toEqual(updatedUser)
+  })
+
+  it('removes a user', async () => {
+    const mockResponse = { data: { message: 'User deleted successfully' } }
+    api.delete.mockResolvedValue(mockResponse)
+
+    const res = await userService.remove(1)
+
+    expect(res).toEqual(mockResponse.data)
+    expect(api.delete).toHaveBeenCalledWith('/api/users/1')
   })
 })

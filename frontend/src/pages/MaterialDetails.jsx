@@ -13,8 +13,30 @@ const MaterialDetails = ({ showNotification }) => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [material, setMaterial] = useState(null)
+  const [user, setUser] = useState({ userId: null, role: '' })
 
   const { tags, selectedTags, setSelectedTags, toggleTags } = selectTags()
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const decodedToken = await decodeToken()
+        if (decodedToken) {
+          setUser({
+            userId: decodedToken.user_id,
+            role: decodedToken.role,
+          })
+        } else {
+          navigate('/')
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error)
+        navigate('/')
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     materialService
@@ -31,7 +53,7 @@ const MaterialDetails = ({ showNotification }) => {
         }
       })
       .catch((error) => {
-        console.log('Error fetching material:', error)
+        console.error('Error fetching material:', error)
       })
   }, [id, showNotification])
 
@@ -40,13 +62,13 @@ const MaterialDetails = ({ showNotification }) => {
   }
 
   const handleDeleteMaterail = async (id) => {
-    if (window.confirm('Haluatko varmati poistaa tämän materiaalin?')) {
+    if (window.confirm('Haluatko varmasti poistaa tämän materiaalin?')) {
       try {
         await materialService.remove(id)
         showNotification('Materiaali poistettu onnistuneesti', 'message', 2000)
         navigate('/materiaalit')
       } catch (error) {
-        console.log('Error deleting material:', error)
+        console.error('Error deleting material:', error)
         showNotification('Materiaalin poisto epäonnistui', 'error', 3000)
       }
     }
@@ -62,12 +84,14 @@ const MaterialDetails = ({ showNotification }) => {
     const formToSubmit = new FormData()
 
     formToSubmit.append('tagIds', JSON.stringify(selectedTags))
+    formToSubmit.append('name', material.name)
+    formToSubmit.append('description', material.description)
 
     try {
       await materialService.update(id, formToSubmit)
       showNotification('Tagit päivitetty onnistuneesti', 'message', 2000)
     } catch (error) {
-      console.log('Error updating tags', error)
+      console.error('Error updating tags', error)
       showNotification('Tagien päivitys epäonnistui', 'error', 3000)
     }
   }
@@ -122,8 +146,7 @@ const MaterialDetails = ({ showNotification }) => {
         </div>
       </div>
       <div className="row">
-        {(decodeToken().role === 'admin' ||
-          decodeToken().user_id === material.user_id) && (
+        {(user.role === 'admin' || user.userId === material.user_id) && (
           <>
             <div className="row">
               <Link to={`/muokkaamateriaalia/${id}`}>Muokkaa materiaalia</Link>

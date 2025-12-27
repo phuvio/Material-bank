@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import tagService from '../services/tags'
 import Filter from '../components/Filter'
 
-const TagAdmin = () => {
+const TagAdmin = ({ showNotification }) => {
   const [tags, setTags] = useState([])
   const [filter, setFilter] = useState('')
 
@@ -20,7 +20,8 @@ const TagAdmin = () => {
       })
       .catch((error) => {
         if (isMounted) {
-          console.log('Error fetching data:', error)
+          console.error('Error fetching data:', error)
+          showNotification('Virhe haettaessa tageja.', 'error', 3000)
         }
       })
 

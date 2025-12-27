@@ -42,7 +42,7 @@ const checkDuplicatUsername = async (username) => {
     )
     return existingUser ? true : false
   } catch (error) {
-    console.log('Error checking duplicate user name', error)
+    console.error('Error checking duplicate user name', error)
     return false
   }
 }

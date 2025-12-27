@@ -1,87 +1,53 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import axios from 'axios'
-import favorites from './favorites'
-import apiUrl from '../config/config'
+import { describe, it, expect, vi } from 'vitest'
+import api from './api'
+import favoriteService from './favorites'
 
-// Mock the axios module
-vi.mock('axios')
-vi.mock('../utils/getAuthHeaders', () => ({
-  default: vi.fn(() => ({ Authorization: 'Bearer mockToken' })),
+// Mock the 'api' module
+vi.mock('./api', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    delete: vi.fn(),
+  },
 }))
 
-describe('favorites API', () => {
-  afterEach(() => {
-    vi.clearAllMocks()
+describe('Favorite Service API', () => {
+  it('fetches a favorite by id', async () => {
+    const mockResponse = { data: { userId: 1, materialId: 1 } }
+    api.get.mockResolvedValue(mockResponse)
+
+    const favorite = await favoriteService.get(1)
+
+    expect(favorite).toEqual(mockResponse.data)
+    expect(api.get).toHaveBeenCalledWith('/api/favorites/1')
   })
 
-  describe('get', () => {
-    it('should fetch favorites for a given user ID', async () => {
-      const userId = 123
-      const mockData = [
-        { id: 1, name: 'Material 1', is_url: false, url: null },
-        { id: 2, name: 'Material 2', is_url: true, url: 'http://example.com' },
-      ]
+  it('creates a new favorite', async () => {
+    const userId = 1
+    const materialId = 1
+    const mockResponse = { data: { userId, materialId } }
+    api.post.mockResolvedValue(mockResponse)
 
-      // Mock axios.get
-      axios.get.mockResolvedValue({ data: mockData })
+    const createdFavorite = await favoriteService.create(userId, materialId)
 
-      const result = await favorites.get(userId)
-
-      expect(axios.get).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}`,
-        {
-          headers: { Authorization: 'Bearer mockToken' },
-        }
-      )
-      expect(result).toEqual(mockData)
-    })
+    expect(createdFavorite).toEqual(mockResponse.data)
+    expect(api.post).toHaveBeenCalledWith(
+      `/api/favorites/${userId}/${materialId}`,
+      {}
+    )
   })
 
-  describe('create', () => {
-    it('should add a new favorite for a user and material', async () => {
-      const userId = 123
-      const materialId = 456
-      const mockResponse = {
-        id: 1,
-        name: 'New Material',
-        is_url: true,
-        url: 'http://example.com',
-      }
+  it('removes a favorite', async () => {
+    const userId = 1
+    const materialId = 1
+    const mockResponse = { data: { userId, materialId } }
+    api.delete.mockResolvedValue(mockResponse)
 
-      // Mock axios.post
-      axios.post.mockResolvedValue({ data: mockResponse })
+    const removedFavorite = await favoriteService.remove(userId, materialId)
 
-      const result = await favorites.create(userId, materialId)
-
-      expect(axios.post).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}/${materialId}`,
-        {},
-        {
-          headers: { Authorization: 'Bearer mockToken' },
-        }
-      )
-      expect(result).toEqual(mockResponse)
-    })
-  })
-
-  describe('remove', () => {
-    it('should remove a favorite for a user and material', async () => {
-      const userId = 123
-      const materialId = 456
-      const mockResponse = { message: 'Favorite removed' }
-
-      // Mock axios.delete
-      axios.delete.mockResolvedValue({ data: mockResponse })
-
-      const result = await favorites.remove(userId, materialId)
-
-      expect(axios.delete).toHaveBeenCalledWith(
-        `${apiUrl}/api/favorites/${userId}/${materialId}`,
-        {
-          headers: { Authorization: 'Bearer mockToken' },
-        }
-      )
-      expect(result).toEqual(mockResponse)
-    })
+    expect(removedFavorite).toEqual(mockResponse.data)
+    expect(api.delete).toHaveBeenCalledWith(
+      `/api/favorites/${userId}/${materialId}`
+    )
   })
 })

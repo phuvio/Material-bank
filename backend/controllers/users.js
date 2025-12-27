@@ -1,91 +1,115 @@
-const router = require('express').Router()
-const { User } = require('../models/index')
-const bcrypt = require('bcrypt')
-const CustomError = require('../utils/customError')
-const authenticateToken = require('../middlewares/authMiddleware')
-const { logAction } = require('../utils/logger')
+import { Router } from 'express'
+import { User } from '../models/index.js'
+import bcrypt from 'bcrypt'
+import CustomError from '../utils/customError.js'
+import authenticateToken from '../middlewares/authMiddleware.js'
+import { logAction } from '../utils/logger.js'
+import routeLimiter from '../utils/routeLimiter.js'
 
-router.get('/', authenticateToken(['admin']), async (req, res, next) => {
-  try {
-    const users = await User.findAll()
-    res.json(users)
-  } catch (error) {
-    next(error)
-  }
-})
+const router = Router()
 
-router.post('/', authenticateToken(['admin']), async (req, res, next) => {
-  const { username, first_name, last_name, password, role } = req.body
-
-  const hashedPassword = await bcrypt.hash(password, 10)
-
-  try {
-    const user = User.create({
-      username,
-      first_name,
-      last_name,
-      password: hashedPassword,
-      role,
-    })
-    logAction(user.username, 'New user created')
-    res.status(201).json(user)
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.get('/:id', authenticateToken(['admin']), async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.params.id)
-    if (user) {
-      res.json(user)
-    } else {
-      throw new CustomError('Error saving user', 404)
+router.get(
+  '/',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    try {
+      const users = await User.findAll()
+      res.json(users)
+    } catch (error) {
+      next(error)
     }
-  } catch (error) {
-    next(error)
   }
-})
+)
 
-router.put('/:id', authenticateToken(['admin']), async (req, res, next) => {
-  try {
-    const userId = req.params.id
+router.post(
+  '/',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    const { username, first_name, last_name, password, role } = req.body
 
-    if (!userId) {
-      throw new CustomError('User ID is needed for update', 400)
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    try {
+      const user = await User.create({
+        username,
+        first_name,
+        last_name,
+        password: hashedPassword,
+        role,
+      })
+      logAction(user.username, 'New user created')
+      res.status(201).json(user)
+    } catch (error) {
+      next(error)
     }
-
-    const { first_name, last_name, password, role } = req.body
-
-    const updateData = {}
-    if (first_name) updateData.first_name = first_name
-    if (last_name) updateData.last_name = last_name
-    if (role) updateData.role = role
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10)
-      updateData.password = hashedPassword
-    }
-
-    const [affectedRows] = await User.update(updateData, {
-      where: { id: userId },
-    })
-
-    if (affectedRows === 0) {
-      throw new CustomError('User not found', 404)
-    }
-
-    const updatedUser = await User.findByPk(userId)
-
-    logAction(updatedUser.userId, 'User was updated')
-    res.status(200).json(updatedUser)
-  } catch (error) {
-    next(error)
   }
-})
+)
+
+router.get(
+  '/:id',
+  routeLimiter,
+  authenticateToken(['admin', 'moderator', 'basic']),
+  async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id)
+      if (user) {
+        res.json(user)
+      } else {
+        throw new CustomError('User not found', 404)
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+router.put(
+  '/:id',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    try {
+      const userId = req.params.id
+
+      if (!userId) {
+        throw new CustomError('User ID is needed for update', 400)
+      }
+
+      const { first_name, last_name, password, role } = req.body
+
+      const updateData = {}
+      if (first_name) updateData.first_name = first_name
+      if (last_name) updateData.last_name = last_name
+      if (role) updateData.role = role
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10)
+        updateData.password = hashedPassword
+      }
+
+      const [affectedRows] = await User.update(updateData, {
+        where: { id: userId },
+      })
+
+      if (affectedRows === 0) {
+        throw new CustomError('User not found', 404)
+      }
+
+      const updatedUser = await User.findByPk(userId)
+
+      logAction(updatedUser.id, 'User was updated')
+      res.status(200).json(updatedUser)
+    } catch (error) {
+      next(error)
+    }
+  }
+)
 
 router.put(
   '/update-password/:id',
-  authenticateToken(['admin']),
+  routeLimiter,
+  authenticateToken(['admin', 'moderator', 'basic']),
   async (req, res, next) => {
     try {
       const userId = req.params.id
@@ -126,11 +150,29 @@ router.put(
         throw new CustomError('User was not found', 400)
       }
 
-      res.status(200)
+      res.status(200).json({ message: 'Password updated successfully' })
     } catch (error) {
       next(error)
     }
   }
 )
 
-module.exports = router
+router.delete(
+  '/:id',
+  routeLimiter,
+  authenticateToken(['admin']),
+  async (req, res, next) => {
+    try {
+      const result = await User.destroy({ where: { id: req.params.id } })
+      if (result === 0) {
+        throw new CustomError('User not found', 404)
+      }
+      logAction(req.params.id, 'User deleted')
+      res.json({ message: 'User deleted successfully' })
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+export default router

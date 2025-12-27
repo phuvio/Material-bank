@@ -26,20 +26,6 @@ describe('TagFilter component', () => {
     })
   })
 
-  it.skip('should have checked checkboxes for selected tags', () => {
-    render(
-      <TagFilter
-        tags={mockTags}
-        selectedTags={mockSelectedTags}
-        toggleTags={mockToggleTags}
-      />
-    )
-
-    expect(screen.getByLabelText('Tag 1')).toBeChecked()
-    expect(screen.getByLabelText('Tag 3')).toBeChecked()
-    expect(screen.getByLabelText('Tag 2')).not.toBeChecked()
-  })
-
   it('should call toggleTags when a checkbox is clicked', () => {
     render(
       <TagFilter

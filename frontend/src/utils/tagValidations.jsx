@@ -21,7 +21,8 @@ export const validateTag = async (data) => {
   if (!data.name) {
     errors.name = 'Anna tagille nimi'
   } else if (!regexName.test(data.name)) {
-    errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+    errors.name =
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä ja merkki /'
   } else if (data.name.length < 3 || data.name.length > 30) {
     errors.name = 'Nimen pituuden tulee olla 3-30 merkkiä'
   }
@@ -38,4 +39,22 @@ export const validateTag = async (data) => {
   return errors
 }
 
-export default validateTag
+export const validateTagUpdate = async (data) => {
+  const errors = {}
+
+  if (!data.name) {
+    errors.name = 'Anna tagille nimi'
+  } else if (!regexName.test(data.name)) {
+    errors.name = 'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+  } else if (data.name.length < 3 || data.name.length > 30) {
+    errors.name = 'Nimen pituuden tulee olla 3-30 merkkiä'
+  }
+
+  if (!data.color) {
+    errors.color = 'Valitse väri'
+  }
+
+  return errors
+}
+
+export default { validateTag, validateTagUpdate }

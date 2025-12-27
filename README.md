@@ -4,19 +4,20 @@ This is a repository for the University of Helsinki course Full Stack -project.
 
 This material bank is intended for remote therapy. More and more often, therapies are carried out remotely. For that there is a needs for a material bank, from which it is possible to quickly and easily search for various test and rehabilitation materials in connection with a video-mediated therapy session. The materials can be e.g. word or pdf files or links to other websites.
 
-[Material bank](https://material-bank-backend-449a0f56d7d0.herokuapp.com/)
+[Material bank](https://www.prone-materiaalipankki.fi/)
 
 ## Documentation
 
 - [Techstack](/Documentation/techstack.md)
 - [Database schema](/Documentation/database.md)
 - [Page layouts](/Documentation/pagelayouts.md)
+- [Code overview](/Documentation/codeoverview.md)
 - [Time log](/Documentation/timelog.md)
 
 ## Scorecards
 
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/phuvio/Material-bank/badge)](https://scorecard.dev/viewer/?uri=github.com/phuvio/Material-bank)
-[![Coverage Status](https://coveralls.io/repos/github/phuvio/Material-bank/badge.svg?branch=main&?kill_cache=1)](https://coveralls.io/github/phuvio/Material-bank?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/phuvio/Material-bank/badge.svg?branch=main&?kill_cache=1)](https://coveralls.io/github/phuvio/Material-bank?branch=main&cache-bust=123456)
 
 ## Quickstart
 
@@ -44,20 +45,77 @@ Running the program locally in development mode:
 npm run dev
 ```
 
-Running tests:
+#### Running unit tests
+
+Frontend:
+
+```bash
+npm run test:frontend
+```
+
+Backend:
+
+```bash
+npm run test:backend
+```
+
+Both front- and backend:
 
 ```bash
 npm run test
 ```
 
-Running tests with coverage:
+#### Running unit tests with coverage
+
+Frontend:
+
+```bash
+npm run coverage:frontend
+```
+
+Backend:
+
+```bash
+npm run coverage:backend
+```
+
+Both front- and backend:
 
 ```bash
 npm run test:coverage
 ```
 
-Running eslint:
+#### Running e2e tests
+
+First start front- and backend in test mode. This is important. otherwise there is a risk of messing up the production database.
+
+```bash
+npm run dev:test
+```
+
+Second start Postgres Docker container:
+
+```bash
+docker compose -f .\docker-compose.yml up -d  
+```
+
+Third run the e2e tests:
+
+```bash
+npm run test:e2e
+```
+
+#### Running eslint
 
 ```bash
 npm run lint
 ```
+
+## License
+
+This project is licensed for **non-commercial use only**.  
+See the [LICENSE](LICENSE) file for full details.
+
+## Security
+
+For information on reporting vulnerabilities, please see [SECURITY.md](./SECURITY.md).

@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require('sequelize')
-const { sequelize } = require('../config/database')
+import { Model, DataTypes } from 'sequelize'
+import { sequelize } from '../config/database.js'
 
 class Material extends Model {}
 
@@ -56,4 +56,4 @@ Material.init(
   }
 )
 
-module.exports = Material
+export default Material

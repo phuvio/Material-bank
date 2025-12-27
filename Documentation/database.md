@@ -51,12 +51,26 @@ erDiagram
         INTEGER tag_id
     }
 
+    Packages {
+        SERIAL id
+        VARCCHAR(100) name
+        TEXT description
+    }
+
+    Packages_Materials {
+        INTEGER package_id
+        INTEGER material_id
+        INTEGER position
+    }
+
     %% Relationships
     Users ||--o{ Favorites : "user_id"
     Materials ||--o{ Favorites : "material_id"
     Materials ||--o{ Tags_Materials : "material_id"
+    Materials ||--o{ Packages_Materials : "material_id"
     Tags ||--o{ Tags_Materials : "tag_id"
     Users ||--o{ Materials : "user_id"
+    Packages ||--o{ Packages_Materials : "package_id"
 ```
 
 There are timestamps on materials and users. Timestamps for users give information when the password has been renewed last time. Password is forced to renew at least once a year. Timestamps for materials have no use at the moment, but are inserted for future use. PostgreSQL triggers are used to update timestamps updated_at.

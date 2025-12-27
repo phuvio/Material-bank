@@ -113,7 +113,7 @@ describe('Login Component', () => {
 
     await waitFor(() => {
       expect(showNotificationMock).toHaveBeenCalledWith(
-        'Virhe kirjautumisessa',
+        'Väärä käyttäjätunnus tai salasana',
         'error',
         3000
       )

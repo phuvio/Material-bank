@@ -1,4 +1,4 @@
-import validateTag from './tagValidations'
+import { validateTag } from './tagValidations'
 import tagService from '../services/tags'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
 
@@ -24,7 +24,7 @@ describe('validateTag function', () => {
     const errors = await validateTag(data)
 
     expect(errors.name).toBe(
-      'Nimessä voi olla vain kirjaimia, numeroita ja välilyöntejä'
+      'Nimessä voi olla vain kirjaimia, numeroita, välilyöntejä ja merkki /'
     )
   })
 

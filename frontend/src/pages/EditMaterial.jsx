@@ -25,7 +25,7 @@ const EditMaterial = ({ showNotification }) => {
         setMaterial(returnedMaterial)
       })
       .catch((error) => {
-        console.log('Error fetching material:', error)
+        console.error('Error fetching material:', error)
       })
   }, [id, showNotification])
 
@@ -72,7 +72,7 @@ const EditMaterial = ({ showNotification }) => {
         navigate(`/materiaalit/${id}`)
       })
       .catch((error) => {
-        console.log('Error updating material', error)
+        console.error('Error updating material', error)
         showNotification('Materiaalin päivitys epäonnistui', 'error', 3000)
       })
   }

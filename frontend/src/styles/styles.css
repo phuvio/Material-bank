@@ -101,6 +101,13 @@ li button {
   text-align: right;
 }
 
+.col-50 {
+  position: relative;
+  margin-top: 7px;
+  width: 50%;
+  float: left;
+}
+
 .col-75 {
   position: relative;
   margin-top: 7px;
@@ -219,6 +226,35 @@ textarea {
   content: url('../images/star_selected.png');
 }
 
+.materialSelectButton {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 40px;
+  color: grey;
+  transition: color 0.3s ease;
+  display: inline-flex;
+  justify-content: right;
+}
+
+
+.materialSelectButton::before {
+  content: "\25CB";
+  color: black;
+}
+
+.materialSelectButton.selected::before {
+  content: "\25CF";
+  color: gold;
+}
+
+.materialSelectButton:hover::before {
+  content: "\25CF";
+  color: gold;
+}
+
 .user-details {
   display: grid;
   grid-template-columns: 200px 300px auto;
@@ -277,4 +313,31 @@ textarea {
 
 div.col-75 ul.password {
   list-style-type: circle;
+}
+
+.input-top-label {
+  display: flex;
+  flex-direction: column; /* Stack label and input vertically */
+  margin-bottom: 10px;
+}
+
+.input-top-label label {
+  margin-bottom: 2px; /* Space between label and input */
+}
+
+.input-top-label input[type="text"] {
+  width: 70%; /* Adjust width for top-label inputs */
+}
+
+.input-top-label textarea {
+  width: 70%;   /* or 100% if you want it full width */
+  min-height: 100px; /* optional, makes it taller */
+  resize: vertical;  /* allows vertical resizing but not horizontal */
+}
+
+.selected-materials-container {
+  width: 80%;
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
 }

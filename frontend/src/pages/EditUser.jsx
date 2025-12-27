@@ -42,7 +42,7 @@ const EditUser = ({ showNotification }) => {
         setUser(returnedUser)
       })
       .catch((error) => {
-        console.log('Error fetching user:', error)
+        console.error('Error fetching user:', error)
       })
   }, [id, showNotification])
 
@@ -81,13 +81,28 @@ const EditUser = ({ showNotification }) => {
         navigate('/kayttajat')
       })
       .catch((error) => {
-        console.log('Error updating user', error)
+        console.error('Error updating user', error)
         showNotification(
           'Käyttäjän tietojen päivitys epäonnistui',
           'error',
           3000
         )
       })
+  }
+
+  const handleDeleteUser = (id) => {
+    if (window.confirm('Haluatko varmasti poistaa tämän käyttäjän?')) {
+      userService
+        .remove(id)
+        .then(() => {
+          showNotification('Käyttäjä poistettu onnistuneesti', 'message', 2000)
+          navigate('/kayttajat')
+        })
+        .catch((error) => {
+          console.error('Error deleting user:', error)
+          showNotification('Käyttäjän poisto epäonnistui', 'error', 3000)
+        })
+    }
   }
 
   if (user === null) {
@@ -138,7 +153,7 @@ const EditUser = ({ showNotification }) => {
           <div className="col-75">
             <input
               id="password"
-              type="password"
+              type="text"
               name="password"
               value={formData.password}
               onChange={handleFormChange}
@@ -175,6 +190,11 @@ const EditUser = ({ showNotification }) => {
           </div>
         </div>
       </form>
+      <div className="row">
+        <button className="deleteButton" onClick={() => handleDeleteUser(id)}>
+          Poista käyttäjä
+        </button>
+      </div>
     </div>
   )
 }

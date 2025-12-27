@@ -21,6 +21,7 @@ const ColorPicker = ({ selectedColor, onColorChange }) => {
             key={color}
             role="button"
             value={selectedColor}
+            aria-label={`color-${color}`}
             onClick={() => handleColorClick(color)}
             style={{
               backgroundColor: color,

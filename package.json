@@ -41,7 +41,7 @@
     "jwt-decode": "^4.0.0",
     "material-bank": "file:",
     "mime": "^4.1.0",
-    "multer": "^2.1.0",
+    "multer": "^2.1.1",
     "pg": "^8.14.1",
     "quill": "^2.0.3",
     "react": "^18.3.1",

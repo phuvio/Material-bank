@@ -19,14 +19,11 @@ export default defineConfig({
     // eslint-disable-next-line no-undef
     'process.env': process.env,
   },
-  include: [
-    'frontend/**/*.test.{js,jsx,ts,tsx}',
-    'frontend/**/__tests__/*.{js,jsx,ts,tsx}',
-  ],
   test: {
+    include: ['**/*.test.{js,jsx,ts,tsx}', '**/__tests__/*.{js,jsx,ts,tsx}'],
     environment: 'jsdom',
     globals: true,
-    setupFiles: './testSetup.js',
+    setupFiles: '../testSetup.js',
     coverage: {
       provider: 'v8', // or 'istanbul' for detailed reports
       reporter: ['text', 'lcov'],

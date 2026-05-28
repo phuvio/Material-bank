@@ -24,7 +24,7 @@ vi.mock('quill', () => {
     mockRoot,
   }
 
-  const MockQuill = vi.fn().mockImplementation(() => ({
+  const mockQuillInstance = {
     root: mockRoot,
     on: mockOn,
     off: mockOff,
@@ -33,9 +33,16 @@ vi.mock('quill', () => {
     enable: mockEnable,
     getText: mockGetText,
     getLength: mockGetLength,
-  }))
+  }
 
-  return { default: MockQuill }
+  const MockQuill = vi.fn(function () {
+    return mockQuillInstance
+  })
+
+  return {
+    __esModule: true,
+    default: MockQuill,
+  }
 })
 
 describe('Editor Component', () => {

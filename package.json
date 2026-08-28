@@ -39,14 +39,13 @@
     "express-rate-limit": "^8.2.2",
     "jsonwebtoken": "^9.0.3",
     "jwt-decode": "^4.0.0",
-    "material-bank": "file:",
     "mime": "^4.1.0",
     "multer": "^2.2.0",
     "pg": "^8.21.0",
     "quill": "2.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.13.0",
+    "react-router-dom": "^7.18.2",
     "sequelize": "^6.37.8",
     "winston": "^3.19.0"
   },
@@ -57,6 +56,7 @@
     "@playwright/test": "^1.60.0",
     "@stylistic/eslint-plugin-js": "^4.4.1",
     "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
@@ -86,6 +86,6 @@
     "vitest": "^4.1.3"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=20.19.0"
   }
 }

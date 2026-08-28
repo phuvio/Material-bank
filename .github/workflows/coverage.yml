@@ -21,7 +21,7 @@ jobs:
           node-version: 20.20.2
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --legacy-peer-deps
 
       - name: Run frontend tests with coverage
         run: npm run coverage:frontend

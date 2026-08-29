@@ -33,7 +33,7 @@ describe('ColorPicker Component', () => {
 
     // Verify that the selected color box has a black border
     const selectedColorBox = screen.getAllByRole('button')[1] // Second color in the list
-    expect(selectedColorBox).toHaveStyle('border: 3px solid black')
+    expect(selectedColorBox.style.border).toBe('3px solid black')
   })
 
   it('displays the selected color below the grid', () => {

@@ -1,7 +1,6 @@
 import globals from 'globals'
 import pluginJs from '@eslint/js'
-import stylisticJs from '@stylistic/eslint-plugin-js'
-import babelParser from '@babel/eslint-parser'
+import stylistic from '@stylistic/eslint-plugin'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
@@ -21,11 +20,11 @@ export default [
     },
     files: ['backend/**/*.js'],
     plugins: {
-      '@stylistic/js': stylisticJs,
+      '@stylistic': stylistic,
       prettier: prettierPlugin,
     },
     rules: {
-      'linebreak-style': ['error', 'unix'],
+      '@stylistic/linebreak-style': 'off',
       'no-console': 'warn',
       //* Avoid Bugs
       'no-undef': 'error',
@@ -78,22 +77,17 @@ export default [
       },
       ecmaVersion: 'latest',
       sourceType: 'module', // Use 'module' for frontend files
-      parser: babelParser,
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: {
           jsx: true,
         },
-        babelOptions: {
-          presets: ['@babel/preset-react'],
-        },
-        requireConfigFile: false, // Avoid requiring a Babel config file
       },
     },
     files: ['frontend/**/*.jsx', 'backend/**/*.jsx', 'backend/**/*.js'],
     plugins: {
-      '@stylistic/js': stylisticJs,
+      '@stylistic': stylistic,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
@@ -101,9 +95,9 @@ export default [
       vitest: vitestGlobals,
     },
     rules: {
-      '@stylistic/js/linebreak-style': ['error', 'unix'],
-      '@stylistic/js/quotes': ['error', 'single'],
-      '@stylistic/js/semi': ['error', 'never'],
+      '@stylistic/linebreak-style': 'off',
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/semi': ['error', 'never'],
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
       eqeqeq: 'error',

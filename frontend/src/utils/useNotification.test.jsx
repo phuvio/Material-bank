@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { render, screen, act } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import useNotification from './useNotification'
 
 // Helper component for testing the hook
@@ -22,52 +22,58 @@ const TestComponent = ({ triggerNotification }) => {
 }
 
 describe('useNotification', () => {
-  vi.useFakeTimers()
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
 
-  it('should initialize with default values', () => {
-    render(<TestComponent />)
+  afterEach(() => {
+    vi.runOnlyPendingTimers()
+    vi.useRealTimers()
+  })
+
+  it('should initialize with default values', async () => {
+    await act(async () => {
+      render(<TestComponent />)
+    })
 
     expect(screen.getByTestId('message').textContent).toBe('')
     expect(screen.getByTestId('type').textContent).toBe('message')
   })
 
-  it('should update message and type when showNotification is called', () => {
-    render(
-      <TestComponent
-        triggerNotification={(showNotification) =>
-          act(() => {
+  it('should update message and type when showNotification is called', async () => {
+    await act(async () => {
+      render(
+        <TestComponent
+          triggerNotification={(showNotification) => {
             showNotification('Test message', 'success', 5000)
-          })
-        }
-      />
-    )
+          }}
+        />
+      )
+    })
 
     expect(screen.getByTestId('message').textContent).toBe('Test message')
     expect(screen.getByTestId('type').textContent).toBe('success')
   })
 
-  it('should reset the timer when showNotification is called again', () => {
-    render(
-      <TestComponent
-        triggerNotification={(showNotification) => {
-          act(() => {
+  it('should reset the timer when showNotification is called again', async () => {
+    await act(async () => {
+      render(
+        <TestComponent
+          triggerNotification={(showNotification) => {
             showNotification('First message', 'error', 3000)
-          })
-          act(() => {
             showNotification('Second message', 'info', 4000)
-          })
-        }}
-      />
-    )
+          }}
+        />
+      )
+    })
 
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(3000)
     })
 
-    // The second message should be displayed
     expect(screen.getByTestId('message').textContent).toBe('Second message')
 
-    act(() => {
+    await act(async () => {
       vi.advanceTimersByTime(1000)
     })
 

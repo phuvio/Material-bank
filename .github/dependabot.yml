@@ -9,3 +9,9 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      # jsdom 30 pulls in undici 8, which requires Node >=22.19.0;
+      # this project is pinned to Node 20 (see package.json engines
+      # and .github/workflows/coverage.yml / deploy.yml).
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]

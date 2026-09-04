@@ -15,3 +15,8 @@ updates:
       # and .github/workflows/coverage.yml / deploy.yml).
       - dependency-name: "jsdom"
         update-types: ["version-update:semver-major"]
+      # eslint-plugin-jsx-a11y@6.10.2 (latest) only supports eslint
+      # ^3-^9 as a peer dep; eslint 10 breaks `npm install` (no
+      # --legacy-peer-deps) on Heroku's build.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]

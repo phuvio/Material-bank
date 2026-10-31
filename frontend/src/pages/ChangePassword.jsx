@@ -26,8 +26,8 @@ const ChangePassword = ({ showNotification }) => {
       [name]: value,
     }))
 
-    let passwordStrength = progressBars.newPassword
-    let passwordAgainStrength = progressBars.newPasswordAgain
+    let passwordStrength
+    let passwordAgainStrength
 
     if (name === 'new_password') {
       passwordStrength = 0
@@ -42,6 +42,8 @@ const ChangePassword = ({ showNotification }) => {
         ...prevData,
         newPassword: passwordStrength,
       }))
+    } else {
+      passwordStrength = progressBars.newPassword
     }
 
     if (

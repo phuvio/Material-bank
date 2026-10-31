@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 
 // Load encryption key from environment variables
 const encryptionKey = process.env.ENCRYPTION_KEY // Should be 32 bytes for AES-256

@@ -38,7 +38,7 @@
     "express-rate-limit": "^8.2.2",
     "jsonwebtoken": "^9.0.3",
     "jwt-decode": "^4.0.0",
-    "mime": "^4.1.0",
+    "mime": "^4.1.2",
     "multer": "^2.5.0",
     "pg": "^8.21.0",
     "quill": "2.0.3",
